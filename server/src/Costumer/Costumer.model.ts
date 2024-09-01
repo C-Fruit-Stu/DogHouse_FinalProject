@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Costumer, credit } from "./Costumer.type";
 import { addcostumer, checkifexists, findCostumer, NewPassfunc, updateDoc, Updateuserinfo } from "./Costumer.db";
-import { TrainerUser } from "../Trainer/trainer.type";
 
 export async function getallcostumers1() {
     let query = {
@@ -36,6 +35,7 @@ export async function logincost(email: string) {
 export async function regCostumer(costumer: Costumer) {
     try {
         let query = { email: costumer.email };
+        console.log("This is Model "+ query);
         let CostumerExists = await checkifexists(query);
 
         if (CostumerExists > 0) {

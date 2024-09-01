@@ -60,14 +60,17 @@ export async function RegisterCostumer(req: Request, res: Response) {
 
     try {
         password = encryptPassword(password);
+        console.log("This is Server / Controler  "+password);
         let customer: Costumer = { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment };
 
         let result = await regCostumer(customer);
 
         if (!result.insertedId) {
+            console.log('This is Controler result(Good) ', result);
             return res.status(400).json({ message: 'registration failed' });
         } else {
             customer.id = result.insertedId;
+            console.log('This is Controler result(Bad) ', result);
             return res.status(201).json({ customer });
         }
     } catch (error) {

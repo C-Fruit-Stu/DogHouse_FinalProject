@@ -24,16 +24,14 @@ import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function SignUpCustomer() {
 
-  const {setCurrentCoustumer} = useContext<any>(CoustumerContext);
+  const { setCurrentCoustumer } = useContext<any>(CoustumerContext);
 
   // Use the image with public ID, 'picture'.
   const myImage = cld.image('picture');
 
   const navigation = useNavigation();
-  const [isFocus, setIsFocus] = useState(false);
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const data = [{ label: '0 - 2 years', value: '1' }, { label: '2 - 4 years', value: '2' }, { label: '4 - 6 years', value: '3' }, { label: '6 - 8 years', value: '4' }, { label: '8 - 10 years', value: '5' }, { label: '10 - 12 years', value: '6' }, { label: '12 + years', value: '7' }];
 
   const [galleryImg, setGalleryImg] = useState<string[]>([]);
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -54,6 +52,7 @@ export default function SignUpCustomer() {
     if (!result.canceled) {
       setGalleryImg([...galleryImg, result.assets[0].uri]);
       formik.setFieldValue('image', result.assets[0].uri);
+      console.log(result.assets[0].uri);
       return result.assets[0].uri;
     }
   };
@@ -148,11 +147,13 @@ export default function SignUpCustomer() {
     },
     onSubmit: (values, { resetForm }) => {
       const NewUser: Partial<CoustumerType> = values;
-      console.log(values);
+      const clientType = 2;
+      console.log("NewCoustumer: " + NewUser);
+      console.log("Navigating with clientType: ", clientType); // Debugging info
       resetForm();
       if (NewUser.email !== '') {
         setCurrentCoustumer(NewUser);
-        navigation.navigate("Payment");
+        navigation.navigate("Payment",  clientType );
       }
     }
   });
@@ -281,7 +282,7 @@ export default function SignUpCustomer() {
             {formik.values.image ? formik.values.image : "Select Your Image"}
           </Text>
         </View>
-        <Image source={{ uri: formik.values.image }} style={styles.imageStyle} />
+        <Image source={{ uri: formik.values.image ? formik.values.image : require('../assets/AutoProfilePic.png') }} style={styles.imageStyle} />
         {formik.touched.image && formik.errors.image ? (
           <Text style={styles.error}>{formik.errors.image}</Text>
         ) : null}

@@ -21,7 +21,7 @@ export default function App() {
     // Apply the transformation.
     myImage
       .effect(sepia());  // Apply a sepia effect.
-np
+      
     // Render the transformed image in a React Native component.
     return (
       <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>

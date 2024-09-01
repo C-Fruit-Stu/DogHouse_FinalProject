@@ -12,8 +12,8 @@ import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 // react-native-creditcard
 // # Connection for yuval - eMcWHJbuAdzLwDEf
-export default function Payment() {
-  const { RegisterNewTrainer } = useContext(TrainerContext);
+export default function Payment(clientType: number) {
+  const { RegisterNewTrainer,currentTrainer } = useContext(TrainerContext);
   const { RegisterNewCoustumer, currentCoustumer } = useContext(CoustumerContext);
   const navigation = useNavigation();
 
@@ -80,35 +80,35 @@ export default function Payment() {
       return errors;
     },
     onSubmit: (values, { resetForm }) => {
-      console.log('first==>', values, 'NewUser==>', currentCoustumer);
+      console.log("clientType: ",clientType);
+      console.log('first==>', values);
       const payment: any = {
         card: values.card,
         date: values.year + '-' + values.month,
         cvv: values.cvv
       }
-      // console.log('TrainerInfo:', JSON.stringify(TrainerInfo, null, 2)); // Updated to display values
-      // if (NewUser.clientType == '1') {
-      //   console.log('TrainerInfo:', JSON.stringify(NewUser, null, 2)); // Updated to display values
-      //   const NewTrainer: any = {
-      //     first_name: NewUser.first_name,
-      //     last_name: NewUser.last_name,
-      //     email: NewUser.email,
-      //     password: NewUser.password,
-      //     dob: NewUser.dob,
-      //     location: NewUser.location,
-      //     experience: NewUser.experience,
-      //     image: NewUser.image,
-      //     phone: NewUser.phone,
-      //     clientType: NewUser.clientType,
-      //     payment: payment,
-      //     stayLogIn: false,
-      //   }
-      //   let u = RegisterNewTrainer(NewTrainer);
-      //   console.log('New Trainer: ' + NewTrainer);
-      //   console.log("u ===> " + u);
-      // }
-      // else 
-      if (currentCoustumer.clientType == '2') {
+      if (clientType == 1) {
+        console.log('TrainerInfo:', JSON.stringify(currentTrainer, null, 2)); // Updated to display values
+        const NewTrainer: any = {
+          first_name: currentTrainer.first_name,
+          last_name: currentTrainer.last_name,
+          email: currentTrainer.email,
+          password: currentTrainer.password,
+          dob: currentTrainer.dob,
+          location: currentTrainer.location,
+          experience: currentTrainer.experience,
+          image: currentTrainer.image,
+          phone: currentTrainer.phone,
+          clientType: currentTrainer.clientType,
+          payment: payment,
+          stayLogIn: false,
+        }
+        let u = RegisterNewTrainer(NewTrainer);
+        console.log('New Trainer: ' + NewTrainer);
+        console.log("u ===> " + u);
+      }
+      else 
+      if (clientType == 2) {
         console.log('CustomerInfo:', JSON.stringify(currentCoustumer, null, 2)); // Updated to display values
         const NewCustomer: CoustumerType = {
           dogBreed: '',
@@ -132,8 +132,8 @@ export default function Payment() {
             }
           ]
         }
-        let u = RegisterNewCoustumer(NewCustomer);
         console.log('New Customer: ' + NewCustomer);
+        let u = RegisterNewCoustumer(NewCustomer);
         console.log("u ===> " + u);
       }
       resetForm();

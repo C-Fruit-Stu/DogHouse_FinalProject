@@ -42,6 +42,7 @@ export async function checkifexists(query = {}) {
 export async function addcostumer(costumer: Costumer) {
     let mongo = new MongoClient(DB_INFO.connection);
     costumer.id = new ObjectId();
+    console.log("This is DataBase new ObjectID: "+costumer)
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).insertOne(costumer);

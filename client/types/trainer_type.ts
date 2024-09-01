@@ -1,3 +1,4 @@
+
 export type TrainerType = {
     first_name: string,
     last_name: string,
@@ -15,12 +16,5 @@ export type TrainerType = {
         ccv: string
     }
     stayLogIn?: boolean;
-    training?: [
-        {
-            name?: string, // שם הלקוח
-            date: Date, // תאריך האימון
-            time: string, // יש להזין מאיזה שעה לאיזה שעה
-        }
-    ]
 }
 

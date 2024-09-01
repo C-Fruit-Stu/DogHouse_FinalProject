@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -12,10 +12,17 @@ import CameraComponent from './Camera';
 import * as ImagePicker from 'expo-image-picker';
 const cld = new Cloudinary({
   cloud: {
-      cloudName: 'demo'
+    cloudName: 'demo'
   }
 });
+
+import { TrainerContext } from '../context/TrainerContextProvider';
+
 export default function SignUpTrainer() {
+
+  const { setCurrentTrainer } = useContext<any>(TrainerContext);
+
+  // -צריך לתקן כמו בלקוח רגיל -יובל
   const [galleryImg, setGalleryImg] = useState<string[]>([]);
   const [cameraOpen, setCameraOpen] = useState(false);
   const navigation = useNavigation();
@@ -31,6 +38,10 @@ export default function SignUpTrainer() {
     { label: '10 - 12 years', value: '6' },
     { label: '12 + years', value: '7' }
   ];
+  
+    const togglePasswordVisibility = () => {
+      setVisiblePassword(!visiblePassword);
+    };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,11 +57,7 @@ export default function SignUpTrainer() {
       return result.assets[0].uri;
     }
   };
-
-  const togglePasswordVisibility = () => {
-    setVisiblePassword(!visiblePassword);
-  };
-
+  
   const formik = useFormik({
     initialValues: {
       first_name: '',
@@ -139,10 +146,12 @@ export default function SignUpTrainer() {
     },
     onSubmit: (values, { resetForm }) => {
       const NewUser: Partial<TrainerType> = values;
-      console.log(values);
+      const clientType = 1 as number;
+      console.log("New Trainer: " + NewUser);
       resetForm();
       if (NewUser.email !== '') {
-        navigation.navigate("Payment", { NewUser });
+        setCurrentTrainer(NewUser);
+        navigation.navigate("Payment",   clientType );
       }
     }
   });
@@ -250,8 +259,8 @@ export default function SignUpTrainer() {
           <Text style={styles.error}>{formik.errors.location}</Text>
         ) : null}
 
-         {/*באתרי קורסים אצל יעל שיעור מספר 6 ו8 סוגר את הפינה של מצלמה והעלת תמונות */}
-         <View style={styles.buttonContainer}>
+        {/*באתרי קורסים אצל יעל שיעור מספר 6 ו8 סוגר את הפינה של מצלמה והעלת תמונות */}
+        <View style={styles.buttonContainer}>
           <View style={styles.buttonNext}>
             <TouchableOpacity onPress={pickImage} style={styles.link}>
               <Text style={styles.TextButton}>Pick Image</Text>

@@ -9,7 +9,6 @@ import SignUpCostumer from './components/SignUpCostumer';
 import SignUpTrainer from './components/SignUpTrainer';
 import Payment from './components/Payment';
 import HomePage from './screens/HomePage';
-import TrainerContextProvider from './context/TrainerContextProvider';
 import Profile from './screens/Profile';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Chat from './components/Chat';
@@ -23,29 +22,34 @@ import UpdateInfo from './components/UpdateInfo';
 import UpdatePayment from './components/UpdatePayment';
 import Membership from './components/Membership';
 import CoustumerContextProvider from './context/CoustumerContextProvider';
+import TrainerContextProvider from './context/TrainerContextProvider';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
- function BackToPre() {
+function BackToPre() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="HomePage" component={HomePage} options={{tabBarLabel: 'Home',
-            headerShown: false,
-            tabBarIcon: () => <MaterialCommunityIcons name='home' size={35} color='#1DBD7B'/>
-        }} />
-      <Tab.Screen name="Profile" component={Profile}  options={{tabBarLabel: 'Profile',
-            headerShown: true,
-            tabBarIcon: () => <MaterialCommunityIcons name='account' size={35} color='#1DBD7B'/>
-        }} />
-        <Tab.Screen name="Chat" component={Chat}  options={{tabBarLabel: 'Chat',
-            headerShown: false,
-            tabBarIcon: () => <MaterialCommunityIcons name='wechat' size={35} color='#1DBD7B'/>
-        }} />
-          <Tab.Screen name="Settings" component={Settings}  options={{tabBarLabel: 'Settings',
-            headerShown: true,
-            tabBarIcon: () => <Feather name="settings" size={24} color="#1DBD7B" />
-        }} />
+      <Tab.Screen name="HomePage" component={HomePage} options={{
+        tabBarLabel: 'Home',
+        headerShown: false,
+        tabBarIcon: () => <MaterialCommunityIcons name='home' size={35} color='#1DBD7B' />
+      }} />
+      <Tab.Screen name="Profile" component={Profile} options={{
+        tabBarLabel: 'Profile',
+        headerShown: true,
+        tabBarIcon: () => <MaterialCommunityIcons name='account' size={35} color='#1DBD7B' />
+      }} />
+      <Tab.Screen name="Chat" component={Chat} options={{
+        tabBarLabel: 'Chat',
+        headerShown: false,
+        tabBarIcon: () => <MaterialCommunityIcons name='wechat' size={35} color='#1DBD7B' />
+      }} />
+      <Tab.Screen name="Settings" component={Settings} options={{
+        tabBarLabel: 'Settings',
+        headerShown: true,
+        tabBarIcon: () => <Feather name="settings" size={24} color="#1DBD7B" />
+      }} />
     </Tab.Navigator>
   );
 }
@@ -72,13 +76,13 @@ function StackNav() {
 
 export default function App() {
   return (
-    <TrainerContextProvider>
-      <CoustumerContextProvider>
-      <NavigationContainer>
-        <StackNav />
-      </NavigationContainer>
-      </CoustumerContextProvider>
-    </TrainerContextProvider>
+    <CoustumerContextProvider>
+      <TrainerContextProvider>
+        <NavigationContainer>
+          <StackNav />
+        </NavigationContainer>
+      </TrainerContextProvider>
+    </CoustumerContextProvider>
   );
 }
 
