@@ -61,7 +61,7 @@ function StackNav() {
       <Stack.Screen name="Bording2" component={Bording2} options={{ headerShown: false }} />
       <Stack.Screen name="SignUpCostumer" component={SignUpCostumer} options={{ headerShown: false }} />
       <Stack.Screen name="SignUpTrainer" component={SignUpTrainer} options={{ headerShown: false }} />
-      <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} /> */}
       <Stack.Screen name="LogIn" component={LogIn} options={{ headerShown: true }} />
       <Stack.Screen name="AllCostumers" component={AllCostumers} options={{ headerShown: true }} />
       <Stack.Screen name="Calander" component={Calanders} options={{ headerShown: true }} />
