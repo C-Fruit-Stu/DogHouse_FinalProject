@@ -8,6 +8,7 @@ import { useFormik } from 'formik';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TrainerType } from '../types/trainer_type';
 import { Cloudinary } from "@cloudinary/url-gen";
+import AutoProfilePic from '../assets/AutoProfilePic.png';
 import CameraComponent from './Camera';
 import * as ImagePicker from 'expo-image-picker';
 const cld = new Cloudinary({
@@ -151,7 +152,7 @@ export default function SignUpTrainer() {
       resetForm();
       if (NewUser.email !== '') {
         setCurrentTrainer(NewUser);
-        navigation.navigate("Payment",   clientType );
+        navigation.navigate("Payment", {clientType} );
       }
     }
   });
@@ -278,7 +279,7 @@ export default function SignUpTrainer() {
             {formik.values.image ? formik.values.image : "Select Your Image"}
           </Text>
         </View>
-        <Image source={{ uri: formik.values.image }} style={styles.imageStyle} />
+        <Image source={{ uri: formik.values.image ? formik.values.image : AutoProfilePic}} style={styles.imageStyle} />
         {formik.touched.image && formik.errors.image ? (
           <Text style={styles.error}>{formik.errors.image}</Text>
         ) : null}

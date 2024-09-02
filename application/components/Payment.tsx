@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerType } from '../types/coustumer_type';
@@ -12,10 +12,14 @@ import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 // react-native-creditcard
 // # Connection for yuval - eMcWHJbuAdzLwDEf
-export default function Payment(clientType: number) {
-  const { RegisterNewTrainer,currentTrainer } = useContext(TrainerContext);
+
+export default function Payment() {
+
+  const { RegisterNewTrainer, currentTrainer } = useContext(TrainerContext);
   const { RegisterNewCoustumer, currentCoustumer } = useContext(CoustumerContext);
+
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<any>>();
 
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState('');
@@ -79,15 +83,15 @@ export default function Payment(clientType: number) {
       }
       return errors;
     },
-    onSubmit: (values, { resetForm }) => {
-      console.log("clientType: ",clientType);
+    onSubmit: async (values, { resetForm }) => {
+      console.log("clientType: ", route.params?.clientType);
       console.log('first==>', values);
       const payment: any = {
         card: values.card,
         date: values.year + '-' + values.month,
         cvv: values.cvv
       }
-      if (clientType == 1) {
+      if (route.params?.clientType == 1) {
         console.log('TrainerInfo:', JSON.stringify(currentTrainer, null, 2)); // Updated to display values
         const NewTrainer: any = {
           first_name: currentTrainer.first_name,
@@ -107,35 +111,34 @@ export default function Payment(clientType: number) {
         console.log('New Trainer: ' + NewTrainer);
         console.log("u ===> " + u);
       }
-      else 
-      if (clientType == 2) {
-        console.log('CustomerInfo:', JSON.stringify(currentCoustumer, null, 2)); // Updated to display values
-        const NewCustomer: CoustumerType = {
-          dogBreed: '',
-          first_name: currentCoustumer.first_name,
-          last_name: currentCoustumer.last_name,
-          email: currentCoustumer.email,
-          password: currentCoustumer.password,
-          dob: currentCoustumer.dob,
-          location: currentCoustumer.location,
-          image: currentCoustumer.image,
-          phone: currentCoustumer.phone,
-          update_details: currentCoustumer.update_details,
-          clientType: currentCoustumer.clientType,
-          payment: payment,
-          stayLogIn: false,
-          trainingSchedule:[
-            {
-              name: '',
-              date: new Date(),
-              time: ''
-            }
-          ]
+      else
+       {
+          console.log('CustomerInfo:', JSON.stringify(currentCoustumer, null, 2)); // Updated to display values
+          const NewCustomer: CoustumerType = {
+            dogBreed: '',
+            first_name: currentCoustumer.first_name,
+            last_name: currentCoustumer.last_name,
+            email: currentCoustumer.email,
+            password: currentCoustumer.password,
+            dob: currentCoustumer.dob,
+            location: currentCoustumer.location,
+            image: currentCoustumer.image,
+            phone: currentCoustumer.phone,
+            update_details: currentCoustumer.update_details,
+            clientType: currentCoustumer.clientType,
+            payment: payment,
+            stayLogIn: false,
+            trainingSchedule: [
+              {
+                name: '',
+                date: new Date(),
+                time: ''
+              }
+            ]
+          }
+          console.log('New Customer: ' + NewCustomer);
+          await RegisterNewCoustumer(NewCustomer);
         }
-        console.log('New Customer: ' + NewCustomer);
-        let u = RegisterNewCoustumer(NewCustomer);
-        console.log("u ===> " + u);
-      }
       resetForm();
       if (payment.card) {
         navigation.navigate('BackToPre');

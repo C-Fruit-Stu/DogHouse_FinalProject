@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, loginUser, registerUser, updateUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddDate, DeleteDate } from "./trainer.model";
+import { getAllUsers, findUserById, loginUser, registerUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost  } from "./trainer.model";
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
 import { ObjectId } from "mongodb";
@@ -74,24 +74,24 @@ export async function register(req: Request, res: Response) {
     }
 }
 
-export async function update(req: Request, res: Response) {
-    let { id } = req.params;
-    let { email, password, location } = req.body;
+// export async function update(req: Request, res: Response) {
+//     let { id } = req.params;
+//     let { email, password, location } = req.body;
 
-    if (!id || id.length < 24)
-        return res.status(400).json({ message: 'must provide a valid id' });
+//     if (!id || id.length < 24)
+//         return res.status(400).json({ message: 'must provide a valid id' });
 
-    if (!email || !password)
-        return res.status(400).json({ message: 'must provide an email and full_name' });
+//     if (!email || !password)
+//         return res.status(400).json({ message: 'must provide an email and full_name' });
 
-    try {
-        password = encryptPassword(password);
-        let result = await updateUser(id, email, password, location);
-        res.status(201).json({ result });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-}
+//     try {
+//         password = encryptPassword(password);
+//         let result = await updateUser(id, email, password, location);
+//         res.status(201).json({ result });
+//     } catch (error) {
+//         res.status(500).json({ error });
+//     }
+// }
 
 export async function physicDeleteUser(req: Request, res: Response) {
     let { id } = req.params;
@@ -223,40 +223,40 @@ export async function deletePost(req: Request, res: Response) {
     }
 }
 
-export async function AddNewDate(req: Request, res: Response) {
-    let { id } = req.params
-    let { date,time } = req.body
+// export async function AddNewDate(req: Request, res: Response) {
+//     let { id } = req.params
+//     let { date,time } = req.body
 
-    if(!id || id.length < 24)
-        return res.status(400).json({ msg: "invalid id" })
+//     if(!id || id.length < 24)
+//         return res.status(400).json({ msg: "invalid id" })
 
-    if(!date || !time)
-        return res.status(400).json({ msg: "invalid info" })
+//     if(!date || !time)
+//         return res.status(400).json({ msg: "invalid info" })
 
-    try {
-        let result = await AddDate(date,time,id)
-        res.status(200).json({ result })
-    } catch (error) {
-        res.status(500).json({ error })
-    }
+//     try {
+//         let result = await AddDate(date,time,id)
+//         res.status(200).json({ result })
+//     } catch (error) {
+//         res.status(500).json({ error })
+//     }
 
-}
+// }
 
-export async function RemoveDate(req: Request, res: Response) {
-    let { id } = req.params
-    let { date,time } = req.body
+// export async function RemoveDate(req: Request, res: Response) {
+//     let { id } = req.params
+//     let { date,time } = req.body
 
-    if(!id || id.length < 24)
-        return res.status(400).json({ msg: "invalid id" })
+//     if(!id || id.length < 24)
+//         return res.status(400).json({ msg: "invalid id" })
 
-    if(!date || !time)
-        return res.status(400).json({ msg: "invalid info" })
+//     if(!date || !time)
+//         return res.status(400).json({ msg: "invalid info" })
 
-    try {
-        let result = await DeleteDate(date, time, id)
-        res.status(200).json({ result })
-    } catch (error) {
-        res.status(500).json({ error })
-    }
-}
+//     try {
+//         let result = await DeleteDate(date, time, id)
+//         res.status(200).json({ result })
+//     } catch (error) {
+//         res.status(500).json({ error })
+//     }
+// }
 

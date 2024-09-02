@@ -11,7 +11,7 @@ import CameraComponent from './Camera';
 import * as ImagePicker from 'expo-image-picker';
 import { CameraView, useCameraPermissions, CameraProps } from 'expo-camera';
 import requestCameraPermissionsAsync from 'expo-camera';
-
+import AutoProfilePic from '../assets/AutoProfilePic.png';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Cloudinary } from "@cloudinary/url-gen";
 const cld = new Cloudinary({
@@ -23,6 +23,8 @@ const cld = new Cloudinary({
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function SignUpCustomer() {
+
+
 
   const { setCurrentCoustumer } = useContext<any>(CoustumerContext);
 
@@ -153,7 +155,7 @@ export default function SignUpCustomer() {
       resetForm();
       if (NewUser.email !== '') {
         setCurrentCoustumer(NewUser);
-        navigation.navigate("Payment",  clientType );
+        navigation.navigate("Payment",  {clientType} );
       }
     }
   });
@@ -282,7 +284,7 @@ export default function SignUpCustomer() {
             {formik.values.image ? formik.values.image : "Select Your Image"}
           </Text>
         </View>
-        <Image source={{ uri: formik.values.image ? formik.values.image : require('../assets/AutoProfilePic.png') }} style={styles.imageStyle} />
+        <Image source={{ uri: formik.values.image ? formik.values.image : AutoProfilePic}} style={styles.imageStyle} />
         {formik.touched.image && formik.errors.image ? (
           <Text style={styles.error}>{formik.errors.image}</Text>
         ) : null}

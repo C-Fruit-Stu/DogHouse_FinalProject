@@ -98,9 +98,9 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <><>
+    <>
     <Navigation/>
-    </><div className="signup">
+    <div className="signup">
       <div className="container">
         <h1 className="signup-title">Sign Up</h1>
         <Formik
