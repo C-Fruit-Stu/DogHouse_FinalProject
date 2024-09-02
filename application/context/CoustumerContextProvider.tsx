@@ -22,7 +22,7 @@ export default function CoustumerContextProvider({ children }: any) {
 async function RegisterNewCoustumer(newCustomer: CoustumerType) {
         try {
             console.log('newCustomer ====>>>', newCustomer)
-            let data = await POST('customer/register', newCustomer);  // Adjust the endpoint to match your server
+            let data = await POST('costumer/register', newCustomer);  // Adjust the endpoint to match your server
             console.log(data);
             if (data && data.customer) {
                 setAllCoustumer([...allCoustumers, data.customer]);

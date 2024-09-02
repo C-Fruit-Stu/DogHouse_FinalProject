@@ -1,5 +1,5 @@
 //const BASE_URL = "https://shenkar-2024-b-fullstack-ui.onrender.com/api";
-const BASE_URL = "https://finaproject1-1ghw.onrender.com/api";
+const BASE_URL = "https://doghouse-la1b.onrender.com/api";
 
 export async function POST(url: string, obj: Object) {
     try {
