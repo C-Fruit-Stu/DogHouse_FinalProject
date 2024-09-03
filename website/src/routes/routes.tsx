@@ -10,6 +10,8 @@ import FAQs from "../pages/FAQs";
 import Support from "../pages/Support";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import TrainingResources from "../pages/TrainingResources";
+import Admin from "../pages/Admin";
+import Profile from "../pages/Profile";
 
 
 export const routes = createBrowserRouter([
@@ -56,5 +58,13 @@ export const routes = createBrowserRouter([
     {
         path: "/trainingresources",
         element: <TrainingResources/>
+    },
+    {
+        path: "/admin",
+        element: <Admin/>
+    },
+    {
+        path: "/profile",
+        element: <Profile/>
     }
 ])

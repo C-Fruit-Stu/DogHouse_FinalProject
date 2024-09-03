@@ -38,6 +38,10 @@ const SignIn: React.FC = () => {
   const handleSubmit = (values: Partial<CoustumerType>, { resetForm }: { resetForm: () => void }) => {
     console.log('Form Values:', values);
     console.log('Form Errors:', validate(values));
+    if(values.email == 'admin@admin.com' && values.password == 'admin1234admin')
+      window.location.href = '/admin'
+    if(values.email == "us@gmail.com" && values.password == "12345678")
+      window.location.href = '/profile'
     resetForm();  // Reset the form after submission if needed
   };
 
