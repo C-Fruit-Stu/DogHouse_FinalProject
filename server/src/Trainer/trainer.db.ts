@@ -60,16 +60,14 @@ export async function checkIfDocumentExists(query = {}) {
 
 export async function insertUser(user: TrainerUser) {
     let mongo = new MongoClient(DB_INFO.connection);
+    user.id = new ObjectId();
+    console.log("This is DataBase new ObjectID: "+user)
     try {
-        //התחברות למסד הנתונים
         await mongo.connect();
-        //הוספת המשתמש למאגר
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).insertOne(user);
     } catch (error) {
         throw error;
-    }
-    finally {
-        //סגירת החיבור למסד הנתונים
+    } finally {
         mongo.close();
     }
 }
