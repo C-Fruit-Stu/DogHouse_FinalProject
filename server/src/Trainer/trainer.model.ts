@@ -34,7 +34,7 @@ export async function findUserById(id: string) {
 
 }
 
-export async function loginUser(email: string) {
+export async function LoginUser(email: string) {
     try {
         let query = { email: email}
         let users = await findUsers(query);
@@ -44,7 +44,7 @@ export async function loginUser(email: string) {
     }
 }
 
-export async function registerUser(user: TrainerUser) {
+export async function RegisterUser(user: TrainerUser) {
     try {
         //האם המייל קיים כבר במאגר
         let query = { email: user.email }

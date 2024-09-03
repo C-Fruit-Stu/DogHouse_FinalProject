@@ -106,10 +106,23 @@ export default function Payment() {
           clientType: currentTrainer.clientType,
           payment: payment,
           stayLogIn: false,
+          trainingSchedule: [
+            {
+              name: '',
+              date: new Date(),
+              time: ''  
+            }
+          ],
+          Posts: [
+            {
+              title: '',
+              description: '',
+              image: ''
+            }
+          ]
         }
-        let u = RegisterNewTrainer(NewTrainer);
         console.log('New Trainer: ' + NewTrainer);
-        console.log("u ===> " + u);
+        await RegisterNewTrainer(NewTrainer);
       }
       else
        {

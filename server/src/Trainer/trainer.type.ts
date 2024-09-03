@@ -1,7 +1,7 @@
 import { ObjectId, PullAllOperator } from "mongodb"
 
 export type TrainerUser = {
-    _id?: ObjectId,
+    id?: ObjectId,
     first_name: string,
     last_name: string,
     email: string,
@@ -14,7 +14,7 @@ export type TrainerUser = {
     clientType:string, // 1 for trainer 2 for costumer
     payment: credit,
     stayLogIn?: boolean,
-    trainingOpenDates?: trainingOpenDates[],
+    trainingSchedule?: trainingSchedule[],
     Posts?: Post[]
 } 
 
@@ -25,7 +25,7 @@ export type credit = {
     ccv: string
 }
 
-export type trainingOpenDates = {
+export type trainingSchedule = {
     id?: ObjectId,
     date:string,
     time: string

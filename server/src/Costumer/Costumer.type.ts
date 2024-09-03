@@ -25,7 +25,7 @@ export type Costumer = {
 }
 
 export type credit = {
-    id? :ObjectId
+    id? :ObjectId // קוד זיהוי
     card: string,
     date: string,
     cvv: string

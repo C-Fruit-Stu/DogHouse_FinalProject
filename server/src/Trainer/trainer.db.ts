@@ -7,10 +7,6 @@ const DB_INFO = {
     collection: 'Trainers'
 }
 
-/**
- * @param query - specify the criteria
- * @param project - specify which fields should be included or excluded in the query results.
- */
 export async function findUsers(query = {}, projection = {}) {
     //מייצר את האובייקט שבאמצעותו נתחבר למסד הנתונים ונבצע שאילתות
     let mongo = new MongoClient(DB_INFO.connection);
@@ -85,7 +81,7 @@ export async function updateDoc(user: TrainerUser) {
         await mongo.connect();
         //עדכון המשתמש
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { _id: user._id },
+            { id: user.id },
             { $set: user }
         );
 

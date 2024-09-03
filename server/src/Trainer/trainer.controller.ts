@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, loginUser, registerUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost  } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost } from "./trainer.model";
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
 import { ObjectId } from "mongodb";
 
-export async function getAll(req: Request, res: Response) {
+export async function GetAll(req: Request, res: Response) {
     try {
         let users = await getAllUsers();
         if (users?.length == 0)
@@ -16,7 +16,7 @@ export async function getAll(req: Request, res: Response) {
     }
 }
 
-export async function getUserById(req: Request, res: Response) {
+export async function GetUserById(req: Request, res: Response) {
     let { id } = req.params; //url שליפת הפרמטר מתוך ה 
     if (id.length != 24)
         return res.status(500).json({ message: 'must provide a valid id' });
@@ -31,13 +31,13 @@ export async function getUserById(req: Request, res: Response) {
     }
 }
 
-export async function login(req: Request, res: Response) {
+export async function LoginTrainer(req: Request, res: Response) {
     let { email, password } = req.body;
     //בדיקה - אם לא נשלחו אימייל וסיסמה תחזיר את ההודעה 
     if (!email || !password)
         return res.status(400).json({ message: 'invalid email or password' });
     try {
-        let user = await loginUser(email);
+        let user = await LoginUser(email);
         if (!user)
             res.status(404).json({ message: 'user not found' });
         //הפעלת הפונקציה לפענוח הסיסמה
@@ -53,24 +53,31 @@ export async function login(req: Request, res: Response) {
 
 
 
-export async function register(req: Request, res: Response) {
-    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment } = req.body;
-    if (!first_name || !last_name || !email || !password || !dob || !location || !experience || !image || !phone || !clientType || !payment)
+export async function RegisterTrainer(req: Request, res: Response) {
+    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment,trainingSchedule,Posts } = req.body;
+
+    if (!first_name || !last_name || !password || !email) {
         return res.status(400).json({ message: 'missing info' });
+    }
 
     try {
-        //הפעלת הפונקציה להצפנת הסיסמה
         password = encryptPassword(password);
-        let user: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment }
-        let result = await registerUser(user);
-        if (!result.insertedId)
-            res.status(400).json({ message: 'registration failed' });
-        else {
-            user._id = result.insertedId;
-            res.status(201).json({ user });
+        console.log("This is Server / Controler  " + password);
+        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts };
+
+        let result = await RegisterUser(trainer);
+
+        if (!result.insertedId) {
+            console.log('This is Controler result(Good) ', result);
+            return res.status(400).json({ message: 'registration failed' });
+        } else {
+            trainer.id = result.insertedId;
+            console.log('This is Controler result(Bad) ', result);
+            return res.status(201).json({ trainer });
         }
     } catch (error) {
-        res.status(500).json({ error });
+        console.error(error);  // Improved error logging
+        return res.status(500).json({ error });
     }
 }
 
@@ -124,16 +131,16 @@ export async function logicDeleteUser(req: Request, res: Response) {
 export async function UpdatePassword(req: Request, res: Response) {
     let { id } = req.params;
     let { password } = req.body;
-    
-    if(!id || id.length < 24)
+
+    if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
-    if(!password)
+    if (!password)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
         password = encryptPassword(password);
-        let result = await ChangePass(password,id);
+        let result = await ChangePass(password, id);
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -144,14 +151,14 @@ export async function updatePayment(req: Request, res: Response) {
     let { id } = req.params
     let { card, date, ccv } = req.body
 
-    if(!id || id.length < 24)
+    if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
-    if(!card || !date || !ccv)
+    if (!card || !date || !ccv)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await checkUpdate(id,card,date,ccv);
+        let result = await checkUpdate(id, card, date, ccv);
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -162,32 +169,32 @@ export async function updatePayment(req: Request, res: Response) {
 
 export async function addNewPost(req: Request, res: Response) {
     let { id } = req.params
-    let { title,description,image } = req.body
+    let { title, description, image } = req.body
 
-    if(!id || id.length < 24)
+    if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
-    if(!title || !description)
+    if (!title || !description)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await addAnotherPost(title,description,image,id)
+        let result = await addAnotherPost(title, description, image, id)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
-    } 
+    }
 }
 
 export async function getAllPostsById(req: Request, res: Response) {
     let { id } = req.params
 
-    if(!id || id.length < 24)
+    if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
     try {
         let result = await showallpostsbyid(id)
-        if(!result)
-            res.status(400).json({msg: "there is no posts"})
+        if (!result)
+            res.status(400).json({ msg: "there is no posts" })
         else
             res.status(200).json({ result })
     } catch (error) {
@@ -216,7 +223,7 @@ export async function deletePost(req: Request, res: Response) {
         return res.status(400).json({ message: 'must provide a valid id' });
 
     try {
-        let result = await deactivePost(id,title);
+        let result = await deactivePost(id, title);
         res.status(201).json({ result });
     } catch (error) {
         res.status(500).json({ error });
