@@ -4,7 +4,7 @@ import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
 import { ObjectId } from "mongodb";
 
-export async function GetAll(req: Request, res: Response) {
+export async function getAll(req: Request, res: Response) {
     try {
         let users = await getAllUsers();
         if (users?.length == 0)
@@ -16,7 +16,8 @@ export async function GetAll(req: Request, res: Response) {
     }
 }
 
-export async function GetUserById(req: Request, res: Response) {
+
+export async function getUserById(req: Request, res: Response) {
     let { id } = req.params; //url שליפת הפרמטר מתוך ה 
     if (id.length != 24)
         return res.status(500).json({ message: 'must provide a valid id' });

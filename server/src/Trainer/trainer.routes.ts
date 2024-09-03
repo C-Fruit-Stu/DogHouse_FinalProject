@@ -1,13 +1,13 @@
 //ייבוא אובייקט 
 import { Router } from 'express';
-import { physicDeleteUser, GetAll, GetUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost } from './trainer.controller';
+import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost } from './trainer.controller';
 
 
 const TrainerRouter = Router();
 
 TrainerRouter
-    .get('/', GetAll) 
-    .get('/:id/', GetUserById) 
+    .get('/', getAll) 
+    .get('/:id/', getUserById) 
     .post('/login', LoginTrainer) 
     .post('/register', RegisterTrainer) 
     // .put('/update/:id', update) 
