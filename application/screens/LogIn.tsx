@@ -30,7 +30,8 @@ export default function LogIn() {
       return errors;
     },
 
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
+      
       console.log(values);
       console.log(formik.errors)
     },

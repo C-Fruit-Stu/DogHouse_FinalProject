@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost } from "./trainer.db";
+import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost } from "./trainer.db";
 import { credit, Post, TrainerUser } from "./trainer.type";
 
 export async function getAllUsers() {
@@ -36,9 +36,9 @@ export async function findUserById(id: string) {
 
 export async function LoginUser(email: string) {
     try {
-        let query = { email: email}
-        let users = await findUsers(query);
-        return users[0];
+        let user = await FindUserByEmail(email);
+        console.log(user)
+        return user;
     } catch (error) {
         throw error;
     }

@@ -5,8 +5,8 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useFormik } from 'formik';
-import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerType } from '../types/coustumer_type';
+import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 

@@ -15,6 +15,7 @@ export async function findUsers(query = {}, projection = {}) {
         await mongo.connect();
         //ביצוע שאילתה
         let users = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).find(query, { projection }).toArray();
+        console.log(users);
         return users;
     } catch (error) {
         throw error;
@@ -25,6 +26,25 @@ export async function findUsers(query = {}, projection = {}) {
     }
 }
 
+export async function FindUserByEmail(email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        let user = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne({ email });
+        if (user) {
+            return user;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (error) {
+        throw error;
+    }
+    finally{
+        mongo.close();
+    }
+}
 export async function FindAllPosts(query = {}, projection = {}) {
     let mongo = new MongoClient(DB_INFO.connection);
 
@@ -61,7 +81,7 @@ export async function checkIfDocumentExists(query = {}) {
 export async function insertUser(user: TrainerUser) {
     let mongo = new MongoClient(DB_INFO.connection);
     user.id = new ObjectId();
-    console.log("This is DataBase new ObjectID: "+user)
+    console.log("This is DataBase new ObjectID: " + user)
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).insertOne(user);
@@ -141,7 +161,7 @@ export async function decativatePost(id: string, title: string) {
 
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
             { _id: new ObjectId(id) },
-            { $pull: {'Posts': {'title': title}} as any }
+            { $pull: { 'Posts': { 'title': title } } as any }
             //{ $pull: { 'openDates': date } as any}
         );
 
