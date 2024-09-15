@@ -154,7 +154,7 @@ export default function Payment() {
         }
       resetForm();
       if (payment.card) {
-        navigation.navigate('BackToPre');
+        navigation.navigate("BackToPre");
       }
     }
   });
