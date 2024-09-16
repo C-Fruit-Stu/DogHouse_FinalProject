@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TrainerType } from '../types/TrainerType';
 import Navigation from '../components/Navigation';
 import Footer from '../components/footer';
+import { TrainerContext } from '../context/TrainerContextProvidor';
 
 
 
 const SignUp: React.FC = () => {
+  const {currentTrainer,setCurrentTrainer} = useContext(TrainerContext);
+  
   const initialValues: TrainerType = {
     first_name: '',
     last_name: '',
@@ -18,6 +21,11 @@ const SignUp: React.FC = () => {
     image: '',
     phone: '',
     clientType: '1',
+    payment: {
+      card: '',
+      date: '',
+      ccv: ''
+    }
   };
 
   const validate = (values: TrainerType) => {
@@ -92,7 +100,12 @@ const SignUp: React.FC = () => {
   };
 
   const handleSubmit = (values: TrainerType) => {
-    console.log('Form Submitted:', values);
+    const NewUser: Partial<TrainerType> = values;
+    console.log("New Trainer: " + NewUser.email);
+    if (NewUser.email !== '') {
+      setCurrentTrainer(NewUser as TrainerType);
+    }
+    console.log('Trainer:', currentTrainer);
     window.location.href = '/payment';
 
   };
@@ -222,3 +235,5 @@ const SignUp: React.FC = () => {
 };
 
 export default SignUp;
+
+

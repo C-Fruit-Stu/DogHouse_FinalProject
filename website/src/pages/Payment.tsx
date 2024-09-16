@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useFormik } from 'formik';
 import Navigation from '../components/Navigation';
 import Footer from '../components/footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
+import { TrainerType } from '../types/TrainerType';
 
 type PaymentValues = {
   card: string;
@@ -12,6 +13,10 @@ type PaymentValues = {
 };
 
 const PaymentPage: React.FC = () => {
+
+  useEffect(() => {
+    console.log('Trainer:', currentTrainer as TrainerType );
+  },[])
   const {RegisterNewTrainer,currentTrainer} = useContext(TrainerContext);
   const formik = useFormik<PaymentValues>({
     initialValues: {
@@ -49,7 +54,7 @@ const PaymentPage: React.FC = () => {
     },
     onSubmit: async (values) => {
       console.log('Payment details submitted:', values);
-
+      console.log('Trainer:', currentTrainer as TrainerType);
       const NewTrainer: any = {
         first_name: currentTrainer.first_name,
         last_name: currentTrainer.last_name,
@@ -82,9 +87,8 @@ const PaymentPage: React.FC = () => {
           }
         ]
       }
-      console.log('New Trainer: ' + NewTrainer);
+      console.log('New Trainer: ' + NewTrainer as any);
       await RegisterNewTrainer(NewTrainer);
-      // Handle payment submission
     },
   });
 
