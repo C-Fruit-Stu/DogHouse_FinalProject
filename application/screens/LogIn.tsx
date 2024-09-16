@@ -49,13 +49,15 @@ export default function LogIn() {
         let clientType = 1;
         navigation.navigate("BackToPre", { clientType });
       }
-      const isCoustumerLoggedIn = await LogInCoustumer(loggingUser);
-      if (isCoustumerLoggedIn) {
-        let clientType = 2;
-        navigation.navigate("BackToPre", { clientType });
-      }
-      else {
-        alert('Wrong email or password');
+      else{
+        const isCoustumerLoggedIn = await LogInCoustumer(loggingUser);
+        if (isCoustumerLoggedIn) {
+          let clientType = 2;
+          navigation.navigate("BackToPre", { clientType });
+        }
+        else {
+          alert('Wrong email or password');
+        }
       }
       resetForm();
     }
