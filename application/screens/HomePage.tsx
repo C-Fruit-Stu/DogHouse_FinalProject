@@ -4,12 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Trainers from '../data/Trainers.json'
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
+import {useRoute, RouteProp} from '@react-navigation/native';
 
 export default function HomePage() {
 
   const { currentTrainer } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
-  if (currentTrainer === undefined) {
+  const route = useRoute<RouteProp<any>>();
+
+  if (route.params?.clientType == 2) {
     return (
       <SafeAreaView>
         <View style={styles.headerDiv}>

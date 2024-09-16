@@ -27,14 +27,10 @@
             }
         }
 
-        async function LogInTrainer(email: string, password: string) {
+        async function LogInTrainer(loggingInfo : any) {
             try{
-                let clientInfo = {
-                    email: email,
-                    password: password
-                }
-                console.log('email ====>>>', email, '\npassword ====>>>', password);
-                let data = await POST('trainer/login',clientInfo);  // Adjust the endpoint to match your server
+                console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
+                let data = await POST('trainer/login',loggingInfo);  // Adjust the endpoint to match your server
                 console.log(data);
                 if (data && data.trainer) {
                     setCurrentTrainer(data.trainer);
@@ -54,7 +50,8 @@
                     allTrainer,
                     currentTrainer,
                     setCurrentTrainer,
-                    RegisterNewTrainer
+                    RegisterNewTrainer,
+                    LogInTrainer
                 }}>
                 {children}
             </TrainerContext.Provider>

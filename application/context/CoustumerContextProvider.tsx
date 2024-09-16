@@ -34,6 +34,25 @@ async function RegisterNewCoustumer(newCustomer: CoustumerType) {
             return false;
         }
     }
+    async function LogInCoustumer(email: string, password: string) {
+        try{
+            let coustumerInfo = {
+                email: email,
+                password: password
+            }
+            console.log('email ====>>>', email, '\npassword ====>>>', password);
+            let data = await POST('coustumer/login',coustumerInfo);  // Adjust the endpoint to match your server
+            console.log(data);
+            if (data && data.coustumer) {
+                setCurrentCoustumer(data.coustumer);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
 
     return (
         <CoustumerContext.Provider
@@ -41,7 +60,8 @@ async function RegisterNewCoustumer(newCustomer: CoustumerType) {
                 allCoustumers,
                 currentCoustumer,
                 RegisterNewCoustumer,
-                setCurrentCoustumer
+                setCurrentCoustumer,
+                LogInCoustumer
             }}>
             {children}
         </CoustumerContext.Provider>
