@@ -44,37 +44,39 @@ export default function LogIn() {
         email: values.email,
         password: values.password
       }
-      // const isTrainerLoggedIn = await LogInTrainer({...loggingUser}); 
-      // if(!isTrainerLoggedIn) {
-      //   const isCoustumerLoggedIn = await LogInCoustumer({...loggingUser});
-      //   if(!isCoustumerLoggedIn) {
-      //     alert('Wrong email or password');
-      //     resetForm();
-      //     return;
-      //   }
-      //   let clientType = 2;
-      //   navigation.navigate("BackToPre",{ clientType });
-      //   return;
-      // }
-      // let clientType = 1;
-      // navigation.navigate("BackToPre",{ clientType });
-      
-      const isTrainerLoggedIn = await LogInTrainer({ ...loggingUser });
-      if (isTrainerLoggedIn) {
-        let clientType = 1;
-        navigation.navigate("BackToPre", { clientType });
+      const isTrainerLoggedIn = await LogInTrainer({...loggingUser}); 
+      if(!isTrainerLoggedIn) {
+        const isCoustumerLoggedIn = await LogInCoustumer({...loggingUser});
+        if(!isCoustumerLoggedIn) {
+          alert('Wrong email or password');
+          resetForm();
+          return;
+        }
+        let clientType = 2;
+        navigation.navigate("BackToPre",{ clientType });
         return;
       }
+      let clientType = 1;
+      navigation.navigate("BackToPre",{ clientType });
+      return;
 
-      const isCustomerLoggedIn = await LogInCoustumer({ ...loggingUser });
-      if (!isCustomerLoggedIn) {
-        alert('Wrong email or password');
-        resetForm();
-        return;
-      }
-      let clientType = 2;
-      navigation.navigate("BackToPre", { clientType });
-    },
+    //   const isTrainerLoggedIn = await LogInTrainer({ ...loggingUser });
+    //   if (isTrainerLoggedIn) {
+    //     let clientType = 1;
+    //     navigation.navigate("BackToPre", { clientType });
+    //     return;
+    //   }
+
+    //   const isCustomerLoggedIn = await LogInCoustumer({ ...loggingUser });
+    //   if (!isCustomerLoggedIn) {
+    //     alert('Wrong email or password');
+    //     resetForm();
+    //     return;
+    //   }
+    //   let clientType = 2;
+    //   navigation.navigate("BackToPre", { clientType });
+    // }
+  }
   });
 
   return (
