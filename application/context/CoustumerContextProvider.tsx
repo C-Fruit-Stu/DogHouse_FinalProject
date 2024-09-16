@@ -19,7 +19,7 @@ export default function CoustumerContextProvider({ children }: any) {
     //         return false;
     //     }
     // }
-async function RegisterNewCoustumer(newCustomer: CoustumerType) {
+    async function RegisterNewCoustumer(newCustomer: CoustumerType) {
         try {
             console.log('newCustomer ====>>>', newCustomer)
             let data = await POST('costumer/register', newCustomer);  // Adjust the endpoint to match your server
@@ -34,10 +34,10 @@ async function RegisterNewCoustumer(newCustomer: CoustumerType) {
             return false;
         }
     }
-    async function LogInCoustumer(loggingInfo : any) {
-        try{
+    async function LogInCoustumer(loggingInfo: any) {
+        try {
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
-            let data = await POST('coustumer/login',loggingInfo);  // Adjust the endpoint to match your server
+            let data = await POST('costumer/login', loggingInfo);  // Adjust the endpoint to match your server
             console.log(data);
             if (data && data.coustumer) {
                 setCurrentCoustumer(data.coustumer);

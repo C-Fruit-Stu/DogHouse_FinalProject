@@ -39,7 +39,7 @@ export async function LoginTrainer(req: Request, res: Response) {
         return res.status(400).json({ message: 'invalid email or password' });
     try {
         let user = await LoginUser(email);
-        console.log("Controller: "+user);
+        console.log("Controller: " + user);
         if (!user)
             res.status(404).json({ message: 'user not found' });
         //הפעלת הפונקציה לפענוח הסיסמה
@@ -56,7 +56,7 @@ export async function LoginTrainer(req: Request, res: Response) {
 
 
 export async function RegisterTrainer(req: Request, res: Response) {
-    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment,trainingSchedule,Posts } = req.body;
+    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts } = req.body;
 
     if (!first_name || !last_name || !password || !email) {
         return res.status(400).json({ message: 'missing info' });
