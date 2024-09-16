@@ -37,7 +37,7 @@ export async function findUserById(id: string) {
 export async function LoginUser(email: string) {
     try {
         let user = await FindUserByEmail(email);
-        console.log(user)
+        console.log("Model: "+user)
         return user;
     } catch (error) {
         throw error;
