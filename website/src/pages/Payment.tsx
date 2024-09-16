@@ -61,7 +61,11 @@ const PaymentPage: React.FC = () => {
         image: currentTrainer.image,
         phone: currentTrainer.phone,
         clientType: currentTrainer.clientType,
-        payment: payment,
+        payment: {
+          card: currentTrainer.card,
+          date: currentTrainer.date,
+          ccv: currentTrainer.ccv
+        },
         stayLogIn: false,
         trainingSchedule: [
           {
