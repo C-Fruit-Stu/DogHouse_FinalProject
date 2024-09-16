@@ -34,14 +34,10 @@ async function RegisterNewCoustumer(newCustomer: CoustumerType) {
             return false;
         }
     }
-    async function LogInCoustumer(email: string, password: string) {
+    async function LogInCoustumer(loggingInfo : any) {
         try{
-            let coustumerInfo = {
-                email: email,
-                password: password
-            }
-            console.log('email ====>>>', email, '\npassword ====>>>', password);
-            let data = await POST('coustumer/login',coustumerInfo);  // Adjust the endpoint to match your server
+            console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
+            let data = await POST('coustumer/login',loggingInfo);  // Adjust the endpoint to match your server
             console.log(data);
             if (data && data.coustumer) {
                 setCurrentCoustumer(data.coustumer);
