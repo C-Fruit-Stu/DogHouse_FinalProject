@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState,useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
@@ -8,9 +8,9 @@ import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function LogIn() {
-  
-  const {LogInTrainer} = useContext(TrainerContext);
-  const {LogInCoustumer} = useContext(CoustumerContext);
+
+  const { LogInTrainer } = useContext(TrainerContext);
+  const { LogInCoustumer } = useContext(CoustumerContext);
   const [visiblePassword, setVisiblePassword] = useState(false);
 
   const navigation = useNavigation();
@@ -41,24 +41,25 @@ export default function LogIn() {
 
     onSubmit: async (values, { resetForm }) => {
       const loggingUser = {
-        email:values.email,
-        password:values.password
+        email: values.email,
+        password: values.password
       }
-      const isTrainerLoggedIn = await LogInTrainer(loggingUser); 
-      if(!isTrainerLoggedIn) {
-        const isCoustumerLoggedIn = await LogInCoustumer(loggingUser);
-        if(!isCoustumerLoggedIn) {
-          alert('Wrong email or password');
-          resetForm();
-          return;
-        }
+      const isTrainerLoggedIn = await LogInTrainer(loggingUser);
+      if (isTrainerLoggedIn) {
+        let clientType = 1;
+        navigation.navigate("BackToPre", { clientType });
+      }
+      const isCoustumerLoggedIn = await LogInCoustumer(loggingUser);
+      if (isCoustumerLoggedIn) {
         let clientType = 2;
-        navigation.navigate("BackToPre",{ clientType });
+        navigation.navigate("BackToPre", { clientType });
       }
-      let clientType = 1;
-      navigation.navigate("BackToPre",{ clientType });
+      else {
+        alert('Wrong email or password');
+      }
+      resetForm();
+    }
 
-    },
   });
 
   return (
