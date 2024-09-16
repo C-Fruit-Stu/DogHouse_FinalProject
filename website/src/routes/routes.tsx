@@ -12,6 +12,7 @@ import TermsAndConditions from "../pages/TermsAndConditions";
 import TrainingResources from "../pages/TrainingResources";
 import Admin from "../pages/Admin";
 import Profile from "../pages/Profile";
+import TrainerContextProvidor from "../context/TrainerContextProvidor";
 
 
 export const routes = createBrowserRouter([
@@ -33,7 +34,7 @@ export const routes = createBrowserRouter([
     },
     {
         path: "/signup",
-        element: <Signup/>
+        element:  <TrainerContextProvidor><Signup/></TrainerContextProvidor>
     },
     {
         path: "/signin",
