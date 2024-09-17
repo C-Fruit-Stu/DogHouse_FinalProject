@@ -101,28 +101,54 @@ const SignUp: React.FC = () => {
     }
 
     if (!values.payment || !values.payment.card) {
-      errors.payment = { ...errors.payment, card: 'Card number is required'};
+      errors.payment = { ...errors.payment, card: 'Card number is required', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', cvv: values.payment?.cvv ? values.payment.cvv : 'cvv is required' };
     } else if (!/^\d{16}$/.test(values.payment.card)) {
-      errors.payment = 'Card number must be 16 digits';
+      errors.payment = { card: 'Card number must be 16 digits', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', cvv: values.payment.cvv ? values.payment.cvv : 'cvv is required' };
     }
 
     if (!values.payment || !values.payment.date) {
-      errors.payment.date = 'Expiration date is required';
+      errors.payment = { ...errors.payment, date: 'Expiration date is required', cvv: values.payment?.cvv ? values.payment.cvv : 'cvv is required', card: values.payment?.card ? values.payment.card : 'Card number is required' };
     } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date)) {
-      errors.payment.date = 'Date must be in MM/YY format';
+      errors.payment = { ...errors.payment, date: 'Date must be in MM/YY format', cvv: values.payment.cvv ? values.payment.cvv : 'cvv is required', card: values.payment.card ? values.payment.card : 'Card number is required' };
     }
 
     if (!values.payment || !values.payment?.cvv) {
-      errors.payment.cvv = 'cvv is required';
+      errors.payment = { ...errors.payment, cvv: 'cvv is required', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', card: values.payment?.card ? values.payment.card : 'Card number is required' };
     } else if (!/^\d{3,4}$/.test(values.payment.cvv)) {
-      errors.payment.cvv = 'cvv must be 3 or 4 digits';
+      errors.payment = { ...errors.payment, cvv: 'cvv must be 3 or 4 digits', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', card: values.payment.card ? values.payment.card : 'Card number is required' };
     }
 
     return errors;
   };
 
   const handleSubmit = async (values: Partial<TrainerType>) => {
-    const NewUser: Partial<TrainerType> = values;
+    const NewUser: any = {
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      password: values.password,
+      dob: values.dob,
+      location: values.location,
+      experience: values.experience,
+      image: values.image,
+      phone: values.phone,
+      payment: values.payment,
+      stayLogIn: false,
+      trainingSchedule: [
+        {
+          name: '',
+          date: new Date(),
+          time: ''  
+        }
+      ],
+      Posts: [
+        {
+          title: '',
+          description: '',
+          image: ''
+        }
+      ]
+    };
     if (NewUser.email !== '') {
       setCurrentTrainer(NewUser);
       console.log('Trainer1:', currentTrainer);
