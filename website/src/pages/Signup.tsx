@@ -1,14 +1,16 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TrainerType } from '../types/TrainerType';
 import Navigation from '../components/Navigation';
 import Footer from '../components/footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
+import '../index.css';
 
 
 
 const SignUp: React.FC = () => {
   const {currentTrainer,setCurrentTrainer,RegisterNewTrainer} = useContext(TrainerContext);
+  const [isLoading, setIsLoading] = useState(false);
   
   const initialValues: TrainerType = {
     first_name: '',
@@ -129,8 +131,10 @@ const SignUp: React.FC = () => {
       setCurrentTrainer(NewUser);
       console.log('Trainer1:', currentTrainer);
       console.log('Trainer2:', NewUser);
-      await RegisterNewTrainer(currentTrainer);
+      setIsLoading(true);
+      await RegisterNewTrainer(NewUser);
     }
+    window.location.href = '/signin';
 
   };
 
@@ -288,6 +292,12 @@ const SignUp: React.FC = () => {
             </Form>
           )}
         </Formik>
+        {isLoading && (
+            <div className="loading-overlay">
+              <div className="loading-spinner"></div>
+              <p>Loading...</p>
+            </div>
+          )}
       </div>
     </div>
     
