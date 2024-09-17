@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TrainerType } from '../types/TrainerType';
 import Navigation from '../components/Navigation';
@@ -132,7 +132,7 @@ const SignUp: React.FC = () => {
       experience: values.experience,
       image: values.image,
       phone: values.phone,
-      clientType: 1,
+      clientType: "1",
       payment: values.payment,
       stayLogIn: false,
       trainingSchedule: [

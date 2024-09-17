@@ -17,7 +17,7 @@ const PaymentPage: React.FC = () => {
   useEffect(() => {
     console.log('Trainer:', currentTrainer);
   },[])
-  const {RegisterNewTrainer,currentTrainer} = useContext(TrainerContext);
+  const {currentTrainer} = useContext(TrainerContext);
   const formik = useFormik<PaymentValues>({
     initialValues: {
       card: '',
