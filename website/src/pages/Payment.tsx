@@ -8,7 +8,7 @@ import { TrainerType } from '../types/TrainerType';
 type PaymentValues = {
   card: string;
   date: string;
-  ccv: string;
+  cvv: string;
   name: string;
 };
 
@@ -22,7 +22,7 @@ const PaymentPage: React.FC = () => {
     initialValues: {
       card: '',
       date: '',
-      ccv: '',
+      cvv: '',
       name: '',
     },
     validate: (values) => {
@@ -40,10 +40,10 @@ const PaymentPage: React.FC = () => {
         errors.date = 'Date must be in MM/YY format';
       }
 
-      if (!values.ccv) {
-        errors.ccv = 'CCV is required';
-      } else if (!/^\d{3,4}$/.test(values.ccv)) {
-        errors.ccv = 'CCV must be 3 or 4 digits';
+      if (!values.cvv) {
+        errors.cvv = 'CVV is required';
+      } else if (!/^\d{3,4}$/.test(values.cvv)) {
+        errors.cvv = 'CVV must be 3 or 4 digits';
       }
 
       if (!values.name) {
@@ -113,18 +113,18 @@ const PaymentPage: React.FC = () => {
             )}
           </div>
           <div className="form-field">
-            <label htmlFor="ccv">CCV</label>
+            <label htmlFor="cvv">cvv</label>
             <input
               type="text"
-              id="ccv"
-              name="ccv"
+              id="cvv"
+              name="cvv"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.ccv}
+              value={formik.values.cvv}
               className="input-field"
               placeholder="123" />
-            {formik.errors.ccv && formik.touched.ccv && (
-              <div className="error-text">{formik.errors.ccv}</div>
+            {formik.errors.cvv && formik.touched.cvv && (
+              <div className="error-text">{formik.errors.cvv}</div>
             )}
           </div>
           <button type="submit" className="submit-button">

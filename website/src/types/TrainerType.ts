@@ -17,7 +17,7 @@ export type TrainerType = {
     payment: {
         card: string,
         date: string,
-        ccv: string
+        cvv: string
     }
     stayLogIn?: boolean;
 }

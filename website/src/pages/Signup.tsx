@@ -9,10 +9,11 @@ import '../index.css';
 
 
 const SignUp: React.FC = () => {
-  const {currentTrainer,setCurrentTrainer,RegisterNewTrainer} = useContext(TrainerContext);
+  const { currentTrainer, setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const initialValues: TrainerType = {
+
+  // little fix from TrainerType to Partial<TrainerType>
+  const initialValues: Partial<TrainerType> = {
     first_name: '',
     last_name: '',
     email: '',
@@ -26,12 +27,12 @@ const SignUp: React.FC = () => {
     payment: {
       card: '',
       date: '',
-      ccv: ''
+      cvv: ''
     },
     stayLogIn: false,
   };
 
-  const validate = (values: TrainerType) => {
+  const validate = (values: Partial<TrainerType>) => {
     const errors: Partial<TrainerType> = {};
 
     if (!values.first_name) {
@@ -99,33 +100,28 @@ const SignUp: React.FC = () => {
       errors.phone = 'Phone number must be in the format 05X-XXXXXXX';
     }
 
-    if (!values.payment.card) {
-      errors.payment = { card: 'Card number is required' };
+    if (!values.payment || !values.payment.card) {
+      errors.payment = { ...errors.payment, card: 'Card number is required'};
     } else if (!/^\d{16}$/.test(values.payment.card)) {
-      if (!errors.payment) errors.payment = {};
-      errors.payment.card = 'Card number must be 16 digits';
+      errors.payment = 'Card number must be 16 digits';
     }
-  
-    if (!values.payment.date) {
-      if (!errors.payment) errors.payment = {};
+
+    if (!values.payment || !values.payment.date) {
       errors.payment.date = 'Expiration date is required';
-    } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date) ) {
-      if (!errors.payment) errors.payment = {};
+    } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date)) {
       errors.payment.date = 'Date must be in MM/YY format';
     }
-  
-    if (!values.payment.ccv) {
-      if (!errors.payment) errors.payment = {};
-      errors.payment.ccv = 'CCV is required';
-    } else if (!/^\d{3,4}$/.test(values.payment.ccv)) {
-      if (!errors.payment) errors.payment = {};
-      errors.payment.ccv = 'CCV must be 3 or 4 digits';
+
+    if (!values.payment || !values.payment?.cvv) {
+      errors.payment.cvv = 'cvv is required';
+    } else if (!/^\d{3,4}$/.test(values.payment.cvv)) {
+      errors.payment.cvv = 'cvv must be 3 or 4 digits';
     }
 
     return errors;
   };
 
-  const handleSubmit = async (values: TrainerType) => {
+  const handleSubmit = async (values: Partial<TrainerType>) => {
     const NewUser: Partial<TrainerType> = values;
     if (NewUser.email !== '') {
       setCurrentTrainer(NewUser);
@@ -140,168 +136,168 @@ const SignUp: React.FC = () => {
 
   return (
     <>
-    <Navigation/>
-    <div className="signup">
-      <div className="container">
-        <h1 className="signup-title">Sign Up</h1>
-        <Formik
-          initialValues={initialValues}
-          validate={validate}
-          onSubmit={handleSubmit}
-        >
-          {() => (
-            <Form className="signup-form">
-              <div className="form-group">
-                <label htmlFor="first_name">First Name</label>
-                <Field
-                  type="text"
-                  id="first_name"
-                  name="first_name"
-                  placeholder="Enter your first name"
-                  className="form-control" />
-                <ErrorMessage name="first_name" component="div" className="error-message" />
-              </div>
+      <Navigation />
+      <div className="signup">
+        <div className="container">
+          <h1 className="signup-title">Sign Up</h1>
+          <Formik
+            initialValues={initialValues}
+            validate={validate}
+            onSubmit={handleSubmit}
+          >
+            {() => (
+              <Form className="signup-form">
+                <div className="form-group">
+                  <label htmlFor="first_name">First Name</label>
+                  <Field
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    placeholder="Enter your first name"
+                    className="form-control" />
+                  <ErrorMessage name="first_name" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="last_name">Last Name</label>
-                <Field
-                  type="text"
-                  id="last_name"
-                  name="last_name"
-                  placeholder="Enter your last name"
-                  className="form-control" />
-                <ErrorMessage name="last_name" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="last_name">Last Name</label>
+                  <Field
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    placeholder="Enter your last name"
+                    className="form-control" />
+                  <ErrorMessage name="last_name" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="email">Email</label>
-                <Field
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  className="form-control" />
-                <ErrorMessage name="email" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="email">Email</label>
+                  <Field
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    className="form-control" />
+                  <ErrorMessage name="email" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="password">Password</label>
-                <Field
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Enter your password"
-                  className="form-control" />
-                <ErrorMessage name="password" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="password">Password</label>
+                  <Field
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    className="form-control" />
+                  <ErrorMessage name="password" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="dob">Date of Birth</label>
-                <Field
-                  type="date"
-                  id="dob"
-                  name="dob"
-                  className="form-control" />
-                <ErrorMessage name="dob" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="dob">Date of Birth</label>
+                  <Field
+                    type="date"
+                    id="dob"
+                    name="dob"
+                    className="form-control" />
+                  <ErrorMessage name="dob" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="location">Location</label>
-                <Field
-                  type="text"
-                  id="location"
-                  name="location"
-                  placeholder="Enter your location"
-                  className="form-control" />
-                <ErrorMessage name="location" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="location">Location</label>
+                  <Field
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter your location"
+                    className="form-control" />
+                  <ErrorMessage name="location" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="phone">Phone</label>
-                <Field
-                  type="text"
-                  id="phone"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  className="form-control" />
-                <ErrorMessage name="phone" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="phone">Phone</label>
+                  <Field
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    className="form-control" />
+                  <ErrorMessage name="phone" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="image">Profile Image URL</label>
-                <Field
-                  type="text"
-                  id="image"
-                  name="image"
-                  placeholder="Enter your profile image URL"
-                  className="form-control" />
-                <ErrorMessage name="image" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="image">Profile Image URL</label>
+                  <Field
+                    type="text"
+                    id="image"
+                    name="image"
+                    placeholder="Enter your profile image URL"
+                    className="form-control" />
+                  <ErrorMessage name="image" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="experience">Experience</label>
-                <Field
-                  as="textarea"
-                  id="experience"
-                  name="experience"
-                  placeholder="Experience"
-                  className="form-control" />
-                <ErrorMessage name="experience" component="div" className="error-message" />
-              </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="experience">Experience</label>
+                  <Field
+                    as="textarea"
+                    id="experience"
+                    name="experience"
+                    placeholder="Experience"
+                    className="form-control" />
+                  <ErrorMessage name="experience" component="div" className="error-message" />
+                </div>
 
-              <div className="form-group mt-3">
-              <label htmlFor="card">Card Number</label>
-              <Field
-                type="text"
-                id="card"
-                name="payment.card"
-                placeholder="1234 5678 9012 3456"
-                className="form-control"
-              />
-              <ErrorMessage name="payment.card" component="div" className="error-message" />
-            </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="payment.card">Card Number</label>
+                  <Field
+                    type="text"
+                    id="payment.card"
+                    name="payment.card"
+                    placeholder="1234 5678 9012 3456"
+                    className="form-control"
+                  />
+                  <ErrorMessage name="payment.card" component="div" className="error-message" />
+                </div>
 
-            <div className="form-group mt-3">
-              <label htmlFor="date">Expiration Date</label>
-              <Field
-                type="text"
-                id="date"
-                name="payment.date"
-                placeholder="MM/YY"
-                className="form-control"
-              />
-              <ErrorMessage name="payment.date" component="div" className="error-message" />
-            </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="payment.date">Expiration Date</label>
+                  <Field
+                    type="text"
+                    id="payment.date"
+                    name="payment.date"
+                    placeholder="MM/YY"
+                    className="form-control"
+                  />
+                  <ErrorMessage name="payment.date" component="div" className="error-message" />
+                </div>
 
-            <div className="form-group mt-3">
-              <label htmlFor="ccv">CCV</label>
-              <Field
-                type="text"
-                id="ccv"
-                name="payment.ccv"
-                placeholder="123"
-                className="form-control"
-              />
-              <ErrorMessage name="payment.ccv" component="div" className="error-message" />
-            </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="payment.cvv">cvv</label>
+                  <Field
+                    type="text"
+                    id="payment.cvv"
+                    name="payment.cvv"
+                    placeholder="123"
+                    className="form-control"
+                  />
+                  <ErrorMessage name="payment.cvv" component="div" className="error-message" />
+                </div>
 
 
-              <button type="submit" className="signup-button mt-4">
-                Sign Up
-              </button>
-            </Form>
-          )}
-        </Formik>
-        {isLoading && (
+                <button type="submit" className="signup-button mt-4">
+                  Sign Up
+                </button>
+              </Form>
+            )}
+          </Formik>
+          {isLoading && (
             <div className="loading-overlay">
               <div className="loading-spinner"></div>
               <p>Loading...</p>
             </div>
           )}
+        </div>
       </div>
-    </div>
-    
-    <Footer/>
+
+      <Footer />
     </>
   );
 };
