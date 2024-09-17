@@ -103,7 +103,7 @@ const SignUp: React.FC = () => {
     if (!values.payment || !values.payment.card) {
       errors.payment = { ...errors.payment, card: 'Card number is required', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : '' };
     } else if (!/^\d{16}$/.test(values.payment.card)) {
-      errors.payment = { card: 'Card number must be 16 digits', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : ''};
+      errors.payment = { ...errors.payment,card: 'Card number must be 16 digits', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : ''};
     }
 
     if (!values.payment || !values.payment.date) {
