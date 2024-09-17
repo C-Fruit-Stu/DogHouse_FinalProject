@@ -101,21 +101,21 @@ const SignUp: React.FC = () => {
     }
 
     if (!values.payment || !values.payment.card) {
-      errors.payment = { ...errors.payment, card: 'Card number is required', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', cvv: values.payment?.cvv ? values.payment.cvv : 'cvv is required' };
+      errors.payment = { ...errors.payment, card: 'Card number is required', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : '' };
     } else if (!/^\d{16}$/.test(values.payment.card)) {
-      errors.payment = { card: 'Card number must be 16 digits', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', cvv: values.payment.cvv ? values.payment.cvv : 'cvv is required' };
+      errors.payment = { card: 'Card number must be 16 digits', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : ''};
     }
 
     if (!values.payment || !values.payment.date) {
-      errors.payment = { ...errors.payment, date: 'Expiration date is required', cvv: values.payment?.cvv ? values.payment.cvv : 'cvv is required', card: values.payment?.card ? values.payment.card : 'Card number is required' };
+      errors.payment = { ...errors.payment, date: 'Expiration date is required', cvv: errors.payment?.cvv ? errors.payment.cvv : '', card: errors.payment?.card ? errors.payment.card : '' };
     } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date)) {
-      errors.payment = { ...errors.payment, date: 'Date must be in MM/YY format', cvv: values.payment.cvv ? values.payment.cvv : 'cvv is required', card: values.payment.card ? values.payment.card : 'Card number is required' };
+      errors.payment = { ...errors.payment, date: 'Date must be in MM/YY format', cvv: errors.payment?.cvv ? errors.payment.cvv : '', card: errors.payment?.card ? errors.payment.card : '' };
     }
 
     if (!values.payment || !values.payment?.cvv) {
-      errors.payment = { ...errors.payment, cvv: 'cvv is required', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', card: values.payment?.card ? values.payment.card : 'Card number is required' };
+      errors.payment = { ...errors.payment, cvv: 'cvv is required', date: errors.payment?.date ? errors.payment?.date : '', card: errors.payment?.card ? errors.payment.card : '' };
     } else if (!/^\d{3,4}$/.test(values.payment.cvv)) {
-      errors.payment = { ...errors.payment, cvv: 'cvv must be 3 or 4 digits', date: values.payment?.date ? values.payment?.date : 'Expiration date is required', card: values.payment.card ? values.payment.card : 'Card number is required' };
+      errors.payment = { ...errors.payment, cvv: 'cvv must be 3 or 4 digits', date: errors.payment?.date ? errors.payment?.date : '', card: errors.payment?.card ? errors.payment.card : '' };
     }
 
     return errors;
@@ -132,6 +132,7 @@ const SignUp: React.FC = () => {
       experience: values.experience,
       image: values.image,
       phone: values.phone,
+      clientType: 1,
       payment: values.payment,
       stayLogIn: false,
       trainingSchedule: [
