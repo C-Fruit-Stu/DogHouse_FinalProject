@@ -8,7 +8,7 @@ import { TrainerContext } from '../context/TrainerContextProvidor';
 
 
 const SignUp: React.FC = () => {
-  const {currentTrainer,setCurrentTrainer} = useContext(TrainerContext);
+  const {currentTrainer,setCurrentTrainer,RegisterNewTrainer} = useContext(TrainerContext);
   
   const initialValues: TrainerType = {
     first_name: '',
@@ -25,7 +25,8 @@ const SignUp: React.FC = () => {
       card: '',
       date: '',
       ccv: ''
-    }
+    },
+    stayLogIn: false,
   };
 
   const validate = (values: TrainerType) => {
@@ -96,17 +97,40 @@ const SignUp: React.FC = () => {
       errors.phone = 'Phone number must be in the format 05X-XXXXXXX';
     }
 
+    if (!values.payment.card) {
+      errors.payment = { card: 'Card number is required' };
+    } else if (!/^\d{16}$/.test(values.payment.card)) {
+      if (!errors.payment) errors.payment = {};
+      errors.payment.card = 'Card number must be 16 digits';
+    }
+  
+    if (!values.payment.date) {
+      if (!errors.payment) errors.payment = {};
+      errors.payment.date = 'Expiration date is required';
+    } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date) ) {
+      if (!errors.payment) errors.payment = {};
+      errors.payment.date = 'Date must be in MM/YY format';
+    }
+  
+    if (!values.payment.ccv) {
+      if (!errors.payment) errors.payment = {};
+      errors.payment.ccv = 'CCV is required';
+    } else if (!/^\d{3,4}$/.test(values.payment.ccv)) {
+      if (!errors.payment) errors.payment = {};
+      errors.payment.ccv = 'CCV must be 3 or 4 digits';
+    }
+
     return errors;
   };
 
-  const handleSubmit = (values: TrainerType) => {
+  const handleSubmit = async (values: TrainerType) => {
     const NewUser: Partial<TrainerType> = values;
-    console.log("New Trainer: " + NewUser.email);
     if (NewUser.email !== '') {
-      setCurrentTrainer(NewUser as TrainerType);
+      setCurrentTrainer(NewUser);
+      console.log('Trainer1:', currentTrainer);
+      console.log('Trainer2:', NewUser);
+      await RegisterNewTrainer(currentTrainer);
     }
-    console.log('Trainer:', currentTrainer);
-    window.location.href = '/payment';
 
   };
 
@@ -221,6 +245,43 @@ const SignUp: React.FC = () => {
                 <ErrorMessage name="experience" component="div" className="error-message" />
               </div>
 
+              <div className="form-group mt-3">
+              <label htmlFor="card">Card Number</label>
+              <Field
+                type="text"
+                id="card"
+                name="payment.card"
+                placeholder="1234 5678 9012 3456"
+                className="form-control"
+              />
+              <ErrorMessage name="payment.card" component="div" className="error-message" />
+            </div>
+
+            <div className="form-group mt-3">
+              <label htmlFor="date">Expiration Date</label>
+              <Field
+                type="text"
+                id="date"
+                name="payment.date"
+                placeholder="MM/YY"
+                className="form-control"
+              />
+              <ErrorMessage name="payment.date" component="div" className="error-message" />
+            </div>
+
+            <div className="form-group mt-3">
+              <label htmlFor="ccv">CCV</label>
+              <Field
+                type="text"
+                id="ccv"
+                name="payment.ccv"
+                placeholder="123"
+                className="form-control"
+              />
+              <ErrorMessage name="payment.ccv" component="div" className="error-message" />
+            </div>
+
+
               <button type="submit" className="signup-button mt-4">
                 Sign Up
               </button>
@@ -229,6 +290,7 @@ const SignUp: React.FC = () => {
         </Formik>
       </div>
     </div>
+    
     <Footer/>
     </>
   );

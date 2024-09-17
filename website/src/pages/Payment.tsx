@@ -15,7 +15,7 @@ type PaymentValues = {
 const PaymentPage: React.FC = () => {
 
   useEffect(() => {
-    console.log('Trainer:', currentTrainer as TrainerType );
+    console.log('Trainer:', currentTrainer);
   },[])
   const {RegisterNewTrainer,currentTrainer} = useContext(TrainerContext);
   const formik = useFormik<PaymentValues>({
@@ -54,41 +54,10 @@ const PaymentPage: React.FC = () => {
     },
     onSubmit: async (values) => {
       console.log('Payment details submitted:', values);
-      console.log('Trainer:', currentTrainer as TrainerType);
-      const NewTrainer: any = {
-        first_name: currentTrainer.first_name,
-        last_name: currentTrainer.last_name,
-        email: currentTrainer.email,
-        password: currentTrainer.password,
-        dob: currentTrainer.dob,
-        location: currentTrainer.location,
-        experience: currentTrainer.experience,
-        image: currentTrainer.image,
-        phone: currentTrainer.phone,
-        clientType: currentTrainer.clientType,
-        payment: {
-          card: currentTrainer.card,
-          date: currentTrainer.date,
-          ccv: currentTrainer.ccv
-        },
-        stayLogIn: false,
-        trainingSchedule: [
-          {
-            name: '',
-            date: new Date(),
-            time: ''  
-          }
-        ],
-        Posts: [
-          {
-            title: '',
-            description: '',
-            image: ''
-          }
-        ]
-      }
-      console.log('New Trainer: ' + NewTrainer as any);
-      await RegisterNewTrainer(NewTrainer);
+      console.log(currentTrainer);
+      const NewTrainer = {...currentTrainer, payment: values};
+      console.log('Trainer:', NewTrainer as TrainerType);
+     // await RegisterNewTrainer(NewTrainer);
     },
   });
 

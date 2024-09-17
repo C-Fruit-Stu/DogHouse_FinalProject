@@ -1,5 +1,9 @@
 
 export type TrainerType = {
+    card: any;
+    date: any;
+    ccv: any;
+    name: any;
     first_name: string,
     last_name: string,
     email: string,
