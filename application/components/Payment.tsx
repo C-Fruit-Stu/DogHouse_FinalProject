@@ -160,6 +160,7 @@ export default function Payment() {
       }
       else{
         alert("Email already taken... try again");
+        navigation.navigate("Bording2");
       }
     }
   });
