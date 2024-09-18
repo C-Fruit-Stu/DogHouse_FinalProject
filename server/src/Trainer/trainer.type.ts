@@ -1,7 +1,7 @@
 import { ObjectId, PullAllOperator } from "mongodb"
 import {Costumer} from "../Costumer/Costumer.type"
 export type TrainerUser = {
-    id?: ObjectId,
+    _id?: ObjectId,
     first_name: string,
     last_name: string,
     email: string,

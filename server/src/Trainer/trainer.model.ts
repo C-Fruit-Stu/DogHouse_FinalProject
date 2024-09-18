@@ -25,7 +25,7 @@ export async function getAllPosts1() {
 
 export async function findUserById(id: string) {
     try {
-        let query = { _id: new ObjectId(id) }
+        let query = { id }
         let users = await findUsers(query);
         return users[0];
     } catch (error) {

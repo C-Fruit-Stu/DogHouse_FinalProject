@@ -80,7 +80,7 @@ export async function checkIfDocumentExists(query = {}) {
 
 export async function insertUser(user: TrainerUser) {
     let mongo = new MongoClient(DB_INFO.connection);
-    user.id = new ObjectId();
+    user._id = new ObjectId();
     console.log("This is DataBase new ObjectID: " + user)
     try {
         await mongo.connect();
@@ -99,7 +99,7 @@ export async function updateDoc(user: TrainerUser) {
         await mongo.connect();
         //עדכון המשתמש
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { id: user.id },
+            { id: user._id },
             { $set: user }
         );
 
