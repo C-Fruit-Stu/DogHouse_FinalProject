@@ -110,9 +110,9 @@ export async function ChangePass(password: string,id:string) {
     }
 }
 
-export async function checkUpdate(id: string, card: string, date: string, ccv: string) {
+export async function checkUpdate(card: string, date: string, ccv: string) {
     try {
-        let credit1: credit = { id: new ObjectId(id), card, date, ccv }
+        let credit1: credit = { card, date, ccv }
         return await UpdateCard(credit1);
     } catch (error) {
         throw error;
@@ -120,18 +120,19 @@ export async function checkUpdate(id: string, card: string, date: string, ccv: s
 }
 
 
-export async function addAnotherPost(title: string, description: string, image: string,id:string) {
+export async function addAnotherPost(title: string, description: string, image: string) {
     try {
-        let post : Post = { title,description, image,id: new ObjectId(id) }
+        let post : Post = { title,description, image }
         return await addonePost(post);
     } catch (error) {
         throw error;
     }
 }
 
-export async function showallpostsbyid(id:string) {
+// אולי יהיה תקלה
+export async function showallpostsbyid(title:string) {
     try {
-        let query = { _id: new ObjectId(id) }
+        let query = { title }
         const projection = { Posts: 1, _id: 0 };
         let users = await findUsers(query,projection);
         return users[0];

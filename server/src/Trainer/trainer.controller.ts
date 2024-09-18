@@ -160,7 +160,7 @@ export async function updatePayment(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await checkUpdate(id, card, date, ccv);
+        let result = await checkUpdate( card, date, ccv);
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -180,7 +180,7 @@ export async function addNewPost(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await addAnotherPost(title, description, image, id)
+        let result = await addAnotherPost(title, description, image)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })

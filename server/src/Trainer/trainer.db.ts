@@ -194,7 +194,7 @@ export async function UpdateCard(card1: credit) {
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { _id: card1.id },
+            { card: card1.card },
             { $set: { payment: card1 } }
         );
     } catch (error) {
@@ -245,7 +245,7 @@ export async function addonePost(post: Post,) {
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { _id: post.id },
+            { title: post.title },
             { $addToSet: { Posts: post } }
 
         )

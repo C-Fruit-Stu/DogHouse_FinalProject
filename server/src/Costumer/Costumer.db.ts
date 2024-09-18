@@ -53,12 +53,13 @@ export async function addcostumer(costumer: Costumer) {
     }
 }
 
+// יכול להיות טעות 
 export async function updateDoc(card1: credit) {
     let mongo = new MongoClient(DB_INFO.connection);
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).updateOne(
-            { _id: card1.id },
+            { card: card1.card },
             { $set: { payment: card1 } }
         );
     } catch (error) {
