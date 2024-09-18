@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import '../index.css';
 import Navigation from '../components/Navigation';
-import { CoustumerType } from '../types/CostumerType';
+import { TrainerType } from '../types/TrainerType';
+import { TrainerContext } from '../context/TrainerContextProvidor';
 
 // Define the initial values and validation
 const SignIn: React.FC = () => {
   const [visiblePassword, setVisiblePassword] = useState(false);
+  const { LogInUser } = useContext(TrainerContext)
 
   const togglePasswordVisibility = () => {
     setVisiblePassword(!visiblePassword);
   };
 
-  const initialValues: Partial<CoustumerType> = {
+  const initialValues: Partial<TrainerType> = {
     email: '',
     password: '',
   };
 
-  const validate = (values: Partial<CoustumerType>) => {
-    const errors: Partial<Partial<CoustumerType>> = {};
+  const validate = (values: Partial<TrainerType>) => {
+    const errors: Partial<Partial<TrainerType>> = {};
 
     if (!values.email) {
       errors.email = 'Required';
@@ -35,14 +37,20 @@ const SignIn: React.FC = () => {
     return errors;
   };
 
-  const handleSubmit = (values: Partial<CoustumerType>, { resetForm }: { resetForm: () => void }) => {
+  const handleSubmit = async (values: Partial<TrainerType>) => {
     console.log('Form Values:', values);
-    console.log('Form Errors:', validate(values));
+    const LogIn = {
+      email : values.email,
+      password: values.password
+    }
+    if(await LogInUser({...LogIn}))
+      window.location.href ='/profile'
+    
     if(values.email == 'admin@admin.com' && values.password == 'admin1234admin')
       window.location.href = '/admin'
     if(values.email == "us@gmail.com" && values.password == "12345678")
       window.location.href = '/profile'
-    resetForm();  // Reset the form after submission if needed
+   
   };
 
   return (
