@@ -91,6 +91,7 @@ export default function Payment() {
         date: values.year + '-' + values.month,
         cvv: values.cvv
       }
+      let succses: any;
       if (route.params?.clientType == 1) {
         console.log('TrainerInfo:', JSON.stringify(currentTrainer, null, 2)); // Updated to display values
         const NewTrainer: Partial<TrainerType> = {
@@ -123,7 +124,7 @@ export default function Payment() {
           CostumersArr:[]
         }
         console.log('New Trainer: ' + NewTrainer);
-        await RegisterNewTrainer(NewTrainer);
+        succses = await RegisterNewTrainer(NewTrainer);
       }
       else
        {
@@ -151,11 +152,14 @@ export default function Payment() {
             ]
           }
           console.log('New Customer: ' + NewCustomer);
-          await RegisterNewCoustumer(NewCustomer);
+          succses = await RegisterNewCoustumer(NewCustomer);
         }
       resetForm();
-      if (payment.card) {
+      if (succses) {
         navigation.navigate("BackToPre");
+      }
+      else{
+        alert("Email already taken... try again");
       }
     }
   });
