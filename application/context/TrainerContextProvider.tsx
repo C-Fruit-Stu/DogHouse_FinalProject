@@ -32,8 +32,8 @@
                 console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
                 let data = await POST('trainer/login',loggingInfo);  // Adjust the endpoint to match your server
                 console.log(data);
-                if (data && data.trainer) {
-                    setCurrentTrainer(data.trainer);
+                if (data && data.user) {
+                    setCurrentTrainer(data.user);
                     return true;
                 }
                 return false;

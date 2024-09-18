@@ -148,7 +148,8 @@ const SignUp: React.FC = () => {
           description: '',
           image: ''
         }
-      ]
+      ],
+      
     };
     if (NewUser.email !== '') {
       setCurrentTrainer(NewUser);

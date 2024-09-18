@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Trainers from '../data/Trainers.json'
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 import {useRoute, RouteProp} from '@react-navigation/native';
 
+
+// async storage
 export default function HomePage() {
 
   const { currentTrainer } = useContext(TrainerContext);
