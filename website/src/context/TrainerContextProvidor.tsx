@@ -26,13 +26,13 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
-    async function LogInUser (loggingInfo: any) {
+    async function LogInTrainer(loggingInfo : any) {
         try{
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
             let data = await POST('trainer/login',loggingInfo); 
             console.log(data);
-            if (data && data.trainer) {
-                setCurrentTrainer(data.trainer);
+            if (data && data.user) {
+                setCurrentTrainer(data.user);
                 return true;
             }
             return false;
@@ -49,7 +49,7 @@ function TrainerContextProvidor({ children }: any) {
         currentTrainer,
         setCurrentTrainer,
         RegisterNewTrainer,
-        LogInUser
+        LogInTrainer
     }}>
     {children}
     </TrainerContext.Provider>

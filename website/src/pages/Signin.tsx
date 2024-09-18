@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react';
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../index.css';
 import Navigation from '../components/Navigation';
 import { TrainerType } from '../types/TrainerType';
 import { TrainerContext } from '../context/TrainerContextProvidor';
 
-// Define the initial values and validation
 const SignIn: React.FC = () => {
   const [visiblePassword, setVisiblePassword] = useState(false);
-  const { LogInUser } = useContext(TrainerContext)
+  const { LogInTrainer } = useContext(TrainerContext);
 
   const togglePasswordVisibility = () => {
     setVisiblePassword(!visiblePassword);
@@ -43,20 +42,16 @@ const SignIn: React.FC = () => {
       email : values.email,
       password: values.password
     }
-    if(await LogInUser({...LogIn}))
+      await LogInTrainer({...LogIn});
       window.location.href ='/profile'
-    
-    if(values.email == 'admin@admin.com' && values.password == 'admin1234admin')
-      window.location.href = '/admin'
-    if(values.email == "us@gmail.com" && values.password == "12345678")
-      window.location.href = '/profile'
+  
    
   };
 
   return (
     <><>
     <Navigation/>
-      </>    <div className="signin-container">
+      </><div className="signin-container">
       <div className="signin-form-wrapper">
         <h1 className="signin-header">Sign In</h1>
         <Formik

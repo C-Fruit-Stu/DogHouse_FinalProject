@@ -12,7 +12,7 @@ const SignUp: React.FC = () => {
   const { currentTrainer, setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  // little fix from TrainerType to Partial<TrainerType>
+
   const initialValues: Partial<TrainerType> = {
     first_name: '',
     last_name: '',
