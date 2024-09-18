@@ -70,12 +70,7 @@ export async function RegisterTrainer(req: Request, res: Response) {
         let result = await RegisterUser(trainer);
         if (result == null)
             return res.status(400).json({ message: 'email already exists' });
-        if (!result.insertedId) {
-            console.log('This is Controler result(Good) ', result);
-            return res.status(400).json({ message: 'registration failed' });
-        } else {
-            trainer.id = result.insertedId;
-            console.log('This is Controler result(Bad) ', result);
+        else {
             return res.status(201).json({ trainer });
         }
     } catch (error) {
