@@ -1,5 +1,5 @@
 import { ObjectId, PullAllOperator } from "mongodb"
-
+import {Costumer} from "../Costumer/Costumer.type"
 export type TrainerUser = {
     id?: ObjectId,
     first_name: string,
@@ -15,24 +15,23 @@ export type TrainerUser = {
     payment: credit,
     stayLogIn?: boolean,
     trainingSchedule?: trainingSchedule[],
-    Posts?: Post[]
+    Posts?: Post[],
+    CostumersArr?:Costumer[]
 } 
 
 export type credit = {
-    id? :ObjectId,
     card: string,
     date: string,
     ccv: string
 }
 
 export type trainingSchedule = {
-    id?: ObjectId,
-    date:string,
+    name?: string,
+    date:Date,
     time: string
 }
 
 export type Post = {
-    id?: ObjectId
     title: string,
     description: string,
     image?: string

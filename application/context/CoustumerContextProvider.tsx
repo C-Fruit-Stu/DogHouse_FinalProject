@@ -39,8 +39,8 @@ export default function CoustumerContextProvider({ children }: any) {
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
             let data = await POST('costumer/login', loggingInfo);  // Adjust the endpoint to match your server
             console.log(data);
-            if (data && data.coustumer) {
-                setCurrentCoustumer(data.coustumer);
+            if (data && data.user) {
+                setCurrentCoustumer(data.user);
                 return true;
             }
             return false;

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Costumer } from "./Costumer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
-import { ChangePass, CheckInfo, checkUpdate, findcostumerbyID, getallcostumers1, logincost, regCostumer } from "./Costumer.model";
+import { ChangePass, CheckInfo, checkUpdate, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer } from "./Costumer.model";
 import { ObjectId } from "mongodb";
 
 export async function GetAllCostumrs(req: Request, res: Response) {
@@ -37,15 +37,15 @@ export async function LoginCostumer(req: Request, res: Response) {
     if (!email || !password)
         return res.status(400).json({ message: 'invalid email or password' });
     try {
-        let user = await logincost(email);
+        let user = await loginCostumer(email);
         if (!user)
             res.status(404).json({ message: 'user not found' });
         //הפעלת הפונקציה לפענוח הסיסמה
         else if (decryptPassword(password, user.password))
             res.status(200).json({ user });
         else
-            res.status(400).json({ message: 'invalid email or password' });
-
+            res.status(400).json({ message: 'invalid password' });
+ 
     } catch (error) {
         res.status(500).json({ error });
     }

@@ -22,7 +22,7 @@ export async function findcostumerbyID(id: string) {
     }
 }
 
-export async function logincost(email: string) {
+export async function loginCostumer(email: string) {
     try {
         let query = { email: email }
         let costumers = await findCostumer(query);

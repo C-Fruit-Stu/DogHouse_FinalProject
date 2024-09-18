@@ -1,4 +1,5 @@
 
+import { CoustumerType } from './coustumer_type'
 export type TrainerType = {
     first_name: string,
     last_name: string,
@@ -15,6 +16,20 @@ export type TrainerType = {
         date: string,
         ccv: string
     }
-    stayLogIn?: boolean;
+    stayLogIn?: boolean,
+    trainingSchedule?: trainingSchedule[],
+    Posts?: Post[],
+    CostumersArr?: CoustumerType[]
 }
 
+export type trainingSchedule = {
+    name?: string,
+    date: Date,
+    time: string
+}
+
+export type Post = {
+    title: string,
+    description: string,
+    image?: string
+}

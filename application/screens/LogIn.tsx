@@ -44,9 +44,9 @@ export default function LogIn() {
         email: values.email,
         password: values.password
       }
-      const isTrainerLoggedIn = await LogInTrainer({...loggingUser}); 
+      const isTrainerLoggedIn = await LogInTrainer({loggingUser}); 
       if(!isTrainerLoggedIn) {
-        const isCoustumerLoggedIn = await LogInCoustumer({...loggingUser});
+        const isCoustumerLoggedIn = await LogInCoustumer({loggingUser});
         if(!isCoustumerLoggedIn) {
           alert('Wrong email or password');
           resetForm();

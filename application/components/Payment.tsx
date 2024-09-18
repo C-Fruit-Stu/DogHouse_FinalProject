@@ -8,7 +8,7 @@ import { useFormik } from 'formik';
 import { CoustumerType } from '../types/coustumer_type';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
-
+import { TrainerType } from '../types/trainer_type';
 
 // react-native-creditcard
 // # Connection for yuval - eMcWHJbuAdzLwDEf
@@ -93,7 +93,7 @@ export default function Payment() {
       }
       if (route.params?.clientType == 1) {
         console.log('TrainerInfo:', JSON.stringify(currentTrainer, null, 2)); // Updated to display values
-        const NewTrainer: any = {
+        const NewTrainer: Partial<TrainerType> = {
           first_name: currentTrainer.first_name,
           last_name: currentTrainer.last_name,
           email: currentTrainer.email,
@@ -119,7 +119,8 @@ export default function Payment() {
               description: '',
               image: ''
             }
-          ]
+          ],
+          CostumersArr:[]
         }
         console.log('New Trainer: ' + NewTrainer);
         await RegisterNewTrainer(NewTrainer);

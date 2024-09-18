@@ -149,6 +149,7 @@ const SignUp: React.FC = () => {
           image: ''
         }
       ],
+      CostumersArr:[],
       
     };
     if (NewUser.email !== '') {
