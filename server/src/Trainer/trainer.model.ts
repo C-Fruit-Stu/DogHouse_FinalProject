@@ -51,6 +51,7 @@ export async function RegisterUser(user: TrainerUser) {
         let userExists = await checkIfDocumentExists(query);
         if (userExists > 0) {
             console.log('userExists', userExists);
+            return null;
             throw new Error("email already exists!");
         }
 

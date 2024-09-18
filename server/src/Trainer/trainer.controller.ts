@@ -65,10 +65,11 @@ export async function RegisterTrainer(req: Request, res: Response) {
     try {
         password = encryptPassword(password);
         console.log("This is Server / Controler  " + password);
-        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts,CostumersArr };
+        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr };
 
         let result = await RegisterUser(trainer);
-
+        if (result == null)
+            return res.status(400).json({ message: 'email already exists' });
         if (!result.insertedId) {
             console.log('This is Controler result(Good) ', result);
             return res.status(400).json({ message: 'registration failed' });
@@ -160,7 +161,7 @@ export async function updatePayment(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await checkUpdate( card, date, ccv);
+        let result = await checkUpdate(card, date, ccv);
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })

@@ -15,7 +15,7 @@
             try {
                 console.log('newTrainer ====>>>', newTrainer)
                 let data = await POST('trainer/register', newTrainer);  // Adjust the endpoint to match your server
-                console.log(data);
+                console.log("context after server functions:\n"+data);
                 if (data && data.trainer) {
                     setAllTrainer([...allTrainer, data.trainer]);
                     return true;
