@@ -18,7 +18,7 @@ export default function HomePage() {
       <SafeAreaView>
         <View style={styles.headerDiv}>
           <View>
-            <Text style={styles.titleName}>Hello {currentCoustumer.first_name}</Text>
+            <Text style={styles.titleName}>Hello {currentCoustumer.first_name as string}</Text>
           </View>
           <View>
             <Image

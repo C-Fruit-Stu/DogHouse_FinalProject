@@ -39,7 +39,6 @@ export async function LoginTrainer(req: Request, res: Response) {
         return res.status(400).json({ message: 'invalid email or password' });
     try {
         let user = await LoginUser(email);
-        console.log("Controller: " + user);
         if (!user)
             res.status(404).json({ message: 'user not found' });
         //הפעלת הפונקציה לפענוח הסיסמה
