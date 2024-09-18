@@ -41,8 +41,8 @@ export default function LogIn() {
 
     onSubmit: async (values, { resetForm }) => {
       const loggingUser = {
-        email: values.email,
-        password: values.password
+        email: values.email as string,
+        password: values.password as string
       }
       const isTrainerLoggedIn = await LogInTrainer({loggingUser}); 
       if(!isTrainerLoggedIn) {
