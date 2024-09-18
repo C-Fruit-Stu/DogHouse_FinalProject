@@ -9,7 +9,7 @@ import CostumerRouter from './Costumer/Costumer.routes';
 import AdminRouter from './admin/admin.routes';
 
 //הגדרת הפורט
-const PORT = process.env.PORT || 7777;
+const PORT = process.env.PORT || 10000;
 
 //מייצר את אובייקט השרת
 const server = express();
