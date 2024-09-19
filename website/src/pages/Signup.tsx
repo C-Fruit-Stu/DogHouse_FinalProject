@@ -11,6 +11,7 @@ import '../index.css';
 const SignUp: React.FC = () => {
   const { currentTrainer, setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [galleryImg, setGalleryImg] = useState<string[]>([]);
 
 
   const initialValues: Partial<TrainerType> = {
@@ -121,6 +122,21 @@ const SignUp: React.FC = () => {
     return errors;
   };
 
+
+  const pickImage = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUri = reader.result as string; // The base64 image
+        setGalleryImg([...galleryImg, imageUri]); // Add image to gallery for display
+        setFieldValue('image', imageUri); // Set the form field value
+      };
+      reader.readAsDataURL(file); // Convert the image to a base64 string
+    }
+  };  
+  
+
   const handleSubmit = async (values: Partial<TrainerType>) => {
     const NewUser: any = {
       first_name: values.first_name,
@@ -174,7 +190,7 @@ const SignUp: React.FC = () => {
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {() => (
+            {({setFieldValue}) => (
               <Form className="signup-form">
                 <div className="form-group">
                   <label htmlFor="first_name">First Name</label>
@@ -251,17 +267,26 @@ const SignUp: React.FC = () => {
                     className="form-control" />
                   <ErrorMessage name="phone" component="div" className="error-message" />
                 </div>
-
                 <div className="form-group mt-3">
-                  <label htmlFor="image">Profile Image URL</label>
-                  <Field
-                    type="text"
+                  <label htmlFor="image">Profile Image</label>
+                  <input
+                    type="file"
                     id="image"
-                    name="image"
-                    placeholder="Enter your profile image URL"
-                    className="form-control" />
+                    accept="image/*"
+                    onChange={(event) => pickImage(event, setFieldValue)} // Handle file selection
+                    className="form-control"
+                  />
                   <ErrorMessage name="image" component="div" className="error-message" />
                 </div>
+
+                {/* Show picked image(s) */}
+                {galleryImg.length > 0 && (
+                  <div className="gallery mt-3">
+                    {galleryImg.map((imgUri, index) => (
+                      <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
+                    ))}
+                  </div>
+                )}
 
                 <div className="form-group mt-3">
                   <label htmlFor="experience">Experience</label>
