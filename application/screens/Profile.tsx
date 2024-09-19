@@ -24,6 +24,7 @@ export default function Profile() {
   console.log("currentTrainer:", currentTrainer);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
+  console.log("clientType:", clientType);
 
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
