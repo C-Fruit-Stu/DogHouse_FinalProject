@@ -38,7 +38,7 @@ export const routes = createBrowserRouter([
     },
     {
         path: "/signin",
-        element: <SignIn/>
+        element: <TrainerContextProvidor><SignIn/></TrainerContextProvidor>
     },
     {
         path: "/payment",
