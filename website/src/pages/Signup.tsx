@@ -138,6 +138,14 @@ const SignUp: React.FC = () => {
   
 
   const handleSubmit = async (values: Partial<TrainerType>) => {
+    let img1 : any = "";
+          {galleryImg.length > 0 && (
+            <div className="gallery mt-3">
+            {galleryImg.map((imgUri, index) => (
+              img1 = imgUri
+      ))}
+      </div>
+     )}
     const NewUser: any = {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -146,7 +154,7 @@ const SignUp: React.FC = () => {
       dob: values.dob,
       location: values.location,
       experience: values.experience,
-      image: values.image,
+      image: img1,
       phone: values.phone,
       clientType: "1",
       payment: values.payment,
@@ -166,14 +174,14 @@ const SignUp: React.FC = () => {
         }
       ],
       CostumersArr:[],
-      
     };
+    console.log(NewUser.image)
     if (NewUser.email !== '') {
       setCurrentTrainer(NewUser);
       console.log('Trainer1:', currentTrainer);
       console.log('Trainer2:', NewUser);
       setIsLoading(true);
-      await RegisterNewTrainer(NewUser);
+      await RegisterNewTrainer({...NewUser});
     }
     window.location.href = '/signin';
 
@@ -273,7 +281,7 @@ const SignUp: React.FC = () => {
                     type="file"
                     id="image"
                     accept="image/*"
-                    onChange={(event) => pickImage(event, setFieldValue)} // Handle file selection
+                    onChange={(event) => pickImage(event, setFieldValue)} 
                     className="form-control"
                   />
                   <ErrorMessage name="image" component="div" className="error-message" />
