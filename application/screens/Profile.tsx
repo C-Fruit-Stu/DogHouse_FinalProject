@@ -20,8 +20,11 @@ export default function Profile() {
   const screenWidth = Dimensions.get('window').width;
   const { currentTrainer } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
+
+  console.log("currentTrainer:", currentTrainer);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
+
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
     datasets: [
@@ -46,7 +49,7 @@ export default function Profile() {
   };
 
 
-  if (clientType == 2) {
+  if (clientType == 2 && currentCoustumer) {
     return (
       <SafeAreaView>
         <ScrollView>
@@ -109,7 +112,7 @@ export default function Profile() {
       </SafeAreaView>
     )
   }
-  else {
+  else if(currentTrainer){
     <SafeAreaView>
       <ScrollView>
         <View style={styles.Header}>
@@ -169,6 +172,9 @@ export default function Profile() {
         </View>
       </ScrollView>
     </SafeAreaView>
+  }
+  else{
+    return <Text>Page 404</Text>
   }
 }
 
