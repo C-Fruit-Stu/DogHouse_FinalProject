@@ -23,33 +23,49 @@ import UpdatePayment from './components/UpdatePayment';
 import Membership from './components/Membership';
 import CoustumerContextProvider from './context/CoustumerContextProvider';
 import TrainerContextProvider from './context/TrainerContextProvider';
+import { clientType } from './types/props_types';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function BackToPre() {
+  const route = useRoute<RouteProp<{ params: clientType }, 'params'>>();
+  const clientType = route.params?.clientType;
+
   return (
     <Tab.Navigator>
       <Tab.Screen name="HomePage" component={HomePage} options={{
         tabBarLabel: 'Home',
         headerShown: false,
         tabBarIcon: () => <MaterialCommunityIcons name='home' size={35} color='#1DBD7B' />
-      }} />
+      }}
+        initialParams={{ clientType }}
+      />
+      
       <Tab.Screen name="Profile" component={Profile} options={{
         tabBarLabel: 'Profile',
         headerShown: true,
         tabBarIcon: () => <MaterialCommunityIcons name='account' size={35} color='#1DBD7B' />
-      }} />
+      }}
+        initialParams={{ clientType }}
+      />
+
       <Tab.Screen name="Chat" component={Chat} options={{
         tabBarLabel: 'Chat',
         headerShown: false,
         tabBarIcon: () => <MaterialCommunityIcons name='wechat' size={35} color='#1DBD7B' />
-      }} />
+      }}
+        initialParams={{ clientType }}
+      />
+
       <Tab.Screen name="Settings" component={Settings} options={{
         tabBarLabel: 'Settings',
         headerShown: true,
         tabBarIcon: () => <Feather name="settings" size={24} color="#1DBD7B" />
-      }} />
+      }}
+        initialParams={{ clientType }}
+      />
     </Tab.Navigator>
   );
 }

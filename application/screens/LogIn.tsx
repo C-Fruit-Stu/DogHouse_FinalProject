@@ -60,23 +60,6 @@ export default function LogIn() {
       let clientType = 1;
       navigation.navigate("BackToPre",{ clientType });
       return;
-
-    //   const isTrainerLoggedIn = await LogInTrainer({ ...loggingUser });
-    //   if (isTrainerLoggedIn) {
-    //     let clientType = 1;
-    //     navigation.navigate("BackToPre", { clientType });
-    //     return;
-    //   }
-
-    //   const isCustomerLoggedIn = await LogInCoustumer({ ...loggingUser });
-    //   if (!isCustomerLoggedIn) {
-    //     alert('Wrong email or password');
-    //     resetForm();
-    //     return;
-    //   }
-    //   let clientType = 2;
-    //   navigation.navigate("BackToPre", { clientType });
-    // }
   }
   });
 
