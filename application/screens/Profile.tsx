@@ -21,10 +21,8 @@ export default function Profile() {
   const { currentTrainer } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
 
-  console.log("currentTrainer:", currentTrainer);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
-  console.log("clientType:", clientType);
 
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
@@ -113,69 +111,69 @@ export default function Profile() {
       </SafeAreaView>
     )
   }
-  else if(currentTrainer){
-    <SafeAreaView>
-      <ScrollView>
-        <View style={styles.Header}>
-          <Text style={styles.profileName}> hello {currentTrainer.first_name} {currentTrainer.last_name}</Text>
-          <Image
-            source={{ uri: currentTrainer.image }}
-            style={styles.profileImage}
-          />
-        </View>
-        <View style={styles.containerButton}>
-          <TouchableOpacity>
-            <View style={styles.StatesContainer}>
-              <Text style={styles.TextContainer}>Stats</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
-            <View style={styles.StatesContainer}>
-              <Text style={styles.TextContainer}>costumers</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.containerButton}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
-            <View style={styles.StatesContainer}>
-              <Text style={styles.TextContainer}>Scheduals</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
-            <View style={styles.StatesContainer}>
-              <Text style={styles.TextContainer}>Posts</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.moneyContainer}>
-          <View>
-            <Text style={styles.textMoney}>Income</Text>
+  else {
+    return (
+
+      <SafeAreaView>
+        <ScrollView>
+          <View style={styles.Header}>
+            <Text style={styles.profileName}> hello {currentTrainer.first_name} {currentTrainer.last_name}</Text>
+            <Image
+              source={{ uri: currentTrainer.image }}
+              style={styles.profileImage}
+            />
           </View>
-          <View style={styles.Line}></View>
-          <View>
-            <Text style={styles.textMoney}>Outcome</Text>
+          <View style={styles.containerButton}>
+            <TouchableOpacity>
+              <View style={styles.StatesContainer}>
+                <Text style={styles.TextContainer}>Stats</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
+              <View style={styles.StatesContainer}>
+                <Text style={styles.TextContainer}>costumers</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </View>
-        <View>
-        </View>
-        <View style={styles.CharContainer}>
-          <BarChart
-            data={data}
-            width={screenWidth}
-            height={290}
-            chartConfig={chartConfig}
-            verticalLabelRotation={30}
-            yAxisLabel="$"
-            yAxisSuffix="" // התווסף בשביל הוריד תקלה
-            showValuesOnTopOfBars
-            fromZero
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  }
-  else{
-    return <Text>Page 404</Text>
+          <View style={styles.containerButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
+              <View style={styles.StatesContainer}>
+                <Text style={styles.TextContainer}>Scheduals</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
+              <View style={styles.StatesContainer}>
+                <Text style={styles.TextContainer}>Posts</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.moneyContainer}>
+            <View>
+              <Text style={styles.textMoney}>Income</Text>
+            </View>
+            <View style={styles.Line}></View>
+            <View>
+              <Text style={styles.textMoney}>Outcome</Text>
+            </View>
+          </View>
+          <View>
+          </View>
+          <View style={styles.CharContainer}>
+            <BarChart
+              data={data}
+              width={screenWidth}
+              height={290}
+              chartConfig={chartConfig}
+              verticalLabelRotation={30}
+              yAxisLabel="$"
+              yAxisSuffix="" // התווסף בשביל הוריד תקלה
+              showValuesOnTopOfBars
+              fromZero
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    )
   }
 }
 
