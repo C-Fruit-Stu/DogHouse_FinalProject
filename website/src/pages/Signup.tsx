@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TrainerType } from '../types/TrainerType';
 import Navigation from '../components/Navigation';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
 import '../index.css';
 
@@ -102,9 +102,9 @@ const SignUp: React.FC = () => {
     }
 
     if (!values.payment || !values.payment.card) {
-      errors.payment = { ...errors.payment, card: 'Card number is required', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : '' };
+      errors.payment = { ...errors.payment, card: 'Card number is required', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv : '' };
     } else if (!/^\d{16}$/.test(values.payment.card)) {
-      errors.payment = { ...errors.payment,card: 'Card number must be 16 digits', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv  : ''};
+      errors.payment = { ...errors.payment, card: 'Card number must be 16 digits', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv : '' };
     }
 
     if (!values.payment || !values.payment.date) {
@@ -123,8 +123,9 @@ const SignUp: React.FC = () => {
   };
 
 
-  const pickImage = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
+  const pickImage = async (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
     const file = event.target.files?.[0];
+    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -134,18 +135,20 @@ const SignUp: React.FC = () => {
       };
       reader.readAsDataURL(file); // Convert the image to a base64 string
     }
-  };  
-  
+  };
+
 
   const handleSubmit = async (values: Partial<TrainerType>) => {
-    let img1 : any = "";
-          {galleryImg.length > 0 && (
-            <div className="gallery mt-3">
-            {galleryImg.map((imgUri, index) => (
-              img1 = imgUri
-      ))}
-      </div>
-     )}
+    let img1: any = "";
+    {
+      galleryImg.length > 0 && (
+        <div className="gallery mt-3">
+          {galleryImg.map((imgUri, index) => (
+            img1 = imgUri
+          ))}
+        </div>
+      )
+    }
     const NewUser: any = {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -163,7 +166,7 @@ const SignUp: React.FC = () => {
         {
           name: '',
           date: new Date(),
-          time: ''  
+          time: ''
         }
       ],
       Posts: [
@@ -173,7 +176,7 @@ const SignUp: React.FC = () => {
           image: ''
         }
       ],
-      CostumersArr:[],
+      CostumersArr: [],
     };
     console.log(NewUser.image)
     if (NewUser.email !== '') {
@@ -181,7 +184,7 @@ const SignUp: React.FC = () => {
       console.log('Trainer1:', currentTrainer);
       console.log('Trainer2:', NewUser);
       setIsLoading(true);
-      await RegisterNewTrainer({...NewUser});
+      await RegisterNewTrainer({ ...NewUser });
     }
     window.location.href = '/signin';
 
@@ -198,7 +201,7 @@ const SignUp: React.FC = () => {
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {({setFieldValue}) => (
+            {({ setFieldValue }) => (
               <Form className="signup-form">
                 <div className="form-group">
                   <label htmlFor="first_name">First Name</label>
@@ -281,7 +284,7 @@ const SignUp: React.FC = () => {
                     type="file"
                     id="image"
                     accept="image/*"
-                    onChange={(event) => pickImage(event, setFieldValue)} 
+                    onChange={(event) => pickImage(event, setFieldValue)}
                     className="form-control"
                   />
                   <ErrorMessage name="image" component="div" className="error-message" />

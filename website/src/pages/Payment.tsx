@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useFormik } from 'formik';
 import Navigation from '../components/Navigation';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
 import { TrainerType } from '../types/TrainerType';
 

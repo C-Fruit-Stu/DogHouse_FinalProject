@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../index.css';
 import Navigation from '../components/Navigation';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 
 const Support: React.FC = () => {
   const initialValues = {

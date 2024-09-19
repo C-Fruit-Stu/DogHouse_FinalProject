@@ -1,7 +1,7 @@
 import React from 'react';
 import '../index.css';
 import Navigation from '../components/Navigation';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 
 const Profile: React.FC = () => {
   return (

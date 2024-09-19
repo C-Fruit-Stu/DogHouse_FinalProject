@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../index.css';
 import Navigation from '../components/Navigation';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 
 const FAQs: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);

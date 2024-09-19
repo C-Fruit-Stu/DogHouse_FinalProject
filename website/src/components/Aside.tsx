@@ -57,6 +57,13 @@ const Aside = () => {
                   <Link to="/contact"><li><a href="#">Contact Us</a></li></Link>
                   <Link to="/faqs"><li><a href="#">FAQs</a></li></Link>
                   <Link to="/term"><li><a href="#">Terms & Conditions</a></li></Link>
+            {/* <ul className="quick-links">
+                  <li><Link to="/trainingresources">Training Resources</Link></li>
+                  <li><Link to="/support">Support</Link></li>
+                  <li><Link to="/contact">Contact Us</Link></li>
+                  <li><Link to="/faqs">FAQs</Link></li>
+                  <li><Link to="/term">Terms & Conditions</Link></li>
+                </ul> */}
                 </ul>
               </Card.Body>
             </Card>
@@ -64,6 +71,8 @@ const Aside = () => {
         </Row>
       </Container>
     </aside>
+
+    
   );
 };
 

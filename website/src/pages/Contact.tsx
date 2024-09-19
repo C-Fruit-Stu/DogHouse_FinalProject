@@ -1,6 +1,6 @@
 import React from 'react'
 import Navigation from '../components/Navigation'
-import Footer from '../components/footer'
+import Footer from '../components/Footer'
 
 function Contact() {
   return (

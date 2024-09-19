@@ -23,6 +23,22 @@ const Navigation = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+
+    // <nav className="custom-navbar"> {/* Replacing react-bootstrap's Navbar with plain <nav> */}
+    //   <div className="container">
+    //     <div className="navbar-brand">
+    //       <Link to="/">Dog Trainer</Link>
+    //     </div>
+    //     <div className="nav-links">
+    //       <Link to="/" className="nav-link">Home</Link>
+    //       <Link to="/about" className="nav-link">About</Link>
+    //       <Link to="/services" className="nav-link">Services</Link>
+    //       <Link to="/contact" className="nav-link">Contact</Link>
+    //       <Link to="/signin" className="nav-link">Sign In</Link>
+    //       <Link to="/signup" className="nav-link">Sign Up</Link>
+    //     </div>
+    //   </div>
+    // </nav>
   );
 };
 
