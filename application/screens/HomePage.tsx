@@ -11,7 +11,6 @@ type RouteParams = {
 
 // async storage
 export default function HomePage() {
-
   const { currentTrainer } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();

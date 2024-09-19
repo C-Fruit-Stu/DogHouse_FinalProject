@@ -1,3 +1,5 @@
+import { TrainerType } from "./trainer_type";
+
 export type CoustumerType = {
     dogBreed: string,
     first_name: string,
@@ -9,7 +11,7 @@ export type CoustumerType = {
     image: string,
     phone: string,
     update_details: string,
-    clientType:string // 1 for trainer 2 for costumer
+    clientType:string, // 1 for trainer 2 for costumer
     payment: {
         card: string,
         date: string,
@@ -22,5 +24,9 @@ export type CoustumerType = {
             date: Date, // תאריך האימון
             time: string, // יש להזין מאיזה שעה לאיזה שעה
         }
-    ]
+    ],
+
+    HisTrainer: Partial<TrainerType>[]
 }
+
+

@@ -23,7 +23,6 @@ import UpdatePayment from './components/UpdatePayment';
 import Membership from './components/Membership';
 import CoustumerContextProvider from './context/CoustumerContextProvider';
 import TrainerContextProvider from './context/TrainerContextProvider';
-import { clientType } from './types/props_types';
 import { useRoute, RouteProp } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();

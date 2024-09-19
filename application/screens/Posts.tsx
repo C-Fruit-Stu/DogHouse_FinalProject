@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, Modal, Alert, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { TrainerContext } from '../context/TrainerContextProvider';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
+type RouteParams = {
+  clientType?: number;
+};
 export default function Posts() {
   const [modalVisible, setModalVisible] = useState(false);
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
+
+  const { currentTrainer } = useContext(TrainerContext);
+  const { currentCoustumer } = useContext(CoustumerContext);
+  const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
+  const clientType = route.params?.clientType;
+
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -42,8 +54,9 @@ export default function Posts() {
       }
     );
   };
-
+if(clientType == 2){
   return (
+    
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={toggleModal}>
         <Text style={styles.buttonText}>+</Text>
@@ -87,6 +100,54 @@ export default function Posts() {
       </Modal>
     </View>
   );
+}
+else{
+  return (
+    // Add Post
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.button} onPress={toggleModal}>
+        <Text style={styles.buttonText}>+</Text>
+      </TouchableOpacity>
+
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+              <Text style={styles.textadd}>Add Post</Text>
+            <Text>Title:</Text>
+            <TextInput
+              style={styles.input}
+              value={input1}
+              onChangeText={setInput1}
+            />
+            <Text>Description:</Text>
+            <TextInput
+              style={styles.input}
+              value={input2}
+              onChangeText={setInput2}
+            />
+            <View style={styles.buttondiv}>
+              <Button title="Pick an image" onPress={pickImage}/>
+            </View>
+            {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+            <View style={styles.buttondiv}>
+              <Button title="Submit" 
+              onPress={handleSubmit}  
+              />
+            </View>
+            <View
+            style={styles.buttondiv}>
+              <Button title="Close" onPress={toggleModal}/>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+}
 }
 
 const styles = StyleSheet.create({

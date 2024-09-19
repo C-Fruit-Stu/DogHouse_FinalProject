@@ -6,7 +6,6 @@ import { useFormik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
-import { clientType } from '../types/props_types';
 
 export default function LogIn() {
 

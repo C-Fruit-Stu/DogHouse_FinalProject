@@ -8,7 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { clientType } from '../types/props_types';
 
 type RouteParams = {
   clientType?: number;
@@ -48,7 +47,7 @@ export default function Profile() {
   };
 
 
-  if (clientType == 2 && currentCoustumer) {
+  if (clientType == 2) {
     return (
       <SafeAreaView>
         <ScrollView>
@@ -113,7 +112,6 @@ export default function Profile() {
   }
   else {
     return (
-
       <SafeAreaView>
         <ScrollView>
           <View style={styles.Header}>
