@@ -5,14 +5,18 @@ import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 import {useRoute, RouteProp} from '@react-navigation/native';
 
+type RouteParams = {
+  clientType?: number;
+};
 
 // async storage
 export default function HomePage() {
 
   const { currentTrainer } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
-  const route = useRoute<RouteProp<any>>();
+  const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
+
   if (clientType == 2) {
     return (
       <SafeAreaView>

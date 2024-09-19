@@ -5,5 +5,5 @@ export type AllTrainerProps={
 }
 
 export type clientType = {
-    clientType?: number; 
+    clientType?: number 
 }

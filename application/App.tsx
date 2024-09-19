@@ -29,8 +29,12 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+type RouteParams = {
+  clientType?: number;
+};
+
 function BackToPre() {
-  const route = useRoute<RouteProp<{ params: clientType }, 'params'>>();
+  const route = useRoute<RouteProp<any, any>>(); // Access route params
   const clientType = route.params?.clientType;
 
   return (
@@ -42,7 +46,7 @@ function BackToPre() {
       }}
         initialParams={{ clientType }}
       />
-      
+
       <Tab.Screen name="Profile" component={Profile} options={{
         tabBarLabel: 'Profile',
         headerShown: true,

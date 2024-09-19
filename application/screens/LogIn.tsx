@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
+import { clientType } from '../types/props_types';
 
 export default function LogIn() {
 
@@ -44,23 +45,23 @@ export default function LogIn() {
         email: values.email,
         password: values.password
       }
-      console.log("Client loggingUser:" , loggingUser);
-      const isTrainerLoggedIn = await LogInTrainer({...loggingUser}); 
-      if(!isTrainerLoggedIn) {
-        const isCoustumerLoggedIn = await LogInCoustumer({...loggingUser});
-        if(!isCoustumerLoggedIn) {
+      console.log("Client loggingUser:", loggingUser);
+      const isTrainerLoggedIn = await LogInTrainer({ ...loggingUser });
+      if (!isTrainerLoggedIn) {
+        const isCoustumerLoggedIn = await LogInCoustumer({ ...loggingUser });
+        if (!isCoustumerLoggedIn) {
           alert('Wrong email or password');
           resetForm();
           return;
         }
         let clientType = 2;
-        navigation.navigate("BackToPre",{ clientType });
+        navigation.navigate("BackToPre", { clientType });
         return;
       }
       let clientType = 1;
-      navigation.navigate("BackToPre",{ clientType });
+      navigation.navigate("BackToPre", { clientType });
       return;
-  }
+    }
   });
 
   return (

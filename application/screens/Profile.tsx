@@ -10,17 +10,18 @@ import { CoustumerContext } from '../context/CoustumerContextProvider';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { clientType } from '../types/props_types';
 
+type RouteParams = {
+  clientType?: number;
+};
+
 export default function Profile() {
 
   const navigation = useNavigation();
   const screenWidth = Dimensions.get('window').width;
   const { currentTrainer } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
-  const route = useRoute<RouteProp<{ params: clientType }, 'params'>>();
+  const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
-
-
-
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
     datasets: [
@@ -62,19 +63,19 @@ export default function Profile() {
                 <Text style={styles.TextContainer}>Stats</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', {clientType})}>
+            <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
               <View style={styles.StatesContainer}>
                 <Text style={styles.TextContainer}>costumers</Text>
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.containerButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('Calander' , {clientType})}>
+            <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
               <View style={styles.StatesContainer}>
                 <Text style={styles.TextContainer}>Scheduals</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Posts' , {clientType})}>
+            <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
               <View style={styles.StatesContainer}>
                 <Text style={styles.TextContainer}>Posts</Text>
               </View>
@@ -124,19 +125,19 @@ export default function Profile() {
               <Text style={styles.TextContainer}>Stats</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', {clientType})}>
+          <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
             <View style={styles.StatesContainer}>
               <Text style={styles.TextContainer}>costumers</Text>
             </View>
           </TouchableOpacity>
         </View>
         <View style={styles.containerButton}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calander', {clientType})}>
+          <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
             <View style={styles.StatesContainer}>
               <Text style={styles.TextContainer}>Scheduals</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Posts', {clientType})}>
+          <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
             <View style={styles.StatesContainer}>
               <Text style={styles.TextContainer}>Posts</Text>
             </View>
