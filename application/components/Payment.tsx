@@ -10,6 +10,7 @@ import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 import { TrainerType } from '../types/trainer_type';
 
+
 // react-native-creditcard
 // # Connection for yuval - eMcWHJbuAdzLwDEf
 
@@ -94,7 +95,7 @@ export default function Payment() {
       let succses: any;
       if (route.params?.clientType == 1) {
         console.log('TrainerInfo:', JSON.stringify(currentTrainer, null, 2)); // Updated to display values
-        const NewTrainer: Partial<TrainerType> = {
+        const NewTrainer: TrainerType = {
           first_name: currentTrainer.first_name,
           last_name: currentTrainer.last_name,
           email: currentTrainer.email,
@@ -111,54 +112,59 @@ export default function Payment() {
             {
               name: '',
               date: new Date(),
-              time: ''  
+              time: ''
             }
           ],
           Posts: [
             {
+              id: '',
               title: '',
               description: '',
-              image: ''
+              image: '',
+              likes: 0,
+              likedByUser: false,
+              comments: [],
+              isOwner: false,
             }
           ],
-          CostumersArr:[]
+          CostumersArr: []
         }
         console.log('New Trainer: ' + NewTrainer);
         succses = await RegisterNewTrainer(NewTrainer);
       }
-      else
-       {
-          console.log('CustomerInfo:', JSON.stringify(currentCoustumer, null, 2)); // Updated to display values
-          const NewCustomer: CoustumerType = {
-            dogBreed: '',
-            first_name: currentCoustumer.first_name,
-            last_name: currentCoustumer.last_name,
-            email: currentCoustumer.email,
-            password: currentCoustumer.password,
-            dob: currentCoustumer.dob,
-            location: currentCoustumer.location,
-            image: currentCoustumer.image,
-            phone: currentCoustumer.phone,
-            update_details: currentCoustumer.update_details,
-            clientType: currentCoustumer.clientType,
-            payment: payment,
-            stayLogIn: false,
-            trainingSchedule: [
-              {
-                name: '',
-                date: new Date(),
-                time: ''
-              }
-            ]
-          }
-          console.log('New Customer: ' + NewCustomer);
-          succses = await RegisterNewCoustumer(NewCustomer);
+      else {
+        console.log('CustomerInfo:', JSON.stringify(currentCoustumer, null, 2)); // Updated to display values
+        const NewCustomer: CoustumerType = {
+          dogBreed: '',
+          first_name: currentCoustumer.first_name,
+          last_name: currentCoustumer.last_name,
+          email: currentCoustumer.email,
+          password: currentCoustumer.password,
+          dob: currentCoustumer.dob,
+          location: currentCoustumer.location,
+          image: currentCoustumer.image,
+          phone: currentCoustumer.phone,
+          update_details: currentCoustumer.update_details,
+          clientType: currentCoustumer.clientType,
+          payment: payment,
+          stayLogIn: false,
+          trainingSchedule: [
+            {
+              name: '',
+              date: new Date(),
+              time: ''
+            }
+          ],
+          HisTrainer:[]
         }
+        console.log('New Customer: ' + NewCustomer);
+        succses = await RegisterNewCoustumer(NewCustomer);
+      }
       resetForm();
       if (succses) {
         navigation.navigate("BackToPre");
       }
-      else{
+      else {
         alert("Email already taken... try again");
         navigation.navigate("Bording2");
       }

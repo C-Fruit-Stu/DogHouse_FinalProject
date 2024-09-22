@@ -19,7 +19,7 @@ const SignIn: React.FC = () => {
   };
 
   const validate = (values: Partial<TrainerType>) => {
-    const errors: Partial<Partial<TrainerType>> = {};
+    const errors: Partial<TrainerType> = {};
 
     if (!values.email) {
       errors.email = 'Required';

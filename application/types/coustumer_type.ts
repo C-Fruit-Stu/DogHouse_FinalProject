@@ -26,7 +26,7 @@ export type CoustumerType = {
         }
     ],
 
-    HisTrainer: Partial<TrainerType>[]
+    HisTrainer?: Partial<TrainerType>[]
 }
 
 

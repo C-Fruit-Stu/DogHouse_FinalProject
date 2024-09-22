@@ -5,13 +5,15 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
 import '../index.css';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp: React.FC = () => {
   const { setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
   const [galleryImg, setGalleryImg] = useState<string[]>([]);
+  const navigate = useNavigate();
 
-  const initialValues: Partial<TrainerType> = {
+  const initialValues: TrainerType = {
     first_name: '',
     last_name: '',
     email: '',
@@ -25,14 +27,14 @@ const SignUp: React.FC = () => {
     payment: {
       card: '',
       date: '',
-      cvv: ''
+      ccv: '',
     },
     stayLogIn: false,
   };
 
   const validate = (values: Partial<TrainerType>) => {
     const errors: Partial<TrainerType> = {};
-    
+
     if (!values.first_name) {
       errors.first_name = 'Required';
     } else if (values.first_name.length < 2) {
@@ -97,25 +99,30 @@ const SignUp: React.FC = () => {
     } else if (!/^05\d-\d{7}$/.test(values.phone)) {
       errors.phone = 'Phone number must be in the format 05X-XXXXXXX';
     }
+    if (!values.payment) {
+      errors.payment = { 
+      card: '',
+      date: '',
+      ccv: '' };
+    } else {
+      if (!values.payment || !values.payment?.card) {
+        errors.payment = { ...errors.payment, card: 'Card number is required', date: 'Expiration date is required', ccv: 'ccv is required' };
+      } else if (!/^\d{16}$/.test(values.payment.card)) {
+        errors.payment = { ...errors.payment, card: 'Card number must be 16 digits', date: 'Expiration date is required', ccv: 'ccv is required' };
+      }
 
-    if (!values.payment || !values.payment.card) {
-      errors.payment = { ...errors.payment, card: 'Card number is required', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv : '' };
-    } else if (!/^\d{16}$/.test(values.payment.card)) {
-      errors.payment = { ...errors.payment, card: 'Card number must be 16 digits', date: errors.payment?.date ? errors.payment.date : '', cvv: errors.payment?.cvv ? errors.payment.cvv : '' };
+      if (!values.payment || !values.payment?.date) {
+        errors.payment = { ...errors.payment, date: 'Expiration date is required', ccv: 'ccv is required', card: 'Card number is required' };
+      } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date)) {
+        errors.payment = { ...errors.payment, date: 'Date must be in MM/YY format', ccv: 'ccv is required', card: 'Card number is required' };
+      }
+
+      if (!values.payment || !values.payment?.ccv) {
+        errors.payment = { ...errors.payment, ccv: 'ccv is required', date: 'Expiration date is required', card: 'Card number is required' };
+      } else if (!/^\d{3,4}$/.test(values.payment.ccv)) {
+        errors.payment = { ...errors.payment, ccv: 'ccv must be 3 or 4 digits', date: 'Expiration date is required', card: 'Card number is required' };
+      }
     }
-
-    if (!values.payment || !values.payment.date) {
-      errors.payment = { ...errors.payment, date: 'Expiration date is required', cvv: errors.payment?.cvv ? errors.payment.cvv : '', card: errors.payment?.card ? errors.payment.card : '' };
-    } else if (!/^\d{2}\/\d{2}$/.test(values.payment.date)) {
-      errors.payment = { ...errors.payment, date: 'Date must be in MM/YY format', cvv: errors.payment?.cvv ? errors.payment.cvv : '', card: errors.payment?.card ? errors.payment.card : '' };
-    }
-
-    if (!values.payment || !values.payment?.cvv) {
-      errors.payment = { ...errors.payment, cvv: 'cvv is required', date: errors.payment?.date ? errors.payment?.date : '', card: errors.payment?.card ? errors.payment.card : '' };
-    } else if (!/^\d{3,4}$/.test(values.payment.cvv)) {
-      errors.payment = { ...errors.payment, cvv: 'cvv must be 3 or 4 digits', date: errors.payment?.date ? errors.payment?.date : '', card: errors.payment?.card ? errors.payment.card : '' };
-    }
-
     return errors;
   };
 
@@ -136,18 +143,18 @@ const SignUp: React.FC = () => {
     initialValues,
     validate,
     onSubmit: async (values: Partial<TrainerType>) => {
-      const NewUser: any = {
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        password: values.password,
-        dob: values.dob,
-        location: values.location,
-        experience: values.experience,
-        image: values.image,
-        phone: values.phone,
-        clientType: "1",
-        payment: values.payment,
+      const NewUser: TrainerType = {
+        first_name: values.first_name || '',
+        last_name: values.last_name || '',
+        email: values.email || '',
+        password: values.password || '',
+        dob: values.dob || '',
+        location: values.location || '',
+        experience: values.experience || '',
+        image: values.image || '',
+        phone: values.phone || '',
+        clientType: '1',
+        payment: values.payment || { card: '', date: '', ccv: '' },
         stayLogIn: false,
         trainingSchedule: [
           {
@@ -158,20 +165,26 @@ const SignUp: React.FC = () => {
         ],
         Posts: [
           {
+            id: '',
             title: '',
             description: '',
-            image: ''
+            image: '',
+            likes: 0,
+            likedByUser: false,
+            comments: [],
+            isOwner: false,
           }
         ],
-        CostumersArr: [],
+        CostumersArr: []
       };
-      
+      // { מונע מהפעולה להזין משתמש ריק }
       if (NewUser.email !== '') {
+        console.log('NewUser:\n' + NewUser)
         setCurrentTrainer(NewUser);
         setIsLoading(true);
-        await RegisterNewTrainer({...NewUser});
+        await RegisterNewTrainer({ ...NewUser });
       }
-      window.location.href = '/signin';
+      navigate('/signin');
     },
   });
 
@@ -320,6 +333,8 @@ const SignUp: React.FC = () => {
             <div className="form-group mt-3">
               <label htmlFor="image">Profile Image</label>
               <input
+                id="image"
+                name="image"
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
@@ -328,7 +343,6 @@ const SignUp: React.FC = () => {
                 <div className="error-message">{formik.errors.image}</div>
               )}
             </div>
-
             {galleryImg.length > 0 && (
               <div className="gallery mt-3">
                 {galleryImg.map((imgUri, index) => (
@@ -374,19 +388,19 @@ const SignUp: React.FC = () => {
               </div>
 
               <div className="form-group mt-2">
-                <label htmlFor="payment.cvv">CVV</label>
+                <label htmlFor="payment.ccv">CCV</label>
                 <input
                   type="text"
-                  id="payment.cvv"
-                  name="payment.cvv"
-                  placeholder="Enter your CVV"
+                  id="payment.ccv"
+                  name="payment.ccv"
+                  placeholder="Enter your CCV"
                   className="form-control"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.payment?.cvv}
+                  value={formik.values.payment?.ccv}
                 />
-                {formik.touched.payment?.cvv && formik.errors.payment?.cvv && (
-                  <div className="error-message">{formik.errors.payment.cvv}</div>
+                {formik.touched.payment?.ccv && formik.errors.payment?.ccv && (
+                  <div className="error-message">{formik.errors.payment.ccv}</div>
                 )}
               </div>
             </div>

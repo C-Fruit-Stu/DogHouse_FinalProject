@@ -14,7 +14,7 @@
         async function RegisterNewTrainer(newTrainer: TrainerType) {
             try {
                 console.log('newTrainer ====>>>', newTrainer)
-                let data = await POST('trainer/register', newTrainer);  // Adjust the endpoint to match your server
+                let data = await POST('trainer/register', newTrainer); 
                 console.log("context after server functions:\n"+data);
                 if(data == null)
                     return false;

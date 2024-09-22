@@ -13,8 +13,10 @@ function TrainerContextProvidor({ children }: any) {
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {
             console.log('newTrainer ====>>>', newTrainer)
-            let data = await POST('trainer/register', newTrainer);  // Adjust the endpoint to match your server
-            console.log(data);
+            let data = await POST('trainer/register', newTrainer);  
+            console.log("context after server functions:\n"+data);
+            if(data == null)
+                return false;
             if (data && data.trainer) {
                 setAllTrainer([...allTrainer, data.trainer]);
                 return true;
