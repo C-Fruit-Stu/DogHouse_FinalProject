@@ -188,6 +188,7 @@ const SignUp: React.FC = () => {
       setIsLoading(true);
       await RegisterNewTrainer({ ...NewUser });
     }
+    console.log(NewUser.image)
     window.location.href = '/signin';
 
   };
