@@ -1,18 +1,15 @@
 import React, { useContext, useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import { TrainerType } from '../types/TrainerType';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
 import '../index.css';
 
-
-
 const SignUp: React.FC = () => {
-  const { currentTrainer, setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
+  const { setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
   const [galleryImg, setGalleryImg] = useState<string[]>([]);
-
 
   const initialValues: Partial<TrainerType> = {
     first_name: '',
@@ -35,7 +32,7 @@ const SignUp: React.FC = () => {
 
   const validate = (values: Partial<TrainerType>) => {
     const errors: Partial<TrainerType> = {};
-
+    
     if (!values.first_name) {
       errors.first_name = 'Required';
     } else if (values.first_name.length < 2) {
@@ -122,66 +119,61 @@ const SignUp: React.FC = () => {
     return errors;
   };
 
-  const handleImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any) => void
-  ) => {
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const imageUrl = reader.result as string;
         setGalleryImg([...galleryImg, imageUrl]);
-        setFieldValue('image', imageUrl); // Save base64 image URL to Formik's field
+        formik.setFieldValue('image', imageUrl);
       };
-      reader.readAsDataURL(file); // Convert image to base64 URL
+      reader.readAsDataURL(file);
     }
   };
-  
 
-  const handleSubmit = async (values: Partial<TrainerType>) => {
-
-    const NewUser: any = {
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.email,
-      password: values.password,
-      dob: values.dob,
-      location: values.location,
-      experience: values.experience,
-      image: values.image,
-      phone: values.phone,
-      clientType: "1",
-      payment: values.payment,
-      stayLogIn: false,
-      trainingSchedule: [
-        {
-          name: '',
-          date: new Date(),
-          time: ''
-        }
-      ],
-      Posts: [
-        {
-          title: '',
-          description: '',
-          image: ''
-        }
-      ],
-      CostumersArr: [],
-    };
-    console.log(NewUser.image)
-    if (NewUser.email !== '') {
-      setCurrentTrainer(NewUser);
-      console.log('Trainer1:', currentTrainer);
-      console.log('Trainer2:', NewUser);
-      setIsLoading(true);
-      await RegisterNewTrainer({ ...NewUser });
-    }
-    console.log(NewUser.image)
-    window.location.href = '/signin';
-
-  };
+  const formik = useFormik({
+    initialValues,
+    validate,
+    onSubmit: async (values: Partial<TrainerType>) => {
+      const NewUser: any = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        password: values.password,
+        dob: values.dob,
+        location: values.location,
+        experience: values.experience,
+        image: values.image,
+        phone: values.phone,
+        clientType: "1",
+        payment: values.payment,
+        stayLogIn: false,
+        trainingSchedule: [
+          {
+            name: '',
+            date: new Date(),
+            time: ''
+          }
+        ],
+        Posts: [
+          {
+            title: '',
+            description: '',
+            image: ''
+          }
+        ],
+        CostumersArr: [],
+      };
+      
+      if (NewUser.email !== '') {
+        setCurrentTrainer(NewUser);
+        setIsLoading(true);
+        await RegisterNewTrainer({ ...NewUser });
+      }
+      window.location.href = '/signin';
+    },
+  });
 
   return (
     <>
@@ -189,161 +181,220 @@ const SignUp: React.FC = () => {
       <div className="signup">
         <div className="container">
           <h1 className="signup-title">Sign Up</h1>
-          <Formik
-            initialValues={initialValues}
-            validate={validate}
-            onSubmit={handleSubmit}
-          >
-            {({setFieldValue}) => (
-              <Form className="signup-form">
-                <div className="form-group">
-                  <label htmlFor="first_name">First Name</label>
-                  <Field
-                    type="text"
-                    id="first_name"
-                    name="first_name"
-                    placeholder="Enter your first name"
-                    className="form-control" />
-                  <ErrorMessage name="first_name" component="div" className="error-message" />
-                </div>
+          <form onSubmit={formik.handleSubmit} className="signup-form">
+            <div className="form-group">
+              <label htmlFor="first_name">First Name</label>
+              <input
+                type="text"
+                id="first_name"
+                name="first_name"
+                placeholder="Enter your first name"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.first_name}
+              />
+              {formik.touched.first_name && formik.errors.first_name && (
+                <div className="error-message">{formik.errors.first_name}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="last_name">Last Name</label>
-                  <Field
-                    type="text"
-                    id="last_name"
-                    name="last_name"
-                    placeholder="Enter your last name"
-                    className="form-control" />
-                  <ErrorMessage name="last_name" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="last_name">Last Name</label>
+              <input
+                type="text"
+                id="last_name"
+                name="last_name"
+                placeholder="Enter your last name"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.last_name}
+              />
+              {formik.touched.last_name && formik.errors.last_name && (
+                <div className="error-message">{formik.errors.last_name}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="email">Email</label>
-                  <Field
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    className="form-control" />
-                  <ErrorMessage name="email" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className="error-message">{formik.errors.email}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="password">Password</label>
-                  <Field
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    className="form-control" />
-                  <ErrorMessage name="password" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className="error-message">{formik.errors.password}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="dob">Date of Birth</label>
-                  <Field
-                    type="date"
-                    id="dob"
-                    name="dob"
-                    className="form-control" />
-                  <ErrorMessage name="dob" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="dob">Date of Birth</label>
+              <input
+                type="date"
+                id="dob"
+                name="dob"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.dob}
+              />
+              {formik.touched.dob && formik.errors.dob && (
+                <div className="error-message">{formik.errors.dob}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="location">Location</label>
-                  <Field
-                    type="text"
-                    id="location"
-                    name="location"
-                    placeholder="Enter your location"
-                    className="form-control" />
-                  <ErrorMessage name="location" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="location">Location</label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                placeholder="Enter your location"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.location}
+              />
+              {formik.touched.location && formik.errors.location && (
+                <div className="error-message">{formik.errors.location}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="phone">Phone</label>
-                  <Field
-                    type="text"
-                    id="phone"
-                    name="phone"
-                    placeholder="Enter your phone number"
-                    className="form-control" />
-                  <ErrorMessage name="phone" component="div" className="error-message" />
-                </div>
-                <div className="form-group mt-3">
-                  <label htmlFor="image">Profile Image</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => handleImageChange(event, setFieldValue)}
-                  />
-                  <ErrorMessage name="image" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="experience">Experience</label>
+              <input
+                type="number"
+                id="experience"
+                name="experience"
+                placeholder="Enter your experience in years"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.experience}
+              />
+              {formik.touched.experience && formik.errors.experience && (
+                <div className="error-message">{formik.errors.experience}</div>
+              )}
+            </div>
 
-                {/* Display the selected images */}
-                {galleryImg.length > 0 && (
-                  <div className="gallery mt-3">
-                    {galleryImg.map((imgUri, index) => (
-                      <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
-                    ))}
-                  </div>
-                )}
+            <div className="form-group mt-3">
+              <label htmlFor="phone">Phone Number</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                placeholder="Enter your phone number (05X-XXXXXXX)"
+                className="form-control"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.phone}
+              />
+              {formik.touched.phone && formik.errors.phone && (
+                <div className="error-message">{formik.errors.phone}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="experience">Experience</label>
-                  <Field
-                    as="textarea"
-                    id="experience"
-                    name="experience"
-                    placeholder="Experience"
-                    className="form-control" />
-                  <ErrorMessage name="experience" component="div" className="error-message" />
-                </div>
+            <div className="form-group mt-3">
+              <label htmlFor="image">Profile Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {formik.touched.image && formik.errors.image && (
+                <div className="error-message">{formik.errors.image}</div>
+              )}
+            </div>
 
-                <div className="form-group mt-3">
-                  <label htmlFor="payment.card">Card Number</label>
-                  <Field
-                    type="text"
-                    id="payment.card"
-                    name="payment.card"
-                    placeholder="1234 5678 9012 3456"
-                    className="form-control"
-                  />
-                  <ErrorMessage name="payment.card" component="div" className="error-message" />
-                </div>
-
-                <div className="form-group mt-3">
-                  <label htmlFor="payment.date">Expiration Date</label>
-                  <Field
-                    type="text"
-                    id="payment.date"
-                    name="payment.date"
-                    placeholder="MM/YY"
-                    className="form-control"
-                  />
-                  <ErrorMessage name="payment.date" component="div" className="error-message" />
-                </div>
-
-                <div className="form-group mt-3">
-                  <label htmlFor="payment.cvv">cvv</label>
-                  <Field
-                    type="text"
-                    id="payment.cvv"
-                    name="payment.cvv"
-                    placeholder="123"
-                    className="form-control"
-                  />
-                  <ErrorMessage name="payment.cvv" component="div" className="error-message" />
-                </div>
-
-
-                <button type="submit" className="signup-button mt-4">
-                  Sign Up
-                </button>
-              </Form>
+            {galleryImg.length > 0 && (
+              <div className="gallery mt-3">
+                {galleryImg.map((imgUri, index) => (
+                  <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
+                ))}
+              </div>
             )}
-          </Formik>
+
+            <div className="form-group mt-3">
+              <h3>Payment Information</h3>
+              <div className="form-group mt-2">
+                <label htmlFor="payment.card">Card Number</label>
+                <input
+                  type="text"
+                  id="payment.card"
+                  name="payment.card"
+                  placeholder="Enter your card number"
+                  className="form-control"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.payment?.card}
+                />
+                {formik.touched.payment?.card && formik.errors.payment?.card && (
+                  <div className="error-message">{formik.errors.payment.card}</div>
+                )}
+              </div>
+
+              <div className="form-group mt-2">
+                <label htmlFor="payment.date">Expiration Date (MM/YY)</label>
+                <input
+                  type="text"
+                  id="payment.date"
+                  name="payment.date"
+                  placeholder="MM/YY"
+                  className="form-control"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.payment?.date}
+                />
+                {formik.touched.payment?.date && formik.errors.payment?.date && (
+                  <div className="error-message">{formik.errors.payment.date}</div>
+                )}
+              </div>
+
+              <div className="form-group mt-2">
+                <label htmlFor="payment.cvv">CVV</label>
+                <input
+                  type="text"
+                  id="payment.cvv"
+                  name="payment.cvv"
+                  placeholder="Enter your CVV"
+                  className="form-control"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.payment?.cvv}
+                />
+                {formik.touched.payment?.cvv && formik.errors.payment?.cvv && (
+                  <div className="error-message">{formik.errors.payment.cvv}</div>
+                )}
+              </div>
+            </div>
+
+            <button type="submit" className="signup-button mt-4">
+              Sign Up
+            </button>
+          </form>
           {isLoading && (
             <div className="loading-overlay">
               <div className="loading-spinner"></div>
@@ -359,9 +410,3 @@ const SignUp: React.FC = () => {
 };
 
 export default SignUp;
-
-
-function setFieldValue(arg0: string, imageUri: string) {
-  throw new Error('Function not implemented.');
-}
-
