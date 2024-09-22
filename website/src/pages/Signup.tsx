@@ -122,33 +122,35 @@ const SignUp: React.FC = () => {
     return errors;
   };
 
-
-  const pickImage = async (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (field: string, value: any) => void
+  ) => {
+    console.log("File input event triggered");
+  
     const file = event.target.files?.[0];
-    console.log(file);
     if (file) {
+      console.log("File selected: ", file);
+  
       const reader = new FileReader();
       reader.onloadend = () => {
-        const imageUri = reader.result as string; // The base64 image
-        setGalleryImg([...galleryImg, imageUri]); // Add image to gallery for display
-        setFieldValue('image', imageUri); // Set the form field value
+        const imageUrl = reader.result as string;
+        console.log("File read successfully, URL: ", imageUrl);
+  
+        setGalleryImg([...galleryImg, imageUrl]);
+        setFieldValue('image', imageUrl); // Update Formik field value with base64 URL
       };
-      reader.readAsDataURL(file); // Convert the image to a base64 string
+  
+      reader.onerror = () => {
+        console.error("File reading failed");
+      };
+  
+      reader.readAsDataURL(file); // Convert image to base64 URL
     }
   };
 
-
   const handleSubmit = async (values: Partial<TrainerType>) => {
-    let img1: any = "";
-    {
-      galleryImg.length > 0 && (
-        <div className="gallery mt-3">
-          {galleryImg.map((imgUri, index) => (
-            img1 = imgUri
-          ))}
-        </div>
-      )
-    }
+
     const NewUser: any = {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -157,7 +159,7 @@ const SignUp: React.FC = () => {
       dob: values.dob,
       location: values.location,
       experience: values.experience,
-      image: img1,
+      image: values.image,
       phone: values.phone,
       clientType: "1",
       payment: values.payment,
@@ -201,7 +203,7 @@ const SignUp: React.FC = () => {
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {({ setFieldValue }) => (
+            {({setFieldValue}) => (
               <Form className="signup-form">
                 <div className="form-group">
                   <label htmlFor="first_name">First Name</label>
@@ -279,25 +281,23 @@ const SignUp: React.FC = () => {
                   <ErrorMessage name="phone" component="div" className="error-message" />
                 </div>
                 <div className="form-group mt-3">
-                  <label htmlFor="image">Profile Image</label>
-                  <input
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    onChange={(event) => pickImage(event, setFieldValue)}
-                    className="form-control"
-                  />
-                  <ErrorMessage name="image" component="div" className="error-message" />
-                </div>
+                <label htmlFor="image">Profile Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => handleImageChange(event, setFieldValue)}
+                />
+                <ErrorMessage name="image" component="div" className="error-message" />
+              </div>
 
-                {/* Show picked image(s) */}
-                {galleryImg.length > 0 && (
-                  <div className="gallery mt-3">
-                    {galleryImg.map((imgUri, index) => (
-                      <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
-                    ))}
-                  </div>
-                )}
+              {/* Show picked image(s) */}
+              {galleryImg.length > 0 && (
+                <div className="gallery mt-3">
+                  {galleryImg.map((imgUri, index) => (
+                    <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
+                  ))}
+                </div>
+              )}
 
                 <div className="form-group mt-3">
                   <label htmlFor="experience">Experience</label>
@@ -369,4 +369,8 @@ const SignUp: React.FC = () => {
 
 export default SignUp;
 
+
+function setFieldValue(arg0: string, imageUri: string) {
+  throw new Error('Function not implemented.');
+}
 
