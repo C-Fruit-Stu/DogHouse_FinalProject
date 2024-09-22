@@ -169,7 +169,7 @@ const SignUp: React.FC = () => {
       if (NewUser.email !== '') {
         setCurrentTrainer(NewUser);
         setIsLoading(true);
-        await RegisterNewTrainer({ ...NewUser });
+        await RegisterNewTrainer({...NewUser});
       }
       window.location.href = '/signin';
     },
