@@ -9,7 +9,7 @@ import '../index.css';
 
 
 const SignUp: React.FC = () => {
-  const { currentTrainer, setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
+  const { currentTrainer, setCurrentTrainer, RegisterNewTrainer,handleImageChange } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
   const [galleryImg, setGalleryImg] = useState<string[]>([]);
 
@@ -122,32 +122,7 @@ const SignUp: React.FC = () => {
     return errors;
   };
 
-  const handleImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any) => void
-  ) => {
-    console.log("File input event triggered");
   
-    const file = event.target.files?.[0];
-    if (file) {
-      console.log("File selected: ", file);
-  
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageUrl = reader.result as string;
-        console.log("File read successfully, URL: ", imageUrl);
-  
-        setGalleryImg([...galleryImg, imageUrl]);
-        setFieldValue('image', imageUrl); // Update Formik field value with base64 URL
-      };
-  
-      reader.onerror = () => {
-        console.error("File reading failed");
-      };
-  
-      reader.readAsDataURL(file); // Convert image to base64 URL
-    }
-  };
 
   const handleSubmit = async (values: Partial<TrainerType>) => {
 
@@ -286,7 +261,7 @@ const SignUp: React.FC = () => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(event) => handleImageChange(event, setFieldValue)}
+                  onChange={(event) => handleImageChange(event)}
                 />
                 <ErrorMessage name="image" component="div" className="error-message" />
               </div>
