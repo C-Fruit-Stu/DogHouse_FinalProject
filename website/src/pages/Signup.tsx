@@ -9,7 +9,7 @@ import '../index.css';
 
 
 const SignUp: React.FC = () => {
-  const { currentTrainer, setCurrentTrainer, RegisterNewTrainer,handleImageChange } = useContext(TrainerContext);
+  const { currentTrainer, setCurrentTrainer, RegisterNewTrainer } = useContext(TrainerContext);
   const [isLoading, setIsLoading] = useState(false);
   const [galleryImg, setGalleryImg] = useState<string[]>([]);
 
@@ -122,6 +122,21 @@ const SignUp: React.FC = () => {
     return errors;
   };
 
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (field: string, value: any) => void
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUrl = reader.result as string;
+        setGalleryImg([...galleryImg, imageUrl]);
+        setFieldValue('image', imageUrl); // Save base64 image URL to Formik's field
+      };
+      reader.readAsDataURL(file); // Convert image to base64 URL
+    }
+  };
   
 
   const handleSubmit = async (values: Partial<TrainerType>) => {
@@ -257,23 +272,23 @@ const SignUp: React.FC = () => {
                   <ErrorMessage name="phone" component="div" className="error-message" />
                 </div>
                 <div className="form-group mt-3">
-                <label htmlFor="image">Profile Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(event) => handleImageChange(event)}
-                />
-                <ErrorMessage name="image" component="div" className="error-message" />
-              </div>
-
-              {/* Show picked image(s) */}
-              {galleryImg.length > 0 && (
-                <div className="gallery mt-3">
-                  {galleryImg.map((imgUri, index) => (
-                    <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
-                  ))}
+                  <label htmlFor="image">Profile Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => handleImageChange(event, setFieldValue)}
+                  />
+                  <ErrorMessage name="image" component="div" className="error-message" />
                 </div>
-              )}
+
+                {/* Display the selected images */}
+                {galleryImg.length > 0 && (
+                  <div className="gallery mt-3">
+                    {galleryImg.map((imgUri, index) => (
+                      <img key={index} src={imgUri} alt="Selected" className="gallery-img" />
+                    ))}
+                  </div>
+                )}
 
                 <div className="form-group mt-3">
                   <label htmlFor="experience">Experience</label>
