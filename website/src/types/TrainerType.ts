@@ -1,6 +1,7 @@
 
 
 export type TrainerType = {
+    insert(user: any): unknown
     first_name: string,
     last_name: string,
     email: string,

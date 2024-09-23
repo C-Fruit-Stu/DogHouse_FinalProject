@@ -32,9 +32,10 @@ function TrainerContextProvidor({ children }: any) {
         try{
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
             let data = await POST('trainer/login',loggingInfo); 
-            console.log(data);
+            console.log('data ====>>>' ,data.user);
             if (data && data.user) {
-                setCurrentTrainer(data.user);
+                setCurrentTrainer(data.user)
+                console.log('currentTrainer ====>>>' ,currentTrainer);
                 return true;
             }
             return false;

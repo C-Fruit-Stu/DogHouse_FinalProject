@@ -42,8 +42,10 @@ const SignIn: React.FC = () => {
       email : values.email,
       password: values.password
     }
-      await LogInTrainer({...LogIn});
-      window.location.href ='/profile'
+    if(await LogInTrainer({...LogIn}))
+       window.location.href ='/profile';
+    else
+      alert('Wrong email or password');
   
    
   };

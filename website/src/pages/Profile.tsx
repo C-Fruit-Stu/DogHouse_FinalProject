@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import '../index.css';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import { TrainerContext } from '../context/TrainerContextProvidor';
 
 const Profile: React.FC = () => {
+
+    const { currentTrainer } = useContext(TrainerContext);
+    console.log(currentTrainer);
   return (
     <><>
     <Navigation/>
