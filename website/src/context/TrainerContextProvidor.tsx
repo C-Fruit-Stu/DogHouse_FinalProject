@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { TrainerType } from "../types/TrainerType";
 import { POST } from "../api";
 
@@ -9,6 +9,12 @@ function TrainerContextProvidor({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
+
+    useEffect(() => {
+        if (currentTrainer !== undefined) {
+            window.location.href = '/profile';
+        }
+    }  , [currentTrainer]);
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {

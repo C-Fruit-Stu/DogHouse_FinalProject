@@ -1,17 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import '../index.css';
 import Navigation from '../components/Navigation';
 import { TrainerType } from '../types/TrainerType';
 import { TrainerContext } from '../context/TrainerContextProvidor';
+import { BrowserRouter } from 'react-router-dom';
 
 const SignIn: React.FC = () => {
   const [visiblePassword, setVisiblePassword] = useState(false);
-  const { LogInTrainer } = useContext(TrainerContext);
+  const { LogInTrainer,currentTrainer } = useContext(TrainerContext);
 
   const togglePasswordVisibility = () => {
     setVisiblePassword(!visiblePassword);
   };
+
+  useEffect(() => {
+    if (currentTrainer) {
+      window.location.href = '/profile';
+    }
+  }, [currentTrainer]);
 
   const initialValues: Partial<TrainerType> = {
     email: '',
@@ -42,8 +49,7 @@ const SignIn: React.FC = () => {
       email : values.email,
       password: values.password
     }
-    if(await LogInTrainer({...LogIn}))
-       window.location.href ='/profile';
+    if(await LogInTrainer(LogIn)){}
     else
       alert('Wrong email or password');
   
