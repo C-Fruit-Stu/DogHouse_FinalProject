@@ -45,16 +45,22 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = async (values: Partial<TrainerType>) => {
     console.log('Form Values:', values);
+    
     const LogIn = {
-      email : values.email,
-      password: values.password
+        email: values.email,
+        password: values.password
+    };
+    
+    // Wait for the LogInTrainer function to resolve
+    const loginSuccess = await LogInTrainer(LogIn);
+    
+    if (loginSuccess) {
+        // Redirect to profile page on successful login
+        window.location.href = '/profile';
+    } else {
+        alert('Wrong email or password');
     }
-    if(await LogInTrainer(LogIn)){}
-    else
-      alert('Wrong email or password');
-  
-   
-  };
+};
 
   return (
     <><>

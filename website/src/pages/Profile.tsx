@@ -8,7 +8,16 @@ const Profile: React.FC = () => {
 
     const { currentTrainer } = useContext(TrainerContext);
 
-    console.log(currentTrainer);
+    useEffect(() => {
+        if (currentTrainer) {
+            console.log('Trainer is now logged in:', currentTrainer);
+        }
+        if (!currentTrainer) {
+            console.log('Trainer is not logged in');
+        }
+    }, [currentTrainer]);
+
+
 
   return (
     <><>

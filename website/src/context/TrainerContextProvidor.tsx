@@ -12,6 +12,7 @@ function TrainerContextProvidor({ children }: any) {
 
     useEffect(() => {
         if (currentTrainer !== undefined) {
+            console.log('currentTrainer ====>>>' ,currentTrainer);
             window.location.href = '/profile';
         }
     }  , [currentTrainer]);
@@ -34,16 +35,18 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
-    async function LogInTrainer(loggingInfo : any) {
-        try{
+    async function LogInTrainer(loggingInfo: any) {
+        try {
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
-            let data = await POST('trainer/login',loggingInfo); 
-            console.log('data ====>>>' ,data.user);
+            let data = await POST('trainer/login', loggingInfo);
+            console.log('data ====>>>', data.user);
+            
             if (data && data.user) {
-                setCurrentTrainer(data.user)
-                console.log('currentTrainer ====>>>' ,currentTrainer);
+                setCurrentTrainer(data.user); // State is updated asynchronously
+                // No need to log currentTrainer here because it won’t be updated immediately
                 return true;
             }
+            
             return false;
         } catch (error) {
             console.log(error);
