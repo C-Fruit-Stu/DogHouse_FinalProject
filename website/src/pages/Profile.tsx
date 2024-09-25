@@ -11,12 +11,11 @@ const Profile: React.FC = () => {
         if (currentTrainer != undefined) {
           console.log('currentTrainer12 ====>>>' ,currentTrainer);
           setCurrentTrainer(currentTrainer);
+          console.log(currentTrainer == undefined);
         }
-      }, []);
-      if(currentTrainer != undefined)
-        setCurrentTrainer(currentTrainer);
-      console.log('currentTrainer ====>>>' ,currentTrainer);
+      }, [currentTrainer]);
 
+      
   return (
     <><>
     <Navigation/>

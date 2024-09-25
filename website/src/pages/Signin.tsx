@@ -55,13 +55,9 @@ const SignIn: React.FC = () => {
     // Wait for the LogInTrainer function to resolve
     const loginSuccess = await LogInTrainer(LogIn);
     console.log(loginSuccess);
-    if (loginSuccess) {
-        console.log(currentTrainer.email);
-        console.log(currentTrainer.password);
-        window.location.href = '/profile';
-    } else {
-        alert('Wrong email or password');
-    }
+    if (!loginSuccess) {
+      alert('Wrong email or password');
+    } 
 };
 
   return (

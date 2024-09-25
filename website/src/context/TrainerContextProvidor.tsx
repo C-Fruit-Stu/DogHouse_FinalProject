@@ -13,7 +13,9 @@ function TrainerContextProvidor({ children }: any) {
     useEffect(() => {
         if (currentTrainer !== undefined) {
             console.log('currentTrainer ====>>>' ,currentTrainer);
-            //window.location.href = '/profile';
+            setCurrentTrainer(currentTrainer);
+            console.log('currentTrainer2 ====>>>' ,currentTrainer);
+            window.location.href = '/profile';
         }
     }  , [currentTrainer]);
 
