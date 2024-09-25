@@ -9,12 +9,13 @@ const Profile: React.FC = () => {
     const { currentTrainer,setCurrentTrainer } = useContext(TrainerContext);
     useEffect(() => {
         if (currentTrainer != undefined) {
-          //window.location.href = '/profile';
           console.log('currentTrainer12 ====>>>' ,currentTrainer);
           setCurrentTrainer(currentTrainer);
         }
-      }, [currentTrainer]);
-
+      }, []);
+      if(currentTrainer != undefined)
+        setCurrentTrainer(currentTrainer);
+      console.log('currentTrainer ====>>>' ,currentTrainer);
 
   return (
     <><>

@@ -16,11 +16,10 @@ const SignIn: React.FC = () => {
 
   useEffect(() => {
     if (currentTrainer != undefined) {
-      //window.location.href = '/profile';
       console.log('currentTrainer11 ====>>>' ,currentTrainer);
       setCurrentTrainer(currentTrainer);
     }
-  }, [currentTrainer]);
+  }, []);
 
   const initialValues: Partial<TrainerType> = {
     email: '',
@@ -55,7 +54,7 @@ const SignIn: React.FC = () => {
     
     // Wait for the LogInTrainer function to resolve
     const loginSuccess = await LogInTrainer(LogIn);
-    
+    console.log(loginSuccess);
     if (loginSuccess) {
         console.log(currentTrainer.email);
         console.log(currentTrainer.password);
