@@ -6,15 +6,14 @@ import { TrainerContext } from '../context/TrainerContextProvidor';
 
 const Profile: React.FC = () => {
 
-    const { currentTrainer } = useContext(TrainerContext);
+    const { currentTrainer,setCurrentTrainer } = useContext(TrainerContext);
     useEffect(() => {
-        if (currentTrainer) {
-            console.log('Trainer is now logged in:', currentTrainer);
+        if (currentTrainer != undefined) {
+          //window.location.href = '/profile';
+          console.log('currentTrainer12 ====>>>' ,currentTrainer);
+          setCurrentTrainer(currentTrainer);
         }
-        if (!currentTrainer) {
-            console.log('Trainer is not logged in');
-        }
-    }, [currentTrainer]);
+      }, [currentTrainer]);
 
 
   return (

@@ -4,19 +4,21 @@ import '../index.css';
 import Navigation from '../components/Navigation';
 import { TrainerType } from '../types/TrainerType';
 import { TrainerContext } from '../context/TrainerContextProvidor';
-import { BrowserRouter } from 'react-router-dom';
+
 
 const SignIn: React.FC = () => {
   const [visiblePassword, setVisiblePassword] = useState(false);
-  const { LogInTrainer,currentTrainer } = useContext(TrainerContext);
+  const { LogInTrainer,currentTrainer,setCurrentTrainer } = useContext(TrainerContext);
 
   const togglePasswordVisibility = () => {
     setVisiblePassword(!visiblePassword);
   };
 
   useEffect(() => {
-    if (currentTrainer) {
-      window.location.href = '/profile';
+    if (currentTrainer != undefined) {
+      //window.location.href = '/profile';
+      console.log('currentTrainer11 ====>>>' ,currentTrainer);
+      setCurrentTrainer(currentTrainer);
     }
   }, [currentTrainer]);
 
@@ -55,7 +57,8 @@ const SignIn: React.FC = () => {
     const loginSuccess = await LogInTrainer(LogIn);
     
     if (loginSuccess) {
-        // Redirect to profile page on successful login
+        console.log(currentTrainer.email);
+        console.log(currentTrainer.password);
         window.location.href = '/profile';
     } else {
         alert('Wrong email or password');
