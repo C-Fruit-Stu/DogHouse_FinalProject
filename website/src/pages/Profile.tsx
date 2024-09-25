@@ -6,7 +6,7 @@ import { TrainerContext } from '../context/TrainerContextProvidor';
 
 const Profile: React.FC = () => {
 
-    const { currentTrainer,trainer } = useContext(TrainerContext);
+    const { currentTrainer } = useContext(TrainerContext);
     useEffect(() => {
         if (currentTrainer) {
             console.log('Trainer is now logged in:', currentTrainer);
@@ -16,7 +16,6 @@ const Profile: React.FC = () => {
         }
     }, [currentTrainer]);
 
-    console.log(trainer)
 
   return (
     <><>

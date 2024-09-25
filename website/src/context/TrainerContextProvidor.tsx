@@ -9,26 +9,6 @@ function TrainerContextProvidor({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
-    let trainer : TrainerType = {
-        insert: function (user: any): unknown {
-            throw new Error("Function not implemented.");
-        },
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        dob: "",
-        location: "",
-        experience: "",
-        image: "",
-        phone: "",
-        clientType: "",
-        payment: {
-            card: "",
-            date: "",
-            ccv: ""
-        }
-    }
 
     useEffect(() => {
         if (currentTrainer !== undefined) {
@@ -62,8 +42,6 @@ function TrainerContextProvidor({ children }: any) {
             console.log('data ====>>>', data.user);
             
             if (data && data.user) {
-                trainer = { ...data.user };
-                console.log('trainer ====>>>', trainer);
                 setCurrentTrainer(data.user); // State is updated asynchronously
                 // No need to log currentTrainer here because it won’t be updated immediately
                 return true;
@@ -86,7 +64,6 @@ function TrainerContextProvidor({ children }: any) {
         setCurrentTrainer,
         RegisterNewTrainer,
         LogInTrainer,
-        trainer
     }}>
     {children}
     </TrainerContext.Provider>
