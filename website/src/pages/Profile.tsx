@@ -3,34 +3,12 @@ import '../index.css';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
-import { TrainerType } from '../types/TrainerType';
 
 const Profile: React.FC = () => {
 
-    const { currentTrainer } = useContext(TrainerContext);
-    let trainer : TrainerType = {
-        insert: function (user: any): unknown {
-            throw new Error('Function not implemented.');
-        },
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        dob: '',
-        location: '',
-        experience: '',
-        image: '',
-        phone: '',
-        clientType: '',
-        payment: {
-            card: '',
-            date: '',
-            ccv: ''
-        }
-    }
+    const { currentTrainer,trainer } = useContext(TrainerContext);
     useEffect(() => {
         if (currentTrainer) {
-            trainer = currentTrainer;
             console.log('Trainer is now logged in:', currentTrainer);
         }
         if (!currentTrainer) {
