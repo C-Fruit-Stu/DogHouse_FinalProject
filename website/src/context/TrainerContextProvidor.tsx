@@ -11,13 +11,11 @@ function TrainerContextProvidor({ children }: any) {
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
 
     useEffect(() => {
-        if (currentTrainer !== undefined) {
-            console.log('currentTrainer ====>>>' ,currentTrainer);
-            setCurrentTrainer(currentTrainer);
-            console.log('currentTrainer2 ====>>>' ,currentTrainer);
-            window.location.href = '/profile';
+        const trainer = localStorage.getItem('trainer');
+        if (trainer){
+            setCurrentTrainer(JSON.parse(trainer as any));
         }
-    }  , [currentTrainer]);
+    }  , []);
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {
@@ -44,7 +42,8 @@ function TrainerContextProvidor({ children }: any) {
             console.log('data ====>>>', data.user);
             
             if (data && data.user) {
-                setCurrentTrainer(data.user); // State is updated asynchronously
+                setCurrentTrainer(data.user); 
+                localStorage.setItem('trainer', JSON.stringify(data.user)) // State is updated asynchronously
                 // No need to log currentTrainer here because it won’t be updated immediately
                 return true;
             }

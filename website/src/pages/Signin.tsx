@@ -4,9 +4,11 @@ import '../index.css';
 import Navigation from '../components/Navigation';
 import { TrainerType } from '../types/TrainerType';
 import { TrainerContext } from '../context/TrainerContextProvidor';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 const SignIn: React.FC = () => {
+  const navigate = useNavigate();
   const [visiblePassword, setVisiblePassword] = useState(false);
   const { LogInTrainer,currentTrainer,setCurrentTrainer } = useContext(TrainerContext);
 
@@ -55,6 +57,9 @@ const SignIn: React.FC = () => {
     // Wait for the LogInTrainer function to resolve
     const loginSuccess = await LogInTrainer(LogIn);
     console.log(loginSuccess);
+    if (loginSuccess) {
+      navigate('/profile');
+    }
     if (!loginSuccess) {
       alert('Wrong email or password');
     } 
