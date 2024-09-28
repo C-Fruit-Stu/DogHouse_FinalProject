@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost } from "./trainer.db";
-import { credit, Post, TrainerUser } from "./trainer.type";
+import { credit, Post, TrainerUser,Comment } from "./trainer.type";
 
 export async function getAllUsers() {
     let query = {
@@ -121,10 +121,10 @@ export async function checkUpdate(card: string, date: string, ccv: string) {
 }
 
 
-export async function addAnotherPost(title: string, description: string, image: string) {
+export async function addAnotherPost(email: string,id: string,title: string, description: string, image: string,likes: number,likedByUser: boolean,comments: Comment[],isOwner: boolean) {
     try {
-        let post : Post = { title,description, image }
-        return await addonePost(post);
+        let post : Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
+        return await addonePost(email,post);
     } catch (error) {
         throw error;
     }

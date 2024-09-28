@@ -31,8 +31,19 @@ export type trainingSchedule = {
     time: string
 }
 
-export type Post = {
-    title: string,
-    description: string,
-    image?: string
-}
+export type Comment = {
+    id: string;
+    text: string;
+    userId: string;
+  };
+  
+  export type Post = {
+    id: string;
+    title: string;
+    description: string;
+    image?: string;
+    likes: number;
+    likedByUser: boolean;
+    comments: Comment[];
+    isOwner: boolean;
+  };

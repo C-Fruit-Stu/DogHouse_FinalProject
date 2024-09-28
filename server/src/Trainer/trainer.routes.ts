@@ -10,11 +10,12 @@ TrainerRouter
     .get('/:id/', getUserById) 
     .post('/login', LoginTrainer) 
     .post('/register', RegisterTrainer) 
-    // .put('/update/:id', update) 
     .delete('/physic/delete/:id', physicDeleteUser)
     .put('/updatepassword/:id',UpdatePassword)
     .put('/updatePayment/:id', updatePayment)
-    .post('/addnewpost/:id', addNewPost)
+
+    // מוסיף פוסט
+    .post('/addnewpost', addNewPost)
     .get('/getallpostsbyid/:id',getAllPostsById)
     .post('/showallposts',showallposts)
     .put('/deletePost/:id', deletePost)

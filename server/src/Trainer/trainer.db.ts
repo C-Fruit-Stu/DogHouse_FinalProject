@@ -239,20 +239,18 @@ export async function UpdateCard(card1: credit) {
 //     }
 // }
 
-export async function addonePost(post: Post,) {
+export async function addonePost(email: string, post: Post) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { title: post.title },
-            { $addToSet: { Posts: post } }
-
-        )
+            { email },
+            { $addToSet: { Posts: post } } 
+        );
     } catch (error) {
         throw error;
-    }
-    finally {
+    } finally {
         mongo.close();
     }
 }

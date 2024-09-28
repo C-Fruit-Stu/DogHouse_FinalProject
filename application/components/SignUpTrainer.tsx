@@ -24,7 +24,6 @@ export default function SignUpTrainer() {
   const { setCurrentTrainer } = useContext<any>(TrainerContext);
 
   // -צריך לתקן כמו בלקוח רגיל -יובל
-  const [galleryImg, setGalleryImg] = useState<string[]>([]);
   const [cameraOpen, setCameraOpen] = useState(false);
   const navigation = useNavigation();
   const [isFocus, setIsFocus] = useState(false);
@@ -43,7 +42,8 @@ export default function SignUpTrainer() {
     const togglePasswordVisibility = () => {
       setVisiblePassword(!visiblePassword);
     };
-
+    
+    const [galleryImg, setGalleryImg] = useState<string[]>([]);
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,

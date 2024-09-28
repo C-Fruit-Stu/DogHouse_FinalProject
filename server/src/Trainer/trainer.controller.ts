@@ -165,17 +165,12 @@ export async function updatePayment(req: Request, res: Response) {
 
 
 export async function addNewPost(req: Request, res: Response) {
-    let { id } = req.params
-    let { title, description, image } = req.body
-
-    if (!id || id.length < 24)
-        return res.status(400).json({ msg: "invalid id" })
-
+    let { email,id,title, description, image, likes,likedByUser,comments,isOwner  } = req.body
     if (!title || !description)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await addAnotherPost(title, description, image)
+        let result = await addAnotherPost(email,id,title, description, image, likes,likedByUser,comments,isOwner)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
