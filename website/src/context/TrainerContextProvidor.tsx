@@ -11,7 +11,7 @@ function TrainerContextProvidor({ children }: any) {
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
 
     useEffect(() => {
-        const trainer = localStorage.getItem('trainer');
+        const trainer = sessionStorage.getItem('trainer');
         if (trainer){
             setCurrentTrainer(JSON.parse(trainer as any));
         }

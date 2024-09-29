@@ -8,7 +8,7 @@ const Profile: React.FC = () => {
     const { currentTrainer,setCurrentTrainer } = useContext(TrainerContext);
     useEffect(() => {
         const timeout = setTimeout(() => {
-            const trainer = localStorage.getItem('trainer');
+            const trainer = sessionStorage.getItem('trainer');
             if (trainer) {
                 setCurrentTrainer(JSON.parse(trainer as any));
                 console.log('Current Trainer:', JSON.parse(trainer as any));
