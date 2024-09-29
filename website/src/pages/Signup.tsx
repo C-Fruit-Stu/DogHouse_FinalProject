@@ -143,6 +143,7 @@ const SignUp: React.FC = () => {
     initialValues,
     validate,
     onSubmit: async (values: Partial<TrainerType>) => {
+      
       const NewUser: TrainerType = {
         first_name: values.first_name || '',
         last_name: values.last_name || '',
@@ -151,7 +152,7 @@ const SignUp: React.FC = () => {
         dob: values.dob || '',
         location: values.location || '',
         experience: values.experience || '',
-        image: values.image || '',
+        image: galleryImg[0] || '',
         phone: values.phone || '',
         clientType: '1',
         payment: values.payment || { card: '', date: '', ccv: '' },
@@ -175,14 +176,15 @@ const SignUp: React.FC = () => {
             isOwner: false,
           }
         ],
-        CostumersArr: []
+        CostumersArr: [],
       };
       // { מונע מהפעולה להזין משתמש ריק }
       if (NewUser.email !== '') {
-        console.log('NewUser:\n' + NewUser)
+        console.log('NewUser:\n' + NewUser);
+        console.log("values ===>", values);
         setCurrentTrainer(NewUser);
-        setIsLoading(true);
-        await RegisterNewTrainer({ ...NewUser });
+        //setIsLoading(true);
+        await RegisterNewTrainer(values);
       }
       navigate('/signin');
     },
