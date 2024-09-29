@@ -4,17 +4,18 @@ import '../index.css'; // Add custom styles here
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { TrainerContext } from '../context/TrainerContextProvidor';
+import {Post} from '../types/TrainerType';
 
-type Post = {
-  id: string;
-  title: string;
-  description: string;
-  image?: string;
-  likes: number;
-  likedByUser: boolean;
-  comments: any[];
-  isOwner: boolean;
-};
+// type Post = {
+//   id: string;
+//   title: string;
+//   description: string;
+//   image?: string;
+//   likes: number;
+//   likedByUser: boolean;
+//   comments: any[];
+//   isOwner: boolean;
+// };
 
 const CreatePost: React.FC<{ onPostSubmit: (post: Post) => void }> = ({ onPostSubmit }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
