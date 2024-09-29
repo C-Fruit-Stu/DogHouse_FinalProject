@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Modal, FlatList, Button, StyleSheet, TextInput, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { TrainerContext } from '../context/TrainerContextProvider';
@@ -24,20 +24,10 @@ export default function Posts() {
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
 
-  // Refresh the screen when a new post is added
-  const [refresh, setRefresh] = useState(false);
-
   // Get the correct posts based on client type
   const posts = clientType === 1
     ? currentTrainer?.Posts || []
     : currentCoustumer?.HisTrainer.flatMap((trainer: TrainerType) => trainer.Posts || []) || [];
-
-  useEffect(() => {
-    if (refresh) {
-      // Trigger re-render when refresh is true
-      setRefresh(false);
-    }
-  }, [refresh]);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -59,9 +49,8 @@ export default function Posts() {
       AddPost(newPost);
       setInput1('');
       setInput2('');
-      setImageUri(null);
+      setImageUri(null); // Clear image input
       setModalVisible(false);
-      setRefresh(true); // Trigger refresh after adding a post
     }
   };
 
@@ -79,53 +68,60 @@ export default function Posts() {
     }
   };
 
+  // Like/unlike posts for trainers and customers
   const handleLike = (postId: string) => {
-    if (clientType === 2) {
-      const updatedPosts = posts.map((post: Post) =>
-        post.id === postId
-          ? {
-              ...post,
-              likedByUser: !post.likedByUser,
-              likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
-            }
-          : post
-      );
-      // Update context with new likes count (pseudo-code)
-      // updatePosts(updatedPosts);
-      setRefresh(true); // Refresh to update likes
-    }
+    const updatedPosts = posts.map((post: Post) =>
+      post.id === postId
+        ? {
+            ...post,
+            likedByUser: !post.likedByUser,
+            likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
+          }
+        : post
+    );
+    // Update context with new likes count
   };
 
+  // Comment handler for posts (trainers and customers)
   const handleComment = (postId: string, newComment: Comment) => {
-    if (clientType === 2) {
-      const updatedPosts = posts.map((post: Post) =>
-        post.id === postId
-          ? { ...post, comments: [...post.comments, newComment] }
-          : post
-      );
-      // Update context with new comment (pseudo-code)
-      // updatePosts(updatedPosts);
-      setRefresh(true); // Refresh to update comments
-    }
+    const updatedPosts = posts.map((post: Post) =>
+      post.id === postId
+        ? { ...post, comments: [...post.comments, newComment] }
+        : post
+    );
+    // Update context with new comment
   };
 
+  // Toggle comment visibility for posts
   const toggleComments = (postId: string) => {
     setCommentsVisible((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
+  // Delete any comment (trainers only)
+  const handleDeleteComment = (postId: string, commentId: string) => {
+    const updatedPosts = posts.map((post: Post) =>
+      post.id === postId
+        ? { ...post, comments: post.comments.filter((comment) => comment.id !== commentId) }
+        : post
+    );
+    // Update context with new comments after deletion
+  };
+
+  // Restore delete handler for trainers
   const handleDelete = (postId: string) => {
     if (clientType === 1) {
-      // Call context function to delete post
+      // Implement delete post logic later
     }
   };
 
+  // Restore edit handler for trainers
   const handleEdit = (postId: string, updatedPost: Post) => {
     if (clientType === 1) {
-      // Call context function to edit post
+      // Implement edit post logic later
     }
   };
 
-  // Display posts and include like and comment functionalities
+  // Facebook-like post view for customers and trainers
   return (
     <View style={styles.container}>
       {clientType === 1 && (
@@ -147,29 +143,40 @@ export default function Posts() {
 
       <FlatList
         data={posts.filter((post: Post) => post.title)}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
             <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
-            <Text style={styles.likesCount}>Likes: {item.likes}</Text>
-            <TouchableOpacity onPress={() => handleLike(item.id)}>
-              <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => toggleComments(item.id)}>
-              <Text style={styles.commentsCount}>Comments: {item.comments.length}</Text>
-            </TouchableOpacity>
-            {commentsVisible[item.id] && (
-              <ScrollView style={styles.commentsSection}>
-                {item.comments.map((comment: Comment, index: number) => (
-                  <Text key={index} style={styles.commentText}>{comment.text}</Text>
-                ))}
-                <TextInput
-                  placeholder="Add a comment"
-                  onSubmitEditing={(event) => handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })}
-                  style={styles.commentInput}
-                />
-              </ScrollView>
-            )}
+            <View style={styles.postActions}>
+              <Text style={styles.likesCount}>Likes: {item.likes}</Text>
+              <TouchableOpacity onPress={() => handleLike(item.id)}>
+                <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => toggleComments(item.id)}>
+                <Text style={styles.commentsCount}>Comments: {item.comments.length}</Text>
+              </TouchableOpacity>
+              {commentsVisible[item.id] && (
+                <ScrollView style={styles.commentsSection}>
+                  {item.comments.map((comment: Comment) => (
+                    <View key={comment.id} style={styles.commentContainer}>
+                      <Text style={styles.commentText}>{comment.text}</Text>
+                      {clientType === 1 && (
+                        <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.id)}>
+                          <Text style={styles.deleteComment}>Delete</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ))}
+                  <TextInput
+                    placeholder="Add a comment"
+                    onSubmitEditing={(event) =>
+                      handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })
+                    }
+                    style={styles.commentInput}
+                  />
+                </ScrollView>
+              )}
+            </View>
           </View>
         )}
       />
@@ -207,10 +214,20 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     marginBottom: 20,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  postActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
   likesCount: {
     fontSize: 16,
-    marginBottom: 5,
   },
   likeButton: {
     color: 'blue',
@@ -218,20 +235,26 @@ const styles = StyleSheet.create({
   },
   commentsCount: {
     fontSize: 16,
-    marginBottom: 5,
   },
   commentsSection: {
     maxHeight: 100,
     marginTop: 10,
   },
+  commentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
   commentText: {
     fontSize: 14,
-    marginBottom: 5,
+  },
+  deleteComment: {
+    color: 'red',
   },
   commentInput: {
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 5,
-    marginBottom: 10,
+    marginTop: 10,
   },
 });
