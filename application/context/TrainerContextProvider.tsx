@@ -45,23 +45,30 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
     async function AddPost(newPost: any) {
-        if (newPost.title == null || newPost.description == null) {
-            alert("Please enter title and description");
-            return false;
-        }
-        else {
-            try {
-                console.log('newPost ====>>>', newPost)
-                let data = await POST('trainer/addnewpost', newPost);
-                console.log("data" + data);
-                if (data && data.post) {
-                    return true;
-                }
-                return false;
-            } catch (error) {
-                console.log(error);
+        if (currentTrainer) {
+            const email = currentTrainer.email;
+            newPost = { ...newPost, email };
+            if (newPost.title == null || newPost.description == null) {
+                alert("Please enter title and description");
                 return false;
             }
+            else {
+                try {
+                    console.log('newPost ====>>>', newPost)
+                    let data = await POST('trainer/addnewpost', newPost);
+                    console.log("data" + data);
+                    if (data && data.post) {
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.log(error);
+                    return false;
+                }
+            }
+        }
+        else {
+            return false;
         }
     }
     async function DeletePost() { }
