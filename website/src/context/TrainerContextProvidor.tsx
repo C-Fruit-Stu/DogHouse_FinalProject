@@ -59,6 +59,7 @@ function TrainerContextProvidor({ children }: any) {
     async function AddPost(newPost: any) {
         if (currentTrainer) {
             const email = currentTrainer.email;
+            newPost = { ...newPost, email };
             if (newPost.title == null || newPost.description == null) {
                 alert("Please enter title and description");
                 return false;
@@ -66,7 +67,7 @@ function TrainerContextProvidor({ children }: any) {
             else {
                 try {
                     console.log('newPost ====>>>', newPost)
-                    let data = await POST('trainer/addnewpost', email + newPost);
+                    let data = await POST('trainer/addnewpost', (newPost));
                     console.log("data" + data);
                     if (data && data.post) {
                         return true;
