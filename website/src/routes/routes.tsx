@@ -13,6 +13,7 @@ import TrainingResources from "../pages/TrainingResources";
 import Admin from "../pages/Admin";
 import Profile from "../pages/Profile";
 import TrainerContextProvidor from "../context/TrainerContextProvidor";
+import AddPost from "../pages/AddPost";
 
 
 export const routes = createBrowserRouter([
@@ -67,5 +68,9 @@ export const routes = createBrowserRouter([
     {
         path: "/profile",
         element: <TrainerContextProvidor><Profile/></TrainerContextProvidor>
+    },
+    {
+        path: "/addpost",
+        element: <TrainerContextProvidor><AddPost/></TrainerContextProvidor>
     }
 ])

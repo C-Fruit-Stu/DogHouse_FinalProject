@@ -43,7 +43,7 @@ function TrainerContextProvidor({ children }: any) {
             
             if (data && data.user) {
                 setCurrentTrainer(data.user); 
-                localStorage.setItem('trainer', JSON.stringify(data.user)) // State is updated asynchronously
+                sessionStorage.setItem('trainer', JSON.stringify(data.user)) // State is updated asynchronously
                 // No need to log currentTrainer here because it won’t be updated immediately
                 return true;
             }
@@ -52,6 +52,28 @@ function TrainerContextProvidor({ children }: any) {
         } catch (error) {
             console.log(error);
             return false;
+        }
+    }
+
+
+    async function AddPost(newPost: any) {
+        if (newPost.title == null || newPost.description == null) {
+            alert("Please enter title and description");
+            return false;
+        }
+        else {
+            try {
+                console.log('newPost ====>>>', newPost)
+                let data = await POST('trainer/addnewpost', newPost);
+                console.log("data" + data);
+                if (data && data.post) {
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
         }
     }
 
@@ -65,6 +87,7 @@ function TrainerContextProvidor({ children }: any) {
         setCurrentTrainer,
         RegisterNewTrainer,
         LogInTrainer,
+        AddPost
     }}>
     {children}
     </TrainerContext.Provider>
