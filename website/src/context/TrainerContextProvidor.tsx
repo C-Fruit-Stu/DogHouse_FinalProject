@@ -12,17 +12,17 @@ function TrainerContextProvidor({ children }: any) {
 
     useEffect(() => {
         const trainer = sessionStorage.getItem('trainer');
-        if (trainer){
+        if (trainer) {
             setCurrentTrainer(JSON.parse(trainer as any));
         }
-    }  , []);
+    }, []);
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {
             console.log('newTrainer ====>>>', newTrainer)
-            let data = await POST('trainer/register', newTrainer);  
-            console.log("context after server functions:\n"+data);
-            if(data == null)
+            let data = await POST('trainer/register', newTrainer);
+            console.log("context after server functions:\n" + data);
+            if (data == null)
                 return false;
             if (data && data.trainer) {
                 setAllTrainer([...allTrainer, data.trainer]);
@@ -40,14 +40,14 @@ function TrainerContextProvidor({ children }: any) {
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
             let data = await POST('trainer/login', loggingInfo);
             console.log('data ====>>>', data.user);
-            
+
             if (data && data.user) {
-                setCurrentTrainer(data.user); 
+                setCurrentTrainer(data.user);
                 sessionStorage.setItem('trainer', JSON.stringify(data.user)) // State is updated asynchronously
                 // No need to log currentTrainer here because it won’t be updated immediately
                 return true;
             }
-            
+
             return false;
         } catch (error) {
             console.log(error);
@@ -57,41 +57,47 @@ function TrainerContextProvidor({ children }: any) {
 
 
     async function AddPost(newPost: any) {
-        if (newPost.title == null || newPost.description == null) {
-            alert("Please enter title and description");
-            return false;
-        }
-        else {
-            try {
-                console.log('newPost ====>>>', newPost)
-                let data = await POST('trainer/addnewpost', newPost);
-                console.log("data" + data);
-                if (data && data.post) {
-                    return true;
-                }
-                return false;
-            } catch (error) {
-                console.log(error);
+        if (currentTrainer) {
+            const email = currentTrainer.email;
+            if (newPost.title == null || newPost.description == null) {
+                alert("Please enter title and description");
                 return false;
             }
+            else {
+                try {
+                    console.log('newPost ====>>>', newPost)
+                    let data = await POST('trainer/addnewpost', email + newPost);
+                    console.log("data" + data);
+                    if (data && data.post) {
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.log(error);
+                    return false;
+                }
+            }
+        }
+        else{
+            return false;
         }
     }
 
-    
 
-  return (
-    <TrainerContext.Provider
-    value={{
-        allTrainer,
-        currentTrainer,
-        setCurrentTrainer,
-        RegisterNewTrainer,
-        LogInTrainer,
-        AddPost
-    }}>
-    {children}
-    </TrainerContext.Provider>
-  )
+
+    return (
+        <TrainerContext.Provider
+            value={{
+                allTrainer,
+                currentTrainer,
+                setCurrentTrainer,
+                RegisterNewTrainer,
+                LogInTrainer,
+                AddPost
+            }}>
+            {children}
+        </TrainerContext.Provider>
+    )
 }
 
 export default TrainerContextProvidor
