@@ -79,7 +79,6 @@ export default function Posts() {
           }
         : post
     );
-    // Update context with new likes count
   };
 
   // Comment handler for posts (trainers and customers)
@@ -89,7 +88,6 @@ export default function Posts() {
         ? { ...post, comments: [...post.comments, newComment] }
         : post
     );
-    // Update context with new comment
   };
 
   // Toggle comment visibility for posts

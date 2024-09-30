@@ -64,6 +64,11 @@ export default function Profile() {
                 <Text style={styles.TextContainer}>Stats</Text>
               </View>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('FindTrainer', { clientType })}>
+              <View style={styles.StatesContainer}>
+                <Text style={styles.TextContainer}>costumers</Text>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
               <View style={styles.StatesContainer}>
                 <Text style={styles.TextContainer}>costumers</Text>
