@@ -52,7 +52,7 @@ export async function LoginCostumer(req: Request, res: Response) {
 }
 
 export async function RegisterCostumer(req: Request, res: Response) {
-    let { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment } = req.body;
+    let { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment,trainingSchedule,HisTrainer } = req.body;
 
     if (!first_name || !last_name || !password || !email) {
         return res.status(400).json({ message: 'missing info' });
@@ -61,7 +61,7 @@ export async function RegisterCostumer(req: Request, res: Response) {
     try {
         password = encryptPassword(password);
         console.log("This is Server / Controler  "+password);
-        let customer: Costumer = { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment };
+        let customer: Costumer = { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment,trainingSchedule,HisTrainer };
 
         let result = await regCostumer(customer);
 

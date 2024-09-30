@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-
+import { TrainerUser } from "../Trainer/trainer.type";
 export type Costumer = {
     id?: ObjectId,
     dogBreed? : string,
@@ -21,7 +21,9 @@ export type Costumer = {
             date: Date, // תאריך האימון
             time: string, // יש להזין מאיזה שעה לאיזה שעה
         }
-    ]
+    ],
+    HisTrainer?: Partial<TrainerUser>[]
+
 }
 
 export type credit = {

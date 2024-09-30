@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Modal, FlatList, Button, StyleSheet, TextInput, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { TrainerContext } from '../context/TrainerContextProvider';
@@ -32,6 +32,18 @@ export default function Posts() {
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const post = currentTrainer.Posts;
+      if (post) {
+        AddPost(post);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [currentTrainer.Posts]);
 
   const handleSubmit = () => {
     if (clientType === 1 && AddPost) {
@@ -73,10 +85,10 @@ export default function Posts() {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
         ? {
-            ...post,
-            likedByUser: !post.likedByUser,
-            likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
-          }
+          ...post,
+          likedByUser: !post.likedByUser,
+          likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
+        }
         : post
     );
   };
@@ -118,70 +130,90 @@ export default function Posts() {
       // Implement edit post logic later
     }
   };
+  if (clientType === 2) {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={posts}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <PostView
+              post={item}
+              clientType={clientType!}
+              isOwner={false}
+              onLike={() => handleLike(item.id)}
+              onComment={(newComment: Comment) => handleComment(item.id, newComment)}
+              onDelete={undefined} // Customers can't delete posts
+              onEdit={undefined} // Customers can't edit posts
+            />
+          )}
+        />
+      </View>
+    );
+    //  למאמנים
+  } else {
+    return (
+      <View style={styles.container}>
+        {clientType === 1 && (
+          <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />
+        )}
 
-  // Facebook-like post view for customers and trainers
-  return (
-    <View style={styles.container}>
-      {clientType === 1 && (
-        <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />
-      )}
-
-      <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TextInput placeholder="Title" value={input1} onChangeText={setInput1} style={styles.input} />
-            <TextInput placeholder="Description" value={input2} onChangeText={setInput2} style={styles.input} />
-            <Button title="Pick an Image" onPress={pickImage} />
-            {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
-            <Button title="Submit" onPress={handleSubmit} />
-            <Button title="Close" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
-
-      <FlatList
-        data={posts.filter((post: Post) => post.title)}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
-            <View style={styles.postActions}>
-              <Text style={styles.likesCount}>Likes: {item.likes}</Text>
-              <TouchableOpacity onPress={() => handleLike(item.id)}>
-                <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => toggleComments(item.id)}>
-                <Text style={styles.commentsCount}>Comments: {item.comments.length}</Text>
-              </TouchableOpacity>
-              {commentsVisible[item.id] && (
-                <ScrollView style={styles.commentsSection}>
-                  {item.comments.map((comment: Comment) => (
-                    <View key={comment.id} style={styles.commentContainer}>
-                      <Text style={styles.commentText}>{comment.text}</Text>
-                      {clientType === 1 && (
-                        <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.id)}>
-                          <Text style={styles.deleteComment}>Delete</Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  ))}
-                  <TextInput
-                    placeholder="Add a comment"
-                    onSubmitEditing={(event) =>
-                      handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })
-                    }
-                    style={styles.commentInput}
-                  />
-                </ScrollView>
-              )}
+        <Modal visible={modalVisible} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TextInput placeholder="Title" value={input1} onChangeText={setInput1} style={styles.input} />
+              <TextInput placeholder="Description" value={input2} onChangeText={setInput2} style={styles.input} />
+              <Button title="Pick an Image" onPress={pickImage} />
+              {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
+              <Button title="Submit" onPress={handleSubmit} />
+              <Button title="Close" onPress={() => setModalVisible(false)} />
             </View>
           </View>
-        )}
-      />
-    </View>
-  );
-}
+        </Modal>
 
+        <FlatList
+          data={posts.filter((post: Post) => post.title)}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.postContainer}>
+              <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
+              <View style={styles.postActions}>
+                <Text style={styles.likesCount}>Likes: {item.likes}</Text>
+                <TouchableOpacity onPress={() => handleLike(item.id)}>
+                  <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => toggleComments(item.id)}>
+                  <Text style={styles.commentsCount}>Comments: {item.comments.length}</Text>
+                </TouchableOpacity>
+                {commentsVisible[item.id] && (
+                  <ScrollView style={styles.commentsSection}>
+                    {item.comments.map((comment: Comment) => (
+                      <View key={comment.id} style={styles.commentContainer}>
+                        <Text style={styles.commentText}>{comment.text}</Text>
+                        {clientType === 1 && (
+                          <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.id)}>
+                            <Text style={styles.deleteComment}>Delete</Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    ))}
+                    <TextInput
+                      placeholder="Add a comment"
+                      onSubmitEditing={(event) =>
+                        handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })
+                      }
+                      style={styles.commentInput}
+                    />
+                  </ScrollView>
+                )}
+              </View>
+            </View>
+          )}
+        />
+      </View>
+    );
+  }
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

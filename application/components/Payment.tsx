@@ -155,14 +155,19 @@ export default function Payment() {
               time: ''
             }
           ],
-          HisTrainer:[]
+          HisTrainer: []
         }
         console.log('New Customer: ' + NewCustomer);
         succses = await RegisterNewCoustumer(NewCustomer);
       }
       resetForm();
       if (succses) {
-        navigation.navigate("BackToPre");
+        if (currentTrainer)
+          navigation.navigate("BackToPre", { clientType: 1 });
+        else if (currentCoustumer)
+          navigation.navigate("BackToPre", { clientType: 2 });
+        else
+          alert("Error try sign up again");
       }
       else {
         alert("Email already taken... try again");
