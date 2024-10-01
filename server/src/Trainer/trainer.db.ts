@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { credit, Post, TrainerUser } from "./trainer.type";
+import { credit, Post, TrainerUser,trainingSchedule } from "./trainer.type";
 
 const DB_INFO = {
     connection: process.env.CONNECTION_STRING as string,
@@ -259,6 +259,7 @@ export async function checkmongopostbyid(query: {}, projection = {}) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
+        await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne(query, { projection });
     } catch (error) {
         throw error;
@@ -266,5 +267,21 @@ export async function checkmongopostbyid(query: {}, projection = {}) {
     finally {
         mongo.close();
     }
+}
+
+export async function newTrainingFunc(trainingSchedulea : trainingSchedule, email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $addToSet: { trainingSchedule: trainingSchedulea } }
+        );
+    } catch (error) {
+        throw error;
+    }
+    finally {
+        mongo.close();
+    }   
 }
 

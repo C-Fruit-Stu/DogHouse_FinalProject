@@ -1,6 +1,6 @@
 //ייבוא אובייקט 
 import { Router } from 'express';
-import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost } from './trainer.controller';
+import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining } from './trainer.controller';
 
 
 const TrainerRouter = Router();
@@ -21,5 +21,7 @@ TrainerRouter
     .put('/deletePost/:id', deletePost)
     // .post('/addnewdates/:id', AddNewDate)
     // .put('/removedate/:id', RemoveDate)
+
+    .post('/addnewtraining', addNewTraining)
 
 export default TrainerRouter;

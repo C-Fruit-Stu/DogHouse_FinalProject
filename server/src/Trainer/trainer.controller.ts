@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining } from "./trainer.model";
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
 import { ObjectId } from "mongodb";
@@ -258,4 +258,19 @@ export async function deletePost(req: Request, res: Response) {
 //         res.status(500).json({ error })
 //     }
 // }
+
+
+export async function addNewTraining(req: Request, res: Response) {
+    let { email,name,date,time } = req.body
+
+    if(!date || !time)
+        return res.status(400).json({ msg: "invalid info" })
+
+    try {
+        let result = await AddTraining(email,name,date,time)
+        res.status(200).json({ result })
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+}
 
