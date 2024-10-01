@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc } from "./trainer.db";
+import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc } from "./trainer.db";
 import { credit, Post, TrainerUser,Comment, trainingSchedule } from "./trainer.type";
 
 export async function getAllUsers() {
@@ -167,6 +167,15 @@ export async function AddTraining(email:string,name:string,date:Date,time:string
     try {
         let newTraining : trainingSchedule =  { name ,date,time }
         return await newTrainingFunc(newTraining,email);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function DeleteTraining(email:string,name:string,date:Date,time:string) {
+    try {
+        let newTraining : trainingSchedule =  { name ,date,time }
+        return await deleteTrainingFunc(newTraining,email);
     } catch (error) {
         throw error;
     }

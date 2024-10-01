@@ -273,6 +273,7 @@ export async function newTrainingFunc(trainingSchedulea : trainingSchedule, emai
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
+        await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
             { email },
             { $addToSet: { trainingSchedule: trainingSchedulea } }
@@ -283,5 +284,23 @@ export async function newTrainingFunc(trainingSchedulea : trainingSchedule, emai
     finally {
         mongo.close();
     }   
+}
+
+export async function deleteTrainingFunc(trainingSchedulea : trainingSchedule, email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+        try {
+            await mongo.connect();
+            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+                { email },
+                { $pull: { 'trainingSchedule': trainingSchedulea } as any }
+            )
+        } catch (error) {
+            throw error;
+        }
+        finally {
+            mongo.close();
+        }
+
 }
 
