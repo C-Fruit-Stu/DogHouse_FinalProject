@@ -1843,17 +1843,23 @@ label {
   flex-grow: 1;
 }
 
-.add-post-button {
-  padding: 8px 16px;
-  background-color: #4CAF50;
+.add-post-button,
+.submit-schedule-button {
+  background-color: #28a745;
   color: white;
+  padding: 10px 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
-.add-post-button:hover {
-  background-color: #45a049;
+.add-post-button:hover,
+.submit-schedule-button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 .create-post-container {
   max-width: 600px;
@@ -1945,6 +1951,31 @@ textarea {
 }
 
 
+.schedule-inputs {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-date-input,
+.schedule-time-input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.schedule-date-input:hover,
+.schedule-time-input:hover {
+  border-color: #007bff;
+  box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.3);
+}
 
 
   
