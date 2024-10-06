@@ -44,6 +44,22 @@ export default function TrainerContextProvider({ children }: any) {
             return false;
         }
     }
+    async function GetAllTrainers() {
+        try {
+            let data = await POST('trainer/getalltrainer', {});
+            console.log("Fetched trainers:", data);
+
+            if (data && data.trainers) {
+                setAllTrainer(data.trainers);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
     async function AddPost(newPost: any) {
         if (currentTrainer) {
             const email = currentTrainer.email;
@@ -84,7 +100,8 @@ export default function TrainerContextProvider({ children }: any) {
                 LogInTrainer,
                 AddPost,
                 DeletePost,
-                EditPost
+                EditPost,
+                GetAllTrainers
             }}>
             {children}
         </TrainerContext.Provider>

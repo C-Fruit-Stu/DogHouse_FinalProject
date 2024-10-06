@@ -23,13 +23,13 @@ export type TrainerType = {
     openDates?: opendates[]
 }
 
-export type opendates = {
+export type trainingSchedule = {
+    name?: string,
     date: Date,
     time: string
 }
 
-export type trainingSchedule = {
-    name?: string,
+export type opendates = {
     date: Date,
     time: string
 }
@@ -38,9 +38,9 @@ export type Comment = {
     id: string;
     text: string;
     userId: string; // to associate the comment with a user
-  };
-  
-  export type Post = {
+};
+
+export type Post = {
     id: string;
     title: string;
     description: string;
@@ -49,7 +49,7 @@ export type Comment = {
     likedByUser: boolean;
     comments: Comment[];
     isOwner: boolean;
-  };
+};
 
 
 export type CoustumerType = {
@@ -63,14 +63,14 @@ export type CoustumerType = {
     image: string,
     phone: string,
     update_details: string,
-    clientType:string, // 1 for trainer 2 for costumer
+    clientType: string, // 1 for trainer 2 for costumer
     payment: {
         card: string,
         date: string,
         ccv: string
     }
     stayLogIn?: boolean;
-    trainingSchedule?:[
+    trainingSchedule?: [
         {
             name?: string, // שם המאמן
             date: Date, // תאריך האימון

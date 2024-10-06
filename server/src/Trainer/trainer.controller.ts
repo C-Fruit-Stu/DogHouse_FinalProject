@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo } from "./trainer.model";
+
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
 import { ObjectId } from "mongodb";
@@ -16,6 +17,18 @@ export async function getAll(req: Request, res: Response) {
     }
 }
 
+export async function getAllTrainers(req: Request, res: Response) {
+    try {
+        let trainers = await getAllTrainersInfo();
+        if (trainers?.length === 0) {
+            res.status(200).json({ message: 'No trainers found', trainers });
+        } else {
+            res.status(200).json({ trainers });
+        }
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+}
 
 export async function getUserById(req: Request, res: Response) {
     let { id } = req.params; //url שליפת הפרמטר מתוך ה 
