@@ -104,6 +104,25 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
+    async function DeleteNewDate(opendate: any) {
+        if(currentTrainer){
+            const email = currentTrainer.email;
+            opendate = { ...opendate, email };
+            try {
+                console.log('opendate ====>>>', opendate)
+                let data = await POST('trainer/deleteopenDate', (opendate));
+                console.log("data" + data);
+                if (data && data.post) {
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+        }
+    }
+
 
     return (
         <TrainerContext.Provider
@@ -114,7 +133,8 @@ function TrainerContextProvidor({ children }: any) {
                 RegisterNewTrainer,
                 LogInTrainer,
                 AddPost,
-                openNewDate
+                openNewDate,
+                DeleteNewDate
             }}>
             {children}
         </TrainerContext.Provider>

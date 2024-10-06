@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
-    const { currentTrainer,setCurrentTrainer,openNewDate } = useContext(TrainerContext);
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
@@ -18,7 +18,6 @@ const Profile: React.FC = () => {
             const trainer = sessionStorage.getItem('trainer');
             if (trainer) {
                 setCurrentTrainer(JSON.parse(trainer as any));
-                console.log('Current Trainer:', JSON.parse(trainer as any));
             }
         }, 3000); // 3000 milliseconds = 3 seconds
     
@@ -43,6 +42,18 @@ const Profile: React.FC = () => {
         console.log(`Selected Date: ${scheduleDate}, Selected Time: ${scheduleTime}`);
         alert(`Schedule for ${scheduleDate} at ${scheduleTime} has been submitted!`);
         await openNewDate(scheduleDate, scheduleTime);
+        setScheduleDate('');
+        setScheduleTime('');
+      } else {
+        alert("Please select both date and time.");
+      }
+    };
+
+    const handaleDeleteSchedule = async (date: any, time: any) => {
+      if (date && time) {
+        console.log(`Selected Date: ${date}, Selected Time: ${time}`);
+        alert(`Schedule for ${date} at ${time} has been deleted!`);
+        await DeleteNewDate(date, time);
         setScheduleDate('');
         setScheduleTime('');
       } else {
@@ -101,6 +112,26 @@ const Profile: React.FC = () => {
               Submit Schedule
             </button>
           </div>
+          {currentTrainer?.openDates.length > 0 && (
+            <div className="open-schedules-container">
+              <h3>Open Schedules</h3>
+              <ul className="open-schedules-list">
+                {currentTrainer?.openDates.map((schedule: any, index: any) => (
+                  <li key={index} className="open-schedule-item">
+                    <span>
+                      {schedule.date} at {schedule.time}
+                    </span>
+                    <button
+                      className="delete-schedule-button"
+                      onClick={() => handaleDeleteSchedule(schedule.date, schedule.time)}
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <h2>Posts</h2>
           <div className="posts-header">
