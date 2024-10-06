@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
-    const { currentTrainer,setCurrentTrainer } = useContext(TrainerContext);
+    const { currentTrainer,setCurrentTrainer,openNewDate } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
@@ -38,12 +38,11 @@ const Profile: React.FC = () => {
       console.log('scheduleDate:', scheduleDate, 'scheduleTime:', scheduleTime);
     };
 
-    const handleSubmitSchedule = () => {
+    const handleSubmitSchedule = async () => {
       if (scheduleDate && scheduleTime) {
         console.log(`Selected Date: ${scheduleDate}, Selected Time: ${scheduleTime}`);
-        // Add further logic to submit the schedule here
         alert(`Schedule for ${scheduleDate} at ${scheduleTime} has been submitted!`);
-        // Clear the inputs
+        await openNewDate(scheduleDate, scheduleTime);
         setScheduleDate('');
         setScheduleTime('');
       } else {
