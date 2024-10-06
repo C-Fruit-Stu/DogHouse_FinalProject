@@ -19,7 +19,13 @@ export type TrainerType = {
     stayLogIn?: boolean,
     trainingSchedule?: trainingSchedule[],
     Posts?: Post[],
-    CostumersArr?: CoustumerType[]
+    CostumersArr?: CoustumerType[],
+    openDates?: opendates[]
+}
+
+export type opendates = {
+    date: Date,
+    time: string
 }
 
 export type trainingSchedule = {

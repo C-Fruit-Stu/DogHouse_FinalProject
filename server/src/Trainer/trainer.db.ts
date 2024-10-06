@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { credit, Post, TrainerUser,trainingSchedule } from "./trainer.type";
+import { credit, opendates, Post, TrainerUser,trainingSchedule } from "./trainer.type";
 
 const DB_INFO = {
     connection: process.env.CONNECTION_STRING as string,
@@ -302,5 +302,23 @@ export async function deleteTrainingFunc(trainingSchedulea : trainingSchedule, e
             mongo.close();
         }
 
+}
+
+export async function openTraining(newdate : opendates,email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $addToSet: { openDates: newdate } }
+        );
+    } catch (error) {
+        throw error;
+    }
+    finally {
+        mongo.close();
+    }
+    
 }
 

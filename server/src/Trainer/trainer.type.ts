@@ -16,13 +16,19 @@ export type TrainerUser = {
     stayLogIn?: boolean,
     trainingSchedule?: trainingSchedule[],
     Posts?: Post[],
-    CostumersArr?:Costumer[]
+    CostumersArr?:Costumer[],
+    openDates?: opendates[]
 } 
 
 export type credit = {
     card: string,
     date: string,
     ccv: string
+}
+
+export type opendates = {
+    date: Date,
+    time: string
 }
 
 export type trainingSchedule = {
