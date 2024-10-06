@@ -22,8 +22,11 @@ TrainerRouter
     // .post('/addnewdates/:id', AddNewDate)
     // .put('/removedate/:id', RemoveDate)
 
+    // מוסיף תור
     .post('/addnewtraining', addNewTraining)
     .put('/deletetraining',deleteTrainiging)
+
+    // פתיחת תורים
     .post('/opentrainingdates',openTrainingDates)
     .put('/deleteopenDate',closeTrainingDates)
 
