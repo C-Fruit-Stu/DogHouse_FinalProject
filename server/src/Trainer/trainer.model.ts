@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining } from "./trainer.db";
+import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
 import { credit, Post, TrainerUser,Comment, trainingSchedule, opendates } from "./trainer.type";
 
 export async function getAllUsers() {
@@ -185,6 +185,16 @@ export async function OpenTraining(date:Date,time:string,email:string) {
     try {
         let newdate : opendates = { date,time }
         return await openTraining(newdate,email); 
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function CloseTraining(date:Date,time:string,email:string) {
+    try {
+        let newdate : opendates = { date,time }
+        return await closeTraining(newdate,email); 
     }
     catch (error) {
         throw error;

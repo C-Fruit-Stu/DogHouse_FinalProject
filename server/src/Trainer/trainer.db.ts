@@ -322,3 +322,21 @@ export async function openTraining(newdate : opendates,email: string) {
     
 }
 
+export async function closeTraining(newdate : opendates,email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $pull: { 'openDates': newdate } as any }
+        );
+    } catch (error) {
+        throw error;
+    }
+    finally {
+        mongo.close();
+    }
+    
+}
+
