@@ -1,4 +1,3 @@
-@ -0,0 +1,91 @@
 import { View, Text, Image, Button, FlatList, StyleSheet } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';

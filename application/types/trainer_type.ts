@@ -21,10 +21,7 @@ export type TrainerType = {
     Posts?: Post[],
     CostumersArr?: CoustumerType[],
     openDates?: opendates[]
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 }
 
 export type opendates = {

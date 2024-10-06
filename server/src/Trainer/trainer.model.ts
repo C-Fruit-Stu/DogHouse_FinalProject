@@ -1,11 +1,7 @@
 import { ObjectId } from "mongodb";
-<<<<<<< Updated upstream
-import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
-import { credit, Post, TrainerUser,Comment, trainingSchedule, opendates } from "./trainer.type";
-=======
 import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
->>>>>>> Stashed changes
+
 
 export async function getAllUsers() {
     let query = {
@@ -213,34 +209,20 @@ export async function DeleteTraining(email: string, name: string, date: Date, ti
     }
 }
 
-<<<<<<< Updated upstream
-export async function OpenTraining(date:Date,time:string,email:string) {
-    try {
-        let newdate : opendates = { date,time }
-        return await openTraining(newdate,email); 
-=======
 export async function OpenTraining(date: Date, time: string, email: string) {
     try {
         let newdate: opendates = { date, time }
         return await openTraining(newdate, email);
->>>>>>> Stashed changes
     }
     catch (error) {
         throw error;
     }
 }
 
-<<<<<<< Updated upstream
-export async function CloseTraining(date:Date,time:string,email:string) {
-    try {
-        let newdate : opendates = { date,time }
-        return await closeTraining(newdate,email); 
-=======
 export async function CloseTraining(date: Date, time: string, email: string) {
     try {
         let newdate: opendates = { date, time }
         return await closeTraining(newdate, email);
->>>>>>> Stashed changes
     }
     catch (error) {
         throw error;

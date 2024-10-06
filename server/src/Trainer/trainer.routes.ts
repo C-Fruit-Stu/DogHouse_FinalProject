@@ -1,10 +1,7 @@
 //ייבוא אובייקט 
 import { Router } from 'express';
-<<<<<<< Updated upstream
-import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, deleteTrainiging, openTrainingDates, closeTrainingDates } from './trainer.controller';
-=======
-import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, getAllTrainers,deleteTrainiging } from './trainer.controller';
->>>>>>> Stashed changes
+import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, deleteTrainiging, openTrainingDates, closeTrainingDates, getAllTrainers } from './trainer.controller';
+
 
 
 const TrainerRouter = Router();
