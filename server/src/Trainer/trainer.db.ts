@@ -1,5 +1,9 @@
 import { MongoClient, ObjectId } from "mongodb";
+<<<<<<< Updated upstream
 import { credit, opendates, Post, TrainerUser,trainingSchedule } from "./trainer.type";
+=======
+import { credit, Post, TrainerUser,trainingSchedule,opendates } from "./trainer.type";
+>>>>>>> Stashed changes
 
 const DB_INFO = {
     connection: process.env.CONNECTION_STRING as string,
@@ -205,6 +209,41 @@ export async function UpdateCard(card1: credit) {
     }
 }
 
+export async function openTraining(newdate : opendates,email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $addToSet: { openDates: newdate } }
+        );
+    } catch (error) {
+        throw error;
+    }
+    finally {
+        mongo.close();
+    }
+    
+}
+
+export async function closeTraining(newdate : opendates,email: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $pull: { 'openDates': newdate } as any }
+        );
+    } catch (error) {
+        throw error;
+    }
+    finally {
+        mongo.close();
+    }
+    
+}
 // export async function newdates(date: Dates, id: ObjectId) {
 //     let mongo = new MongoClient(DB_INFO.connection);
 

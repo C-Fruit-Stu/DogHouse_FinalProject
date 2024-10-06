@@ -21,6 +21,10 @@ export type TrainerType = {
     Posts?: Post[],
     CostumersArr?: CoustumerType[],
     openDates?: opendates[]
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }
 
 export type opendates = {
@@ -38,9 +42,9 @@ export type Comment = {
     id: string;
     text: string;
     userId: string; // to associate the comment with a user
-  };
-  
-  export type Post = {
+};
+
+export type Post = {
     id: string;
     title: string;
     description: string;
@@ -49,4 +53,4 @@ export type Comment = {
     likedByUser: boolean;
     comments: Comment[];
     isOwner: boolean;
-  };
+};

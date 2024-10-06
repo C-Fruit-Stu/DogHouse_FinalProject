@@ -1,6 +1,11 @@
 import { ObjectId } from "mongodb";
+<<<<<<< Updated upstream
 import { checkIfDocumentExists,FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
 import { credit, Post, TrainerUser,Comment, trainingSchedule, opendates } from "./trainer.type";
+=======
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
+import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
+>>>>>>> Stashed changes
 
 export async function getAllUsers() {
     let query = {
@@ -12,6 +17,33 @@ export async function getAllUsers() {
     return await findUsers(query);
 }
 
+export async function getAllTrainersInfo() {
+    let query = {
+        clientType: "1"
+    };
+    let projection = {
+        first_name: 1,
+        last_name: 1,
+        Posts: 1,
+        email: 1,
+        dob: 1,
+        experience: 1,
+        phone: 1,
+        image: 1,
+        trainingSchedule: 1
+    };
+
+    return await findUsers(query, projection);
+}
+
+export async function getAllPosts() {
+    let query = {
+        $or: [
+            { Posts: { $exists: true } },
+            { Posts: true }
+        ]
+    }
+}
 export async function getAllPosts1() {
     let query = {
         $or: [
@@ -20,7 +52,7 @@ export async function getAllPosts1() {
         ]
     }
     const projection = { Posts: 1, _id: 0 };
-    return await FindAllPosts(query,projection);
+    return await FindAllPosts(query, projection);
 }
 
 export async function findUserById(id: string) {
@@ -37,7 +69,7 @@ export async function findUserById(id: string) {
 export async function LoginUser(email: string) {
     try {
         let user = await FindUserByEmail(email);
-        console.log("Model: "+user)
+        console.log("Model: " + user)
         return user;
     } catch (error) {
         throw error;
@@ -93,19 +125,19 @@ export async function deactiveUser(id: string) {
     }
 }
 
-export async function deactivePost(id: string,title:string) {
+export async function deactivePost(id: string, title: string) {
     try {
-        return await decativatePost(id,title)
+        return await decativatePost(id, title)
     } catch (error) {
         throw error
     }
 }
 
-export async function ChangePass(password: string,id:string) {
+export async function ChangePass(password: string, id: string) {
     try {
         let newPass: string = password
         let _id = new ObjectId(id)
-        return await NewPassfunc(newPass,_id);
+        return await NewPassfunc(newPass, _id);
     } catch (error) {
         throw error;
     }
@@ -121,21 +153,21 @@ export async function checkUpdate(card: string, date: string, ccv: string) {
 }
 
 
-export async function addAnotherPost(email: string,id: string,title: string, description: string, image: string,likes: number,likedByUser: boolean,comments: Comment[],isOwner: boolean) {
+export async function addAnotherPost(email: string, id: string, title: string, description: string, image: string, likes: number, likedByUser: boolean, comments: Comment[], isOwner: boolean) {
     try {
-        let post : Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
-        return await addonePost(email,post);
+        let post: Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
+        return await addonePost(email, post);
     } catch (error) {
         throw error;
     }
 }
 
 // אולי יהיה תקלה
-export async function showallpostsbyid(title:string) {
+export async function showallpostsbyid(title: string) {
     try {
         let query = { title }
         const projection = { Posts: 1, _id: 0 };
-        let users = await findUsers(query,projection);
+        let users = await findUsers(query, projection);
         return users[0];
     } catch (error) {
         throw error;
@@ -163,38 +195,52 @@ export async function showallpostsbyid(title:string) {
 //     }
 // }
 
-export async function AddTraining(email:string,name:string,date:Date,time:string) {
+export async function AddTraining(email: string, name: string, date: Date, time: string) {
     try {
-        let newTraining : trainingSchedule =  { name ,date,time }
-        return await newTrainingFunc(newTraining,email);
+        let newTraining: trainingSchedule = { name, date, time }
+        return await newTrainingFunc(newTraining, email);
     } catch (error) {
         throw error;
     }
 }
 
-export async function DeleteTraining(email:string,name:string,date:Date,time:string) {
+export async function DeleteTraining(email: string, name: string, date: Date, time: string) {
     try {
-        let newTraining : trainingSchedule =  { name ,date,time }
-        return await deleteTrainingFunc(newTraining,email);
+        let newTraining: trainingSchedule = { name, date, time }
+        return await deleteTrainingFunc(newTraining, email);
     } catch (error) {
         throw error;
     }
 }
 
+<<<<<<< Updated upstream
 export async function OpenTraining(date:Date,time:string,email:string) {
     try {
         let newdate : opendates = { date,time }
         return await openTraining(newdate,email); 
+=======
+export async function OpenTraining(date: Date, time: string, email: string) {
+    try {
+        let newdate: opendates = { date, time }
+        return await openTraining(newdate, email);
+>>>>>>> Stashed changes
     }
     catch (error) {
         throw error;
     }
 }
 
+<<<<<<< Updated upstream
 export async function CloseTraining(date:Date,time:string,email:string) {
     try {
         let newdate : opendates = { date,time }
         return await closeTraining(newdate,email); 
+=======
+export async function CloseTraining(date: Date, time: string, email: string) {
+    try {
+        let newdate: opendates = { date, time }
+        return await closeTraining(newdate, email);
+>>>>>>> Stashed changes
     }
     catch (error) {
         throw error;
