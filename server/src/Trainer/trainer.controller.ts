@@ -19,15 +19,14 @@ export async function getAll(req: Request, res: Response) {
 
 export async function getAllTrainers(req: Request, res: Response) {
     try {
-        let trainers = await getAllTrainersInfo();
+        let trainers = await getAllTrainersInfo();  // Retrieves all trainers
         if (trainers?.length === 0) {
             res.status(200).json({ message: 'No trainers found', trainers });
         } else {
             res.status(200).json({ trainers });
         }
     } catch (error) {
-        console.error('Error in getAllTrainers:', error); // Log the error
-        res.status(500).json({ error: 'Internal Server Error', details: error });
+        res.status(500).json({ error });  // Log the exact error for better debugging
     }
 }
 

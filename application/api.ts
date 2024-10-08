@@ -43,7 +43,7 @@ export async function GET(url: string) {
         return data;
 
     } catch (error) {
-        console.error({ error });
+        console.error("Error in GET:", error);
     }
 
 }
