@@ -44,10 +44,11 @@ export default function TrainerContextProvider({ children }: any) {
             return false;
         }
     }
+
     async function GetAllTrainers() {
         try {
             let data = await GET('trainer/getalltrainer');
-            console.log("Fetched trainers:", data);
+            console.log("Fetched trainers from context:", data); // Add a log to see the raw data
 
             if (data && data.trainers) {
                 setAllTrainer(data.trainers);
@@ -55,7 +56,7 @@ export default function TrainerContextProvider({ children }: any) {
             }
             return false;
         } catch (error) {
-            console.log(error);
+            console.log('Error fetching trainers in context:', error);
             return false;
         }
     }
