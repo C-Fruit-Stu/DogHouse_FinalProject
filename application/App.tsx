@@ -10,6 +10,7 @@ import SignUpTrainer from './components/SignUpTrainer';
 import Payment from './components/Payment';
 import HomePage from './screens/HomePage';
 import Profile from './screens/Profile';
+import FindTrainer from './screens/FindTrainer';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Chat from './components/Chat';
 import Settings from './screens/Settings';
@@ -42,6 +43,14 @@ function BackToPre() {
         tabBarLabel: 'Home',
         headerShown: false,
         tabBarIcon: () => <MaterialCommunityIcons name='home' size={35} color='#1DBD7B' />
+      }}
+        initialParams={{ clientType }}
+      />
+
+      <Tab.Screen name="Posts" component={Posts} options={{
+        tabBarLabel: 'Posts',
+        headerShown: true,
+        tabBarIcon: () => <MaterialCommunityIcons name='post' size={35} color='#1DBD7B' />
       }}
         initialParams={{ clientType }}
       />
@@ -86,6 +95,7 @@ function StackNav() {
       <Stack.Screen name="Calander" component={Calanders} options={{ headerShown: true }} />
       <Stack.Screen name="Posts" component={Posts} options={{ headerShown: true }} />
       <Stack.Screen name="Update Info" component={UpdateInfo} options={{ headerShown: true }} />
+      <Stack.Screen name="FindTrainer" component={FindTrainer} options={{ headerShown: true }} />
       <Stack.Screen name="Update Payment" component={UpdatePayment} options={{ headerShown: true }} />
       <Stack.Screen name="Mambership" component={Membership} options={{ headerShown: true }} />
       <Stack.Screen name="BackToPre" component={BackToPre} options={{ headerShown: false }} />

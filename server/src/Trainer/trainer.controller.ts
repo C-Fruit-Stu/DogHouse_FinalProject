@@ -20,6 +20,7 @@ export async function getAll(req: Request, res: Response) {
 export async function getAllTrainers(req: Request, res: Response) {
     try {
         let trainers = await getAllTrainersInfo();
+        console.log('trainers: ', trainers);
         if (trainers?.length === 0) {
             res.status(200).json({ message: 'No trainers found', trainers });
         } else {

@@ -34,17 +34,6 @@ export default function Posts() {
   };
 
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const post = currentTrainer.Posts;
-      if (post) {
-        AddPost(post);
-      }
-    }, 1000);
-
-    return () => clearTimeout(timeout);
-  }, [currentTrainer.Posts]);
-
   const handleSubmit = () => {
     if (clientType === 1 && AddPost) {
       const newPost: Post = {
@@ -63,6 +52,7 @@ export default function Posts() {
       setInput2('');
       setImageUri(null); // Clear image input
       setModalVisible(false);
+      useEffect;
     }
   };
 

@@ -63,11 +63,6 @@ export default function LogIn() {
       navigation.navigate("BackToPre", { clientType });
       return;
     }
-
-
-
-
-    
   });
 
   return (

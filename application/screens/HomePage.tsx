@@ -3,7 +3,9 @@ import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
-import {useRoute, RouteProp} from '@react-navigation/native';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 type RouteParams = {
   clientType?: number;
@@ -15,6 +17,7 @@ export default function HomePage() {
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
+  const navigation = useNavigation();
 
   if (clientType == 2) {
     return (
@@ -30,6 +33,11 @@ export default function HomePage() {
             />
           </View>
         </View>
+        <TouchableOpacity onPress={() => navigation.navigate('FindTrainer')}>
+          <View style={styles.StatesContainer}>
+            <Text style={styles.TextContainer}>Find new Trainers</Text>
+          </View>
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -65,6 +73,17 @@ const styles = StyleSheet.create({
   },
   titleName: {
     marginTop: 40,
+    fontSize: 18
+  },
+  StatesContainer: {
+    backgroundColor: "rgba(29,189,123,0.6)",
+    height: 130,
+    width: 130,
+    borderRadius: 20
+  },
+  TextContainer: {
+    textAlign: "center",
+    margin: "auto",
     fontSize: 18
   }
 })

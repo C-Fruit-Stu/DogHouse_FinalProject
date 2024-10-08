@@ -19,7 +19,7 @@ TrainerRouter
     // מוסיף פוסט
     .post('/addnewpost', addNewPost)
     .get('/getallpostsbyid/:id',getAllPostsById)
-    .post('/showallposts',showallposts)
+    .post('/showallposts',showallposts)     
     .put('/deletePost/:id', deletePost)
     // .post('/addnewdates/:id', AddNewDate)
     // .put('/removedate/:id', RemoveDate)
