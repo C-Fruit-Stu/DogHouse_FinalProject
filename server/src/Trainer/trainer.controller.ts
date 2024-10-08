@@ -302,13 +302,13 @@ export async function deleteTrainiging(req: Request, res: Response) {
 }
 
 export async function openTrainingDates(req: Request, res: Response) {
-    let { date,time,email } = req.body
-
-    if(!date || !time)
+    let { date,hour,email } = req.body
+    console.log(hour)
+    if(!date || !hour)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await OpenTraining(date,time,email)
+        let result = await OpenTraining(date,hour,email)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })

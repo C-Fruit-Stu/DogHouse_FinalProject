@@ -1,6 +1,6 @@
 //const BASE_URL = "https://shenkar-2024-b-fullstack-ui.onrender.com/api";
-const BASE_URL = import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : "https://doghouse-la1b.onrender.com/api";
-
+const BASE_URL = "http://localhost:7777/api";
+//import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : "https://doghouse-finalproject.onrender.com/api"; 
 
 export async function POST(url: string, obj: Object) {
     try {
@@ -14,6 +14,7 @@ export async function POST(url: string, obj: Object) {
             },
             body: JSON.stringify(obj)
         });
+        console.log("res: ", { res });
 
         //הסטטוס הוא לא מקבוצת 200
         if (!res.ok) {

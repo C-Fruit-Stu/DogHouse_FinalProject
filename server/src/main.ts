@@ -16,7 +16,7 @@ const server = express();
  
 //הגדרת יכולות שונות
 server.use(express.urlencoded({ extended: true }));
-server.use(express.json({ limit: '500mb' })); //json עבודה עם 
+server.use(express.json({ limit: '1000mb' })); //json עבודה עם 
 // Define the CORS options
 const corsOptions = {
     credentials: true,

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { TrainerType } from "../types/TrainerType";
-import { POST } from "../api";
+import { POST, PUT } from "../api";
 
 
 export const TrainerContext = createContext<any>({});
@@ -85,15 +85,15 @@ function TrainerContextProvidor({ children }: any) {
     }
 
 
-    async function openNewDate(opendate: any) {
+    async function openNewDate(date: Date,hour:string) {
         if(currentTrainer){
             const email = currentTrainer.email;
-            opendate = { ...opendate, email };
+            const opendate = { date: date, hour: hour, email: email };
             try {
                 console.log('opendate ====>>>', opendate)
                 let data = await POST('trainer/opentrainingdates', (opendate));
                 console.log("data" + data);
-                if (data && data.post) {
+                if (data) {
                     return true;
                 }
                 return false;
@@ -104,15 +104,15 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
-    async function DeleteNewDate(opendate: any) {
+    async function DeleteNewDate(date: Date,time:string) {
         if(currentTrainer){
             const email = currentTrainer.email;
-            opendate = { ...opendate, email };
+            const opendate = { date:date,time:time, email:email };
             try {
                 console.log('opendate ====>>>', opendate)
-                let data = await POST('trainer/deleteopenDate', (opendate));
+                let data = await PUT('trainer/deleteopenDate', (opendate));
                 console.log("data" + data);
-                if (data && data.post) {
+                if (data) {
                     return true;
                 }
                 return false;
