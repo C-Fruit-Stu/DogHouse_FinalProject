@@ -12,12 +12,13 @@ const Profile: React.FC = () => {
     const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
-    const [scheduleTime, setScheduleTime] = useState('');
+    const [scheduleTime, setScheduleTime] = useState<string>('');
     useEffect(() => {
         const timeout = setTimeout(() => {
             const trainer = sessionStorage.getItem('trainer');
             if (trainer) {
-                setCurrentTrainer(JSON.parse(trainer as any));
+                sessionStorage.setItem('trainer', JSON.stringify(currentTrainer))
+                setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
             }
         }, 3000); // 3000 milliseconds = 3 seconds
     
