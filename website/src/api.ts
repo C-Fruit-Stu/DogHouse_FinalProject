@@ -1,5 +1,5 @@
 //const BASE_URL = "https://shenkar-2024-b-fullstack-ui.onrender.com/api";
-const BASE_URL = "https://doghouse-la1b.onrender.com/api";
+const BASE_URL = import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : "https://doghouse-la1b.onrender.com/api";
 
 
 export async function POST(url: string, obj: Object) {
@@ -7,6 +7,7 @@ export async function POST(url: string, obj: Object) {
         console.log(BASE_URL)
         console.log(url)
         let res = await fetch(`${BASE_URL}/${url}`, {
+            mode: 'cors',
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
