@@ -45,21 +45,23 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
+    
     async function GetAllTrainers() {
         try {
-            let data = await GET('trainer/getalltrainer');
-            console.log("Fetched trainers from context:", data); // Add a log to see the raw data
+            let data = await GET('trainer/getalltrainer');  // No ID required here
+            console.log("Fetched trainers:", data);
 
             if (data && data.trainers) {
-                setAllTrainer(data.trainers);
+                setAllTrainer(data.trainers);  // Assuming you're storing all trainers
                 return true;
             }
             return false;
         } catch (error) {
-            console.log('Error fetching trainers in context:', error);
+            console.log('error: ', error);
             return false;
         }
     }
+
 
     async function AddPost(newPost: any) {
         if (currentTrainer) {

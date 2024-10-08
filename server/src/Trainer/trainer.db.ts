@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { credit, opendates, Post, TrainerUser,trainingSchedule } from "./trainer.type";
+import { credit, opendates, Post, TrainerUser, trainingSchedule } from "./trainer.type";
 
 const DB_INFO = {
     connection: process.env.CONNECTION_STRING as string,
@@ -33,13 +33,12 @@ export async function findAllTrainers() {
         const projection = {
             first_name: 1,
             last_name: 1,
-            Posts: 1,
             email: 1,
             dob: 1,
             experience: 1,
             phone: 1,
             image: 1,
-            trainingSchedule: 1
+            Posts: 1
         };
         let trainers = await mongo.db(DB_INFO.name)
             .collection(DB_INFO.collection)
@@ -70,7 +69,7 @@ export async function FindUserByEmail(email: string) {
     catch (error) {
         throw error;
     }
-    finally{
+    finally {
         mongo.close();
     }
 }
@@ -276,7 +275,7 @@ export async function addonePost(email: string, post: Post) {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
             { email },
-            { $addToSet: { Posts: post } } 
+            { $addToSet: { Posts: post } }
         );
     } catch (error) {
         throw error;
@@ -299,7 +298,7 @@ export async function checkmongopostbyid(query: {}, projection = {}) {
     }
 }
 
-export async function newTrainingFunc(trainingSchedulea : trainingSchedule, email: string) {
+export async function newTrainingFunc(trainingSchedulea: trainingSchedule, email: string) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
@@ -313,28 +312,28 @@ export async function newTrainingFunc(trainingSchedulea : trainingSchedule, emai
     }
     finally {
         mongo.close();
-    }   
+    }
 }
 
-export async function deleteTrainingFunc(trainingSchedulea : trainingSchedule, email: string) {
+export async function deleteTrainingFunc(trainingSchedulea: trainingSchedule, email: string) {
     let mongo = new MongoClient(DB_INFO.connection);
 
-        try {
-            await mongo.connect();
-            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-                { email },
-                { $pull: { 'trainingSchedule': trainingSchedulea } as any }
-            )
-        } catch (error) {
-            throw error;
-        }
-        finally {
-            mongo.close();
-        }
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $pull: { 'trainingSchedule': trainingSchedulea } as any }
+        )
+    } catch (error) {
+        throw error;
+    }
+    finally {
+        mongo.close();
+    }
 
 }
 
-export async function openTraining(newdate : opendates,email: string) {
+export async function openTraining(newdate: opendates, email: string) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
@@ -349,10 +348,10 @@ export async function openTraining(newdate : opendates,email: string) {
     finally {
         mongo.close();
     }
-    
+
 }
 
-export async function closeTraining(newdate : opendates,email: string) {
+export async function closeTraining(newdate: opendates, email: string) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
@@ -367,6 +366,6 @@ export async function closeTraining(newdate : opendates,email: string) {
     finally {
         mongo.close();
     }
-    
+
 }
 
