@@ -8,23 +8,25 @@ const DB_INFO = {
 }
 
 export async function findUsers(query = {}, projection = {}) {
-    //מייצר את האובייקט שבאמצעותו נתחבר למסד הנתונים ונבצע שאילתות
     let mongo = new MongoClient(DB_INFO.connection);
     try {
-        //התחברות למסד הנתונים
+        console.log('Connecting to MongoDB...');
         await mongo.connect();
-        //ביצוע שאילתה
+        console.log('Successfully connected to MongoDB');
+        
         let users = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).find(query, { projection }).toArray();
-        console.log(users);
+        console.log('Fetched users:', users); // Log fetched users
         return users;
     } catch (error) {
+        console.error('Error in findUsers:', error); // Log detailed error
         throw error;
-    }
-    finally {
-        //סגירת החיבור למסד הנתונים
+    } finally {
         mongo.close();
+        console.log('MongoDB connection closed');
     }
 }
+
+
 
 export async function FindUserByEmail(email: string) {
     let mongo = new MongoClient(DB_INFO.connection);

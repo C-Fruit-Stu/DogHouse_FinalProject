@@ -26,9 +26,11 @@ export async function getAllTrainers(req: Request, res: Response) {
             res.status(200).json({ trainers });
         }
     } catch (error) {
-        res.status(500).json({ error });
+        console.error('Error in getAllTrainers:', error); // Log the error
+        res.status(500).json({ error: 'Internal Server Error', details: error });
     }
 }
+
 
 export async function getUserById(req: Request, res: Response) {
     let { id } = req.params; //url שליפת הפרמטר מתוך ה 
