@@ -85,15 +85,15 @@ function TrainerContextProvidor({ children }: any) {
     }
 
 
-    async function openNewDate(opendate: any) {
+    async function openNewDate(date: Date,hour:string) {
         if(currentTrainer){
             const email = currentTrainer.email;
-            opendate = { ...opendate, email };
+            const opendate = { date, hour, email };
             try {
                 console.log('opendate ====>>>', opendate)
                 let data = await POST('trainer/opentrainingdates', (opendate));
                 console.log("data" + data);
-                if (data && data.post) {
+                if (data) {
                     return true;
                 }
                 return false;

@@ -1,6 +1,6 @@
 //const BASE_URL = "https://shenkar-2024-b-fullstack-ui.onrender.com/api";
-const BASE_URL = import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : "https://doghouse-la1b.onrender.com/api";
-
+const BASE_URL = "https://doghouse-finalproject.onrender.com/api";
+//import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : 
 
 export async function POST(url: string, obj: Object) {
     try {
