@@ -12,18 +12,10 @@ const Profile: React.FC = () => {
     const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
-    const [scheduleTime, setScheduleTime] = useState<string>('');
+    const [scheduleTime, setScheduleTime] = useState('');
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            const trainer = sessionStorage.getItem('trainer');
-            if (trainer) {
-                sessionStorage.setItem('trainer', JSON.stringify(currentTrainer))
-                setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
-            }
-        }, 3000); // 3000 milliseconds = 3 seconds
-    
-        return () => clearTimeout(timeout); 
-    }  , [currentTrainer]);
+        setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
+    }  , []);
     function handleAddPost(): void {
         navigate('/addpost');
     }

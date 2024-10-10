@@ -10,12 +10,12 @@ function TrainerContextProvidor({ children }: any) {
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
 
-    useEffect(() => {
-        const trainer = sessionStorage.getItem('trainer');
-        if (trainer) {
-            setCurrentTrainer(JSON.parse(trainer as any));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const trainer = sessionStorage.getItem('trainer');
+    //     if (trainer) {
+    //         setCurrentTrainer(JSON.parse(trainer as any));
+    //     }
+    // }, []);
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {
