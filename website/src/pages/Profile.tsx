@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
-    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,getUserByEmail } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
     useEffect(() => {
         setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
     }  , []);
+
     function handleAddPost(): void {
         navigate('/addpost');
     }
@@ -47,6 +48,8 @@ const Profile: React.FC = () => {
         console.log(`Selected Date: ${date}, Selected Time: ${time}`);
         alert(`Schedule for ${date} at ${time} has been deleted!`);
         await DeleteNewDate(date, time);
+        console.log(currentTrainer);
+        await getUserByEmail(currentTrainer?.email);
         setScheduleDate('');
         setScheduleTime('');
       } else {

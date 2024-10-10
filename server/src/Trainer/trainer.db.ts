@@ -341,3 +341,5 @@ export async function closeTraining(newdate : opendates,email: string) {
     
 }
 
+
+
