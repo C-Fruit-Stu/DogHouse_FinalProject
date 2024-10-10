@@ -114,7 +114,7 @@ function TrainerContextProvidor({ children }: any) {
                 let data = await PUT('trainer/deleteopenDate', (opendate));
                 console.log("data" + data);
                 if (data) {
-                    console.log('data===>',data);
+                    console.log('data===>',data.user);
                     return true;
                 }
                 return false;
@@ -122,6 +122,14 @@ function TrainerContextProvidor({ children }: any) {
                 console.log(error);
                 return false;
             }
+        }
+    }
+
+    async function getuserByEmail(email: string) {
+        try {
+            return await POST('trainer/getuserByEmail', { email: email })
+        } catch (error) {
+            throw error
         }
     }
 
@@ -139,6 +147,7 @@ function TrainerContextProvidor({ children }: any) {
                 AddPost,
                 openNewDate,
                 DeleteNewDate,
+                getuserByEmail
             }}>
             {children}
         </TrainerContext.Provider>

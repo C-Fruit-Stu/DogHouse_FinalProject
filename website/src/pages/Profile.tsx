@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
-    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,getuserByEmail } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
@@ -48,7 +48,8 @@ const Profile: React.FC = () => {
         console.log(`Selected Date: ${date}, Selected Time: ${time}`);
         alert(`Schedule for ${date} at ${time} has been deleted!`);
         await DeleteNewDate(date, time);
-        console.log(currentTrainer);
+        let trainer = await getuserByEmail(currentTrainer?.email);
+        console.log(trainer);
         setScheduleDate('');
         setScheduleTime('');
       } else {
