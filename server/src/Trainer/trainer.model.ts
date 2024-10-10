@@ -229,13 +229,3 @@ export async function CloseTraining(date: Date, time: string, email: string) {
     }
 }
 
-export async function getUserByEmail(email: string) {
-    try {
-        let query = { email }
-        const projection = { password: 0, _id: 0 };
-        let users = await findUsers(query, projection);
-        return users[0];
-    } catch (error) {
-        throw error;
-    }
-}

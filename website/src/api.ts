@@ -30,7 +30,7 @@ export async function POST(url: string, obj: Object) {
     }
 }
 
-export async function GET(url: string) {
+export async function GET(url: string, email: string) {
     try {
         let res = await fetch(`${BASE_URL}/${url}`, {
             method: 'GET',
