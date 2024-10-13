@@ -33,20 +33,21 @@ export async function GET(url: string) {
                 "Content-Type": "application/json"
             }
         });
-        //הסטטוס הוא לא מקבוצת 200
+
         if (!res.ok) {
-            console.log({ res });
+            console.log('Response error:', res);
             return;
         }
 
         let data = await res.json();
+        console.log('Data received from server:', data); // Add this
         return data;
 
     } catch (error) {
-        console.error("Error in GET:", error);
+        console.error('Error in GET request:', error);
     }
-
 }
+
 
 export async function PUT(url: string, obj: Object) {
     try {

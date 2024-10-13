@@ -19,25 +19,19 @@ export async function getAllTrainersInfo() {
     };
     let projection = {
         first_name: 1,
-        last_name: 1,
-        Posts: 1,
-        email: 1,
-        dob: 1,
-        experience: 1,
-        phone: 1,
-        image: 1,
-        trainingSchedule: 1
+        last_name: 1
     };
 
     try {
-        const trainers = await findUsers(query, projection);  // Fetch trainers with projection
-        console.log('Trainers fetched from DB:', trainers);   // Log trainers
+        const trainers = await findUsers(query, projection);
+        console.log('Fetched trainers from DB:', trainers);
         return trainers;
     } catch (error) {
         console.error('Error in getAllTrainersInfo:', error);
         throw error;
     }
 }
+
 
 // export async function getAllTrainersInfo() {
 //     try {
