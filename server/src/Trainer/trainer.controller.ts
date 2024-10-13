@@ -17,18 +17,26 @@ export async function getAll(req: Request, res: Response) {
     }
 }
 
+
+
+
 export async function TrainersData(req: Request, res: Response) {
     try {
-        let trainers = await getAllTrainersInfo();  // Retrieves all trainers
+        console.log('Fetching all trainers...');
+        let trainers = await getAllTrainersInfo();
+        console.log('Trainers fetched from DB:', trainers);
+
         if (trainers?.length === 0) {
             res.status(200).json({ message: 'No trainers found', trainers });
         } else {
             res.status(200).json({ trainers });
         }
     } catch (error) {
-        res.status(500).json({ error });  // Log the exact error for better debugging
+        console.error('Error fetching trainers in controller:', error);
+        res.status(500).json({ error: 'Error fetching trainers' });
     }
 }
+
 
 
 export async function getUserById(req: Request, res: Response) {
