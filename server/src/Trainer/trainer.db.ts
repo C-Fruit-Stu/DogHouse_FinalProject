@@ -26,31 +26,21 @@ export async function findUsers(query = {}, projection = {}) {
     }
 }
 
-export async function findAllTrainers() {
+export async function findAllTrainers(query = {}, projection = {}) {
     let mongo = new MongoClient(DB_INFO.connection);
     try {
         await mongo.connect();
-        const projection = {
-            first_name: 1,
-            last_name: 1,
-            email: 1,
-            dob: 1,
-            experience: 1,
-            phone: 1,
-            image: 1,
-            Posts: 1
-        };
-        let trainers = await mongo.db(DB_INFO.name)
-            .collection(DB_INFO.collection)
-            .find({ clientType: "1" }, { projection })
-            .toArray();
-        console.log('Trainers fetched from DB:', trainers);
-        return trainers;
+        const users = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).find(query, { projection }).toArray();
+
+        // Log the fetched users for debugging
+        console.log('Users found in the DB:', users);
+        
+        return users;
     } catch (error) {
-        console.error('Error fetching trainers from DB:', error);
+        console.error('Error fetching users from DB:', error);
         throw error;
     } finally {
-        await mongo.close();
+        mongo.close();
     }
 }
 
