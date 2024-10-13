@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining,findAllTrainers } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers } from "./trainer.db";
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 
 
@@ -15,13 +15,17 @@ export async function getAllUsers() {
 
 export async function getAllTrainersInfo() {
     try {
-        const trainers = await findAllTrainers();
+        let query = {
+            clientType: "1"
+        };
+        const trainers = await findUsers(query);
         return trainers;
     } catch (error) {
         console.error('Error in getAllTrainersInfo:', error);
         throw error;
     }
 }
+
 
 export async function getAllPosts() {
     let query = {

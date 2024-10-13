@@ -14,7 +14,7 @@ TrainerRouter
     .delete('/physic/delete/:id', physicDeleteUser)
     .put('/updatepassword/:id',UpdatePassword)
     .put('/updatePayment/:id', updatePayment)
-    .get('/getalltrainer', getAllTrainers)
+    .post('/getalltrainer', getAllTrainers)
 
     // מוסיף פוסט
     .post('/addnewpost', addNewPost)

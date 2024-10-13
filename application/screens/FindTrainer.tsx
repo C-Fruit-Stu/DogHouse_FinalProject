@@ -1,12 +1,18 @@
 import { View, Text, Image, Button, FlatList, StyleSheet } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function FindTrainer() {
     const { allTrainer, GetAllTrainers } = useContext(TrainerContext);
-
+    const trainersData = async () => {
+        await AsyncStorage.setItem(
+            'allTrainer',
+            JSON.stringify(GetAllTrainers)
+        );
+        console.log(JSON.parse(allTrainer));
+    }
     useEffect(() => {
-        GetAllTrainers();
+        trainersData;
     }, []);
 
     const calculateAge = (dob: string) => {
