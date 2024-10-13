@@ -17,7 +17,7 @@ export async function getAll(req: Request, res: Response) {
     }
 }
 
-export async function getAllTrainers(req: Request, res: Response) {
+export async function TrainersData(req: Request, res: Response) {
     try {
         let trainers = await getAllTrainersInfo();  // Retrieves all trainers
         if (trainers?.length === 0) {
