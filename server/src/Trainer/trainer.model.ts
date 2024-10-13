@@ -15,15 +15,27 @@ export async function getAllUsers() {
 
 export async function getAllTrainersInfo() {
     try {
-        console.log('Calling findAllTrainers in the DB...');
-        const trainers = await findAllTrainers();
-        console.log('Trainers retrieved from DB:', trainers); // Log the trainers from DB
-        return trainers;
+       let query = { clientType: "1" };
+       let projection = {
+          first_name: 1,
+          last_name: 1,
+          Posts: 1,
+          email: 1,
+          dob: 1,
+          experience: 1,
+          phone: 1,
+          image: 1,
+          trainingSchedule: 1
+       };
+       let trainers = await findUsers(query, projection);
+       console.log('Trainers fetched:', trainers); // Log the trainers to ensure the data is correct
+       return trainers;
     } catch (error) {
-        console.error('Error in getAllTrainersInfo model:', error);
-        throw error;
+       console.error('Error in getAllTrainersInfo:', error);
+       throw error;
     }
-}
+ }
+ 
 
 
 // export async function getAllTrainersInfo() {

@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET } from '../api';  // Assuming GET is the method to fetch data from your server
+import { POST } from '../api';  
 
 export async function RefreshTrainersData() {
     try {
         // Fetch trainers from the API
-        let data = await GET('trainer/getalltrainer');  // Fetch all trainers
+        let data = await POST('trainer/getalltrainer',{});  // Fetch all trainers
         console.log("Fetched trainers data:\n", data);
 
         if (data && data.trainers && data.trainers.length > 0) {
