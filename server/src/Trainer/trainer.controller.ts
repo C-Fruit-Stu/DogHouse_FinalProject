@@ -18,13 +18,11 @@ export async function getAll(req: Request, res: Response) {
 }
 
 
-
-
-export async function TrainersData(req: Request, res: Response) {
+export async function getAllTrainers(req: Request, res: Response) {
     try {
-        console.log('Fetching all trainers...');
+        console.log('Fetching all trainers from DB...');
         let trainers = await getAllTrainersInfo();
-        console.log('Trainers fetched from DB:', trainers);
+        console.log('Trainers data fetched:', trainers); // Log the trainers
 
         if (trainers?.length === 0) {
             res.status(200).json({ message: 'No trainers found', trainers });
@@ -32,10 +30,11 @@ export async function TrainersData(req: Request, res: Response) {
             res.status(200).json({ trainers });
         }
     } catch (error) {
-        console.error('Error fetching trainers in controller:', error);
-        res.status(500).json({ error: 'Error fetching trainers' });
+        console.error('Error in getAllTrainers controller:', error);
+        res.status(500).json({ error: 'Server error occurred while fetching trainers' });
     }
 }
+
 
 
 
