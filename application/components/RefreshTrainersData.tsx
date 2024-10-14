@@ -11,13 +11,7 @@ export async function RefreshTrainersData() {
             const trainerArray = data.trainers.map((trainer: any) => ({
                 first_name: trainer.first_name,
                 last_name: trainer.last_name,
-                email: trainer.email,
-                dob: trainer.dob,
-                experience: trainer.experience,
-                phone: trainer.phone,
-                image: trainer.image,
-                trainingSchedule: trainer.trainingSchedule,
-                Posts: trainer.Posts,
+                email: trainer.email
             }));
 
             const trainersJson = JSON.stringify(trainerArray);

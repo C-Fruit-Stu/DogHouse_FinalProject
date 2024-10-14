@@ -26,34 +26,6 @@ export async function findUsers(query = {}, projection = {}) {
     }
 }
 
-export async function findAllTrainers() {
-    let mongo = new MongoClient(DB_INFO.connection);
-    let query = { clientType: "1" };
-    let projection = {
-        first_name: 1,
-        last_name: 1,
-        Posts: 1,
-        email: 1,
-        dob: 1,
-        experience: 1,
-        phone: 1,
-        image: 1,
-        trainingSchedule: 1
-    };
-
-    try {
-        await mongo.connect();
-        console.log('Connected to MongoDB. Query:', query);
-        const trainers = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).find(query, { projection }).toArray();
-        console.log('Trainers found:', trainers);
-        return trainers;
-    } catch (error) {
-        console.error('Error in findAllTrainers DB function:', error);
-        throw error;
-    } finally {
-        mongo.close();
-    }
-}
 
 
 export async function FindUserByEmail(email: string) {

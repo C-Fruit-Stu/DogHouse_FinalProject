@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 
 
@@ -19,13 +19,7 @@ export async function getAllTrainersInfo() {
        let projection = {
           first_name: 1,
           last_name: 1,
-          Posts: 1,
-          email: 1,
-          dob: 1,
-          experience: 1,
-          phone: 1,
-          image: 1,
-          trainingSchedule: 1
+          email:1
        };
        let trainers = await findUsers(query, projection);
        console.log('Trainers fetched:', trainers); // Log the trainers to ensure the data is correct
