@@ -1,11 +1,46 @@
 import { View, Text, Image, Button, FlatList, StyleSheet } from 'react-native';
 import React, { useContext, useEffect } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';
-import { RefreshTrainersData } from '../components/RefreshTrainersData';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native'; // Import for navigation
+
 export default function FindTrainer() {
-    const { allTrainer, GetAllTrainers, setAllTrainer } = useContext(TrainerContext);
+    const { allTrainers, setTrainers, GetAllTrainers, GetTrainerPosts } = useContext(TrainerContext);
+    const navigation = useNavigation(); // Initialize navigation
+
+    // Load trainers from AsyncStorage
+    const TrainersRawData = async () => {
+        try {
+            GetAllTrainers();
+            const trainersJson = await AsyncStorage.getItem('allTrainer');
+            if (trainersJson !== null) {
+                const trainersArray = JSON.parse(trainersJson);
+                setTrainers(trainersArray);
+                console.log("Loaded trainers from AsyncStorage:", trainersArray);
+            } else {
+                console.log("No trainers found in AsyncStorage");
+            }
+        } catch (error) {
+            console.error('Error loading trainers from AsyncStorage:', error);
+        }
+    }
+
+    // Fetch posts by trainer email and navigate to Posts screen
+    const showPosts = async (email: string) => {
+        try {
+            const posts = await GetTrainerPosts(email); // Fetch posts by trainer's email
+            if (posts.length > 0) {
+                navigation.navigate('Posts', { posts }); // Navigate to the Posts screen with posts
+            } else {
+                console.log("No posts found for this trainer");
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    }
+
     useEffect(() => {
-        RefreshTrainersData()
+        TrainersRawData();
     }, []);
 
     const calculateAge = (dob: string) => {
@@ -30,8 +65,8 @@ export default function FindTrainer() {
                     <Text style={styles.trainerExperience}>Experience: {item.experience} years</Text>
                     <Text style={styles.trainerAge}>Age: {calculateAge(item.dob)}</Text>
                     <View style={styles.buttonsContainer}>
-                        <Button title="View" onPress={() => { }} />
-                        <Button title="Message" onPress={() => { }} />
+                        <Button title="ViewPosts" onPress={() => { showPosts(item.email) }} />
+                        <Button title="Like" onPress={() => { }} />
                         <Button title="Follow" onPress={() => { }} />
                     </View>
                 </View>
@@ -41,8 +76,8 @@ export default function FindTrainer() {
 
     return (
         <FlatList
-            data={allTrainer}
-            keyExtractor={(item, index) => index.toString()}
+            data={allTrainers}
+            keyExtractor={(item, index) => index.toString()} // Use index as key temporarily
             renderItem={renderTrainer}
         />
     );

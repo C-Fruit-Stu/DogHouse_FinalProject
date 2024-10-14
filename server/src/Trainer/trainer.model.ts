@@ -106,6 +106,18 @@ export async function RegisterUser(user: TrainerUser) {
     }
 }
 
+export async function showPostsByEmail(email: string) {
+    try {
+      const query = { email };
+      const projection = { Posts: 1, _id: 0 };
+      const users = await findUsers(query, projection);
+      return users[0]?.Posts || [];
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+
 // export async function updateUser(id: string, email: string, password: string, location: any) {
 //     try {
 //         let user: Partial<TrainerUser> = {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo,showPostsByEmail } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -215,6 +215,22 @@ export async function getAllPostsById(req: Request, res: Response) {
     }
 }
 
+export async function getAllPostsByEmail(req: Request, res: Response) {
+    const { email } = req.params;
+  
+    if (!email)
+      return res.status(400).json({ msg: "invalid email" });
+  
+    try {
+      const result = await showPostsByEmail(email);
+      if (!result)
+        res.status(400).json({ msg: "No posts found" });
+      else
+        res.status(200).json({ posts: result });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
 
 export async function showallposts(req: Request, res: Response) {
     try {

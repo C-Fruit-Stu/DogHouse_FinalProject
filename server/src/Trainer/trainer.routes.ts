@@ -1,6 +1,6 @@
 //ייבוא אובייקט 
 import { Router } from 'express';
-import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, deleteTrainiging, openTrainingDates, closeTrainingDates, getAllTrainers } from './trainer.controller';
+import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, deleteTrainiging, openTrainingDates, closeTrainingDates, getAllTrainers,getAllPostsByEmail } from './trainer.controller';
 
 
 
@@ -15,6 +15,8 @@ TrainerRouter
     .put('/updatepassword/:id',UpdatePassword)
     .put('/updatePayment/:id', updatePayment)
     .post('/getalltrainer', getAllTrainers)
+    .get('/getallpostsbyemail/:id', getAllPostsByEmail)
+    
 
     // מוסיף פוסט
     .post('/addnewpost', addNewPost)
