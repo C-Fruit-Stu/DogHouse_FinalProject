@@ -18,7 +18,10 @@ const Admin: React.FC = () => {
         <h2 className="admin-logo">Admin Dashboard</h2>
         <ul className="admin-nav">
           <li>
-            <Link to="/admin/users" className="admin-link">Manage Users</Link>
+            <Link to="/Manageusers" className="admin-link">Manage Trainers</Link>
+          </li>
+          <li>
+            <Link to="/managecostumers" className="admin-link">Manage Costumers</Link>
           </li>
           <li>
             <Link to="/admin/reports" className="admin-link">View Reports</Link>

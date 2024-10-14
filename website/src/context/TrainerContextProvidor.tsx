@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { TrainerType } from "../types/TrainerType";
-import { POST, PUT,GET } from "../api";
+import { POST, PUT,GET, DELETE } from "../api";
 
 
 export const TrainerContext = createContext<any>({});
@@ -141,6 +141,48 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
+    async function getAllUsers() {
+        try {
+            let data = await GET('trainer/', {})
+            console.log("data" + data);
+            if (data && data.users) {
+                setAllTrainer(data.users);
+                return data.users;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function getAllCostumers() {
+        try {
+            let data = await GET('costumer/', {})
+            console.log("data" + data);
+            if (data && data.users) {
+                setAllTrainer(data.users);
+                return data.users;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteTrainer(id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await DELETE('trainer/physic/delete/' + id)
+            console.log("data" + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
 
 
 
@@ -155,7 +197,10 @@ function TrainerContextProvidor({ children }: any) {
                 AddPost,
                 openNewDate,
                 DeleteNewDate,
-                getuserByEmail
+                getuserByEmail,
+                getAllUsers,
+                DeleteTrainer,
+                getAllCostumers
             }}>
             {children}
         </TrainerContext.Provider>

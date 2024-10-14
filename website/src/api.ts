@@ -30,7 +30,7 @@ export async function POST(url: string, obj: Object) {
     }
 }
 
-export async function GET(url: string, email: string) {
+export async function GET(url: string,obj: Object) {
     try {
         let res = await fetch(`${BASE_URL}/${url}`, {
             method: 'GET',
@@ -79,6 +79,7 @@ export async function PUT(url: string, obj: Object) {
 
 export async function DELETE(url: string) {
     try {
+        console.log('url ====>>>', url)
         let res = await fetch(`${BASE_URL}/${url}`, {
             method: 'DELETE',
             headers: {

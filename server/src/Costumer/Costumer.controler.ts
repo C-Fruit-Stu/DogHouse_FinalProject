@@ -7,6 +7,7 @@ import { ObjectId } from "mongodb";
 export async function GetAllCostumrs(req: Request, res: Response) {
     try {
         let costumers = await getallcostumers1();
+        console.log(costumers)
         if (costumers?.length == 0)
             res.status(200).json({ message: 'no costumers inside', costumers })
         else
