@@ -15,7 +15,7 @@ TrainerRouter
     .put('/updatepassword/:id',UpdatePassword)
     .put('/updatePayment/:id', updatePayment)
     .post('/getalltrainer', getAllTrainers)
-    .get('/getallpostsbyemail/:id', getAllPostsByEmail)
+    .get('/getallpostsbyemail/:email', getAllPostsByEmail)
     
 
     // מוסיף פוסט
