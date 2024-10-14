@@ -48,8 +48,8 @@ const Profile: React.FC = () => {
         console.log(`Selected Date: ${date}, Selected Time: ${time}`);
         alert(`Schedule for ${date} at ${time} has been deleted!`);
         await DeleteNewDate(date, time);
-        let trainer = await getuserByEmail(currentTrainer?.email);
-        console.log(trainer);
+        let trainer = await getuserByEmail();
+        console.log(currentTrainer.openDates);
         setScheduleDate('');
         setScheduleTime('');
       } else {

@@ -125,9 +125,17 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
-    async function getuserByEmail(email: string) {
+    async function getuserByEmail() {
         try {
-            return await POST('trainer/getuserByEmail', { email: email })
+            let email = currentTrainer?.email
+            console.log('email ====>>>', email)
+            let data = await POST('trainer/gettrainerbyemail', { email: email })
+            console.log("data" + data.user?.email);
+            if (data && data.user) {
+                setCurrentTrainer(data.user);
+                return data.user;
+            }
+            return false;
         } catch (error) {
             throw error
         }
