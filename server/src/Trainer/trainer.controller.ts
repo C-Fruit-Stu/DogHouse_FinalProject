@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo,showPostsByEmail } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -20,20 +20,20 @@ export async function getAll(req: Request, res: Response) {
 
 export async function getAllTrainers(req: Request, res: Response) {
     try {
-       console.log('Received request to fetch all trainers');
-       let trainers = await getAllTrainersInfo();
-       console.log('Fetched trainers:', trainers);
- 
-       if (trainers.length === 0) {
-          return res.status(200).json({ message: 'No trainers found', trainers });
-       }
-       return res.status(200).json({ trainers });
+        console.log('Received request to fetch all trainers');
+        let trainers = await getAllTrainersInfo();
+        console.log('Fetched trainers:', trainers);
+
+        if (trainers.length === 0) {
+            return res.status(200).json({ message: 'No trainers found', trainers });
+        }
+        return res.status(200).json({ trainers });
     } catch (error) {
-       console.error('Error fetching trainers:', error); 
-       return res.status(500).json({ message: 'Error fetching trainers', error });
+        console.error('Error fetching trainers:', error);
+        return res.status(500).json({ message: 'Error fetching trainers', error });
     }
- }
- 
+}
+
 
 
 
@@ -186,12 +186,12 @@ export async function updatePayment(req: Request, res: Response) {
 
 
 export async function addNewPost(req: Request, res: Response) {
-    let { email,id,title, description, image, likes,likedByUser,comments,isOwner  } = req.body
+    let { email, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body
     if (!title || !description)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await addAnotherPost(email,id,title, description, image, likes,likedByUser,comments,isOwner)
+        let result = await addAnotherPost(email, id, title, description, image, likes, likedByUser, comments, isOwner)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -217,20 +217,21 @@ export async function getAllPostsById(req: Request, res: Response) {
 
 export async function getAllPostsByEmail(req: Request, res: Response) {
     const { email } = req.params;
-  
+
     if (!email)
-      return res.status(400).json({ msg: "invalid email" });
-  
+        return res.status(400).json({ msg: "invalid email" });
+
     try {
-      const result = await showPostsByEmail(email);
-      if (!result)
-        res.status(400).json({ msg: "No posts found" });
-      else
-        res.status(200).json({ posts: result });
+        const result = await showPostsByEmail(email);  // Fetch posts by email
+        if (!result || result.length === 0)
+            return res.status(400).json({ msg: "No posts found" });  // If no posts are found
+        else
+            return res.status(200).json({ posts: result });  // Return posts
     } catch (error) {
-      res.status(500).json({ error });
+        return res.status(500).json({ error: "Server error while fetching posts" });
     }
-  }
+}
+
 
 export async function showallposts(req: Request, res: Response) {
     try {
@@ -298,13 +299,13 @@ export async function deletePost(req: Request, res: Response) {
 
 
 export async function addNewTraining(req: Request, res: Response) {
-    let { email,name,date,time } = req.body
+    let { email, name, date, time } = req.body
 
-    if(!date || !time)
+    if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await AddTraining(email,name,date,time)
+        let result = await AddTraining(email, name, date, time)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -312,13 +313,13 @@ export async function addNewTraining(req: Request, res: Response) {
 }
 
 export async function deleteTrainiging(req: Request, res: Response) {
-    let { email,name,date,time } = req.body
+    let { email, name, date, time } = req.body
 
-    if(!date || !time)
+    if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await DeleteTraining(email,name,date,time)
+        let result = await DeleteTraining(email, name, date, time)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -326,13 +327,13 @@ export async function deleteTrainiging(req: Request, res: Response) {
 }
 
 export async function openTrainingDates(req: Request, res: Response) {
-    let { date,time,email } = req.body
+    let { date, time, email } = req.body
 
-    if(!date || !time)
+    if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await OpenTraining(date,time,email)
+        let result = await OpenTraining(date, time, email)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -340,13 +341,13 @@ export async function openTrainingDates(req: Request, res: Response) {
 }
 
 export async function closeTrainingDates(req: Request, res: Response) {
-    let { date,time,email } = req.body
+    let { date, time, email } = req.body
 
-    if(!date || !time)
+    if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await CloseTraining(date,time,email)
+        let result = await CloseTraining(date, time, email)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })

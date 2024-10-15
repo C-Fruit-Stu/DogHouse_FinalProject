@@ -111,11 +111,13 @@ export async function showPostsByEmail(email: string) {
       const query = { email };
       const projection = { Posts: 1, _id: 0 };
       const users = await findUsers(query, projection);
-      return users[0]?.Posts || [];
+      console.log('User fetched:', users);  // Log the fetched user(s)
+      return users[0]?.Posts || [];  // Return posts array or empty if no posts
     } catch (error) {
       throw error;
     }
   }
+  
   
 
 // export async function updateUser(id: string, email: string, password: string, location: any) {
