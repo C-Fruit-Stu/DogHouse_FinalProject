@@ -3,13 +3,14 @@ import { View, Modal, FlatList, Button, StyleSheet, TextInput, Image, Text, Touc
 import * as ImagePicker from 'expo-image-picker';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { Post, Comment, TrainerType } from '../types/trainer_type';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { Post, Comment } from '../types/trainer_type';
 import PostView from '../components/ViewPost';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RouteParams = {
-  clientType?: number;
-  trainerEmail?: string; // The trainer's email to fetch posts
+  clientType?: number,
+  trainerEmail?: string
 };
 
 export default function Posts() {
@@ -17,33 +18,41 @@ export default function Posts() {
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [galleryImg, setGalleryImg] = useState<string[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({});
-  const [posts, setPosts] = useState<Post[]>([]); // To store the posts from the trainer
 
-  const { currentTrainer, AddPost,GetTrainerPosts } = useContext(TrainerContext);
+  const { currentTrainer, AddPost, GetTrainerPosts } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
-  const trainerEmail = route.params?.trainerEmail; // Trainer email passed in
+  const trainerEmail = route.params?.trainerEmail;
+  const navigation = useNavigation();
 
-  // Fetch posts based on the trainer email (used by customers)
   useEffect(() => {
-    if (trainerEmail && clientType === 2) {
-      async function fetchPosts() {
-        const fetchedPosts = await GetTrainerPosts(trainerEmail);
-        setPosts(fetchedPosts);
+    // Load posts for the customer based on the trainer email
+    if (clientType === 2 && trainerEmail) {
+      async function loadTrainerPosts() {
+        try {
+          const fetchedPosts = await GetTrainerPosts(trainerEmail);
+          setPosts(fetchedPosts);
+        } catch (error) {
+          console.error('Error fetching trainer posts:', error);
+        }
       }
-      fetchPosts();
-    } else if (clientType === 1 && currentTrainer?.Posts) {
-      // For trainers, load their own posts
-      setPosts(currentTrainer.Posts);
+      loadTrainerPosts();
+    } else if (clientType === 1) {
+      // Load trainer's own posts
+      setPosts(currentTrainer?.Posts || []);
     }
-  }, [trainerEmail, clientType, currentTrainer]);
 
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
+    return () => {
+      // Clear posts when leaving the screen
+      setPosts([]);
+      AsyncStorage.removeItem(`trainerPosts-${trainerEmail}`);
+    };
+  }, [clientType, trainerEmail]);
+
+  const toggleModal = () => setModalVisible(!modalVisible);
 
   const handleSubmit = () => {
     if (clientType === 1 && AddPost) {
@@ -74,7 +83,6 @@ export default function Posts() {
     });
 
     if (!result.canceled && result.assets) {
-      setGalleryImg([...galleryImg, result.assets[0].uri]);
       setImageUri(result.assets[0].uri);
     }
   };
@@ -89,7 +97,7 @@ export default function Posts() {
           }
         : post
     );
-    setPosts(updatedPosts); // Update the local state
+    setPosts(updatedPosts);
   };
 
   const handleComment = (postId: string, newComment: Comment) => {
@@ -98,7 +106,7 @@ export default function Posts() {
         ? { ...post, comments: [...post.comments, newComment] }
         : post
     );
-    setPosts(updatedPosts); // Update the local state
+    setPosts(updatedPosts);
   };
 
   const toggleComments = (postId: string) => {
@@ -164,11 +172,7 @@ export default function Posts() {
                   <TextInput
                     placeholder="Add a comment"
                     onSubmitEditing={(event) =>
-                      handleComment(item.id, {
-                        id: Math.random().toString(),
-                        text: event.nativeEvent.text,
-                        userId: 'currentUserId',
-                      })
+                      handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })
                     }
                     style={styles.commentInput}
                   />

@@ -50,21 +50,25 @@ export default function TrainerContextProvider({ children }: any) {
     
     async function GetAllTrainers() {
         try {
-            let data = await POST('trainer/getalltrainer',{}); 
+            let data = await POST('trainer/getalltrainer', {}); // Fetch all trainers
             console.log("Fetched trainers data:\n", data);
-    
+
             if (data && data.trainers && data.trainers.length > 0) {
                 const trainerArray = data.trainers.map((trainer: any) => ({
                     first_name: trainer.first_name,
                     last_name: trainer.last_name,
                     email: trainer.email
                 }));
-    
+
                 const trainersJson = JSON.stringify(trainerArray);
-    
+
+                // Save in AsyncStorage
                 await AsyncStorage.setItem('allTrainer', trainersJson);
                 console.log("Saved trainers to AsyncStorage", JSON.parse(trainersJson));
-    
+
+                // Set trainers in state
+                setAllTrainer(trainerArray);
+
                 return true;
             } else {
                 console.log("No trainers found or invalid data");
