@@ -32,7 +32,10 @@ export async function POST(url: string, obj: Object) {
 
 export async function GET(url: string,obj: Object) {
     try {
+        console.log(BASE_URL)
+        console.log(url)
         let res = await fetch(`${BASE_URL}/${url}`, {
+            mode: 'cors',
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"

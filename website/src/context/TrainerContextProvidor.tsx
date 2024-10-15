@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { TrainerType } from "../types/TrainerType";
+import { CoustumerType, TrainerType } from "../types/TrainerType";
 import { POST, PUT,GET, DELETE } from "../api";
 
 
@@ -8,6 +8,7 @@ export const TrainerContext = createContext<any>({});
 function TrainerContextProvidor({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
+    const [allCostumers, setAllCostumers] = useState<CoustumerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
 
     // useEffect(() => {
@@ -158,9 +159,9 @@ function TrainerContextProvidor({ children }: any) {
     async function getAllCostumers() {
         try {
             let data = await GET('costumer/', {})
-            console.log("data" + data);
-            if (data && data.users) {
-                setAllTrainer(data.users);
+            console.log("data   " + data.costumers);
+            if (data && data.costumers) {
+                setAllCostumers(data.costumers);
                 return data.users;
             }
             return false;
@@ -173,6 +174,20 @@ function TrainerContextProvidor({ children }: any) {
         try {
             console.log('id ====>>>', id)
             let data = await DELETE('trainer/physic/delete/' + id)
+            console.log("data" + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteCostumer (id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await DELETE('costumer/physic/delete/' + id)
             console.log("data" + data);
             if (data) {
                 return true;
@@ -200,7 +215,9 @@ function TrainerContextProvidor({ children }: any) {
                 getuserByEmail,
                 getAllUsers,
                 DeleteTrainer,
-                getAllCostumers
+                getAllCostumers,
+                allCostumers,
+                DeleteCostumer
             }}>
             {children}
         </TrainerContext.Provider>
