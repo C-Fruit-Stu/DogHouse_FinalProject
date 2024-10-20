@@ -16,6 +16,7 @@ import TrainerContextProvidor from "../context/TrainerContextProvidor";
 import AddPost from "../pages/AddPost";
 import Manageusers from "../components/Manageusers";
 import ManageCostumers from "../components/ManageCostumers";
+import Settings from "../components/Settings";
 
 
 export const routes = createBrowserRouter([
@@ -82,5 +83,9 @@ export const routes = createBrowserRouter([
     {
         path: "/managecostumers",
         element: <TrainerContextProvidor><ManageCostumers/></TrainerContextProvidor>
+    },
+    {
+        path: "/settings",
+        element: <TrainerContextProvidor><Settings/></TrainerContextProvidor>
     }
 ])
