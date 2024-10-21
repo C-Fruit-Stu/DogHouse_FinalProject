@@ -82,7 +82,7 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function GetTrainerPosts(email: string){
         try{
-            let data = await GET(`trainer/gettrainerposts/${email}`);
+            let data = await GET(`trainer/getallpostsbyemail/${email}`);
             console.log(data);
             if(data && data.posts){
                 return data.posts;

@@ -9,8 +9,9 @@ import PostView from '../components/ViewPost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RouteParams = {
-  clientType?: number,
-  trainerEmail?: string
+  clientType?: number;
+  trainerEmail?: string;
+  posts?: Post[];
 };
 
 export default function Posts() {
@@ -29,28 +30,20 @@ export default function Posts() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Load posts for the customer based on the trainer email
-    if (clientType === 2 && trainerEmail) {
-      async function loadTrainerPosts() {
+    const loadPosts = async () => {
+      if (clientType == 2 && trainerEmail) {
         try {
           const fetchedPosts = await GetTrainerPosts(trainerEmail);
           setPosts(fetchedPosts);
         } catch (error) {
           console.error('Error fetching trainer posts:', error);
         }
+      } else if (clientType === 1 && currentTrainer?.Posts) {
+        setPosts(currentTrainer.Posts);
       }
-      loadTrainerPosts();
-    } else if (clientType === 1) {
-      // Load trainer's own posts
-      setPosts(currentTrainer?.Posts || []);
-    }
-
-    return () => {
-      // Clear posts when leaving the screen
-      setPosts([]);
-      AsyncStorage.removeItem(`trainerPosts-${trainerEmail}`);
     };
-  }, [clientType, trainerEmail]);
+    loadPosts();
+  }, []);
 
   const toggleModal = () => setModalVisible(!modalVisible);
 
@@ -91,10 +84,10 @@ export default function Posts() {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
         ? {
-            ...post,
-            likedByUser: !post.likedByUser,
-            likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
-          }
+          ...post,
+          likedByUser: !post.likedByUser,
+          likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
+        }
         : post
     );
     setPosts(updatedPosts);
@@ -121,30 +114,73 @@ export default function Posts() {
     );
     setPosts(updatedPosts);
   };
+  if (clientType == 1) {
+    if (!posts.length) {
+      return <Text>No posts available</Text>;
+    }
+    return (
+      <View style={styles.container}>
+        {clientType === 1 && <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />}
 
-  if (!posts.length) {
-    return <Text>No posts available</Text>;
-  }
-
-  return (
-    <View style={styles.container}>
-      {clientType === 1 && <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />}
-
-      <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TextInput placeholder="Title" value={input1} onChangeText={setInput1} style={styles.input} />
-            <TextInput placeholder="Description" value={input2} onChangeText={setInput2} style={styles.input} />
-            <Button title="Pick an Image" onPress={pickImage} />
-            {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
-            <Button title="Submit" onPress={handleSubmit} />
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+        <Modal visible={modalVisible} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TextInput placeholder="Title" value={input1} onChangeText={setInput1} style={styles.input} />
+              <TextInput placeholder="Description" value={input2} onChangeText={setInput2} style={styles.input} />
+              <Button title="Pick an Image" onPress={pickImage} />
+              {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
+              <Button title="Submit" onPress={handleSubmit} />
+              <Button title="Close" onPress={() => setModalVisible(false)} />
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.postContainer}>
+              <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
+              <View style={styles.postActions}>
+                <Text style={styles.likesCount}>Likes: {item.likes}</Text>
+                <TouchableOpacity onPress={() => handleLike(item.id)}>
+                  <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => toggleComments(item.id)}>
+                  <Text style={styles.commentsCount}>Comments: {item.comments.length}</Text>
+                </TouchableOpacity>
+                {commentsVisible[item.id] && (
+                  <ScrollView style={styles.commentsSection}>
+                    {item.comments.map((comment: Comment) => (
+                      <View key={comment.id} style={styles.commentContainer}>
+                        <Text style={styles.commentText}>{comment.text}</Text>
+                        {clientType === 1 && (
+                          <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.id)}>
+                            <Text style={styles.deleteComment}>Delete</Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    ))}
+                    <TextInput
+                      placeholder="Add a comment"
+                      onSubmitEditing={(event) =>
+                        handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })
+                      }
+                      style={styles.commentInput}
+                    />
+                  </ScrollView>
+                )}
+              </View>
+            </View>
+          )}
+        />
+      </View>
+    );
+  }
+  else {
+    return (
       <FlatList
-        data={posts.filter((post: Post) => post.title)}
+        data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
@@ -182,8 +218,8 @@ export default function Posts() {
           </View>
         )}
       />
-    </View>
-  );
+    )
+  }
 }
 
 const styles = StyleSheet.create({

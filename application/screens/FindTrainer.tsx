@@ -5,13 +5,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 export default function FindTrainer() {
-    const { GetTrainerPosts } = useContext(TrainerContext);
+    const { GetTrainerPosts,GetAllTrainers } = useContext(TrainerContext);
     const navigation = useNavigation();
     const [localTrainers, setLocalTrainers] = useState<any[]>([]); // Ensure this is always an array
 
     // Load trainers from AsyncStorage
     const TrainersRawData = async () => {
         try {
+            GetAllTrainers();
             const storedTrainers = await AsyncStorage.getItem('allTrainer');
             if (storedTrainers) {
                 const trainersArray = JSON.parse(storedTrainers);
