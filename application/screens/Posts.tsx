@@ -31,9 +31,11 @@ export default function Posts() {
 
   useEffect(() => {
     const loadPosts = async () => {
+      console.log('clientType', clientType);
+      console.log('trainerEmail', trainerEmail);
       if (clientType == 2 && trainerEmail) {
         try {
-          const fetchedPosts = await GetTrainerPosts(trainerEmail);
+          const fetchedPosts = await GetTrainerPosts(trainerEmail); // Fetch posts by trainer's email
           setPosts(fetchedPosts);
         } catch (error) {
           console.error('Error fetching trainer posts:', error);

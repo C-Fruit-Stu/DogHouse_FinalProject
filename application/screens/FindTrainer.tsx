@@ -2,12 +2,18 @@ import { View, Text, Image, Button, FlatList, StyleSheet } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 
+type RouteParams = {
+    clientType?: number;
+    trainerEmail?: string;
+};
 export default function FindTrainer() {
-    const { GetTrainerPosts,GetAllTrainers } = useContext(TrainerContext);
+    const { GetTrainerPosts, GetAllTrainers } = useContext(TrainerContext);
     const navigation = useNavigation();
     const [localTrainers, setLocalTrainers] = useState<any[]>([]); // Ensure this is always an array
+    const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
+    const clientType = route.params?.clientType;
 
     // Load trainers from AsyncStorage
     const TrainersRawData = async () => {
@@ -31,15 +37,20 @@ export default function FindTrainer() {
         }
     };
 
-    // Fetch posts by trainer email and navigate to Posts screen
-    const showPosts = async (email: string) => {
+    const addTrainerToList = async (email: string) => {
         try {
-            const posts = await GetTrainerPosts(email); // Fetch posts by trainer's email
-            if (posts && posts.length > 0) {
-                navigation.navigate('Posts', { posts, trainerEmail: email });
-            } else {
-                console.log("No posts found for this trainer");
-            }
+
+        }
+        catch (error) {
+            console.error('Error adding trainer to list:', error);
+        }
+    }
+    // Fetch posts by trainer email and navigate to Posts screen
+    const showPosts = async (trainerEmail: string) => {
+        try {
+            console.log('trainerEmail ', trainerEmail);
+            navigation.navigate('Posts', { clientType, trainerEmail });
+
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
@@ -73,7 +84,7 @@ export default function FindTrainer() {
                     <View style={styles.buttonsContainer}>
                         <Button title="ViewPosts" onPress={() => showPosts(item.email)} />
                         <Button title="Like" onPress={() => { }} />
-                        <Button title="Follow" onPress={() => { }} />
+                        <Button title="Follow" onPress={() => addTrainerToList(item.email)} />
                     </View>
                 </View>
             </View>
