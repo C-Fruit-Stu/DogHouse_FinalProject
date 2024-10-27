@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { TrainerType } from "../types/TrainerType";
-import { POST, PUT } from "../api";
+import { GET, POST, PUT } from "../api";
 
 
 export const TrainerContext = createContext<any>({});
@@ -10,12 +10,12 @@ function TrainerContextProvidor({ children }: any) {
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
 
-    useEffect(() => {
-        const trainer = sessionStorage.getItem('trainer');
-        if (trainer) {
-            setCurrentTrainer(JSON.parse(trainer as any));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const trainer = sessionStorage.getItem('trainer');
+    //     if (trainer) {
+    //         setCurrentTrainer(JSON.parse(trainer as any));
+    //     }
+    // }, []);
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {
@@ -123,6 +123,23 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
+    async function GettrainerById(id:string){
+        if(currentTrainer){
+            try{
+                console.log(id)
+                let data = await GET('trainer/' + id, id)
+                console.log("data===>", data)
+                if(data)
+                    return data
+                return false
+            }
+            catch(error){
+                console.log(error)
+                return false
+            }
+        }
+    }
+
 
     return (
         <TrainerContext.Provider
@@ -134,7 +151,8 @@ function TrainerContextProvidor({ children }: any) {
                 LogInTrainer,
                 AddPost,
                 openNewDate,
-                DeleteNewDate
+                DeleteNewDate,
+                GettrainerById
             }}>
             {children}
         </TrainerContext.Provider>

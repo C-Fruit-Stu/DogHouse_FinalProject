@@ -9,21 +9,21 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
-    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,GettrainerById } = useContext(TrainerContext);
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState<string>('');
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            const trainer = sessionStorage.getItem('trainer');
-            if (trainer) {
-                sessionStorage.setItem('trainer', JSON.stringify(currentTrainer))
-                setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
-            }
-        }, 3000); // 3000 milliseconds = 3 seconds
-    
-        return () => clearTimeout(timeout); 
-    }  , [currentTrainer]);
+          setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
+          fetchtrainer()
+    }  , []);
+
+    async function fetchtrainer(){
+      let user = await GettrainerById(currentTrainer._id)
+      console.log(user)
+    }
+
+
     function handleAddPost(): void {
         navigate('/addpost');
     }

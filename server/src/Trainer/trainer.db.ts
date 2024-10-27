@@ -26,6 +26,22 @@ export async function findUsers(query = {}, projection = {}) {
     }
 }
 
+export async function userinID(query : {}) {
+    let mongo = new MongoClient(DB_INFO.connection)
+    try {
+        await mongo.connect();
+
+        let user = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne(query)
+        console.log("user===>", user)
+        return user
+    } catch (error) {
+        throw error
+    }
+    finally{
+        mongo.close();
+    }
+}
+
 export async function findAllTrainers() {
     let mongo = new MongoClient(DB_INFO.connection);
     try {
