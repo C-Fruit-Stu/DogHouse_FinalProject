@@ -9,11 +9,20 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
+
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,getuserByEmail } = useContext(TrainerContext);
+
     const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,GettrainerById } = useContext(TrainerContext);
+
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
-    const [scheduleTime, setScheduleTime] = useState<string>('');
+    const [scheduleTime, setScheduleTime] = useState('');
     useEffect(() => {
+
+        setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
+    }  , []);
+
+
           setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
           fetchtrainer()
     }  , []);
@@ -22,6 +31,7 @@ const Profile: React.FC = () => {
       let user = await GettrainerById(currentTrainer._id)
       console.log(user)
     }
+
 
 
     function handleAddPost(): void {
@@ -55,6 +65,8 @@ const Profile: React.FC = () => {
         console.log(`Selected Date: ${date}, Selected Time: ${time}`);
         alert(`Schedule for ${date} at ${time} has been deleted!`);
         await DeleteNewDate(date, time);
+        let trainer = await getuserByEmail();
+        console.log(currentTrainer.openDates);
         setScheduleDate('');
         setScheduleTime('');
       } else {

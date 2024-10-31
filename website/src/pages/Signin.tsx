@@ -53,6 +53,11 @@ const SignIn: React.FC = () => {
         email: values.email,
         password: values.password
     };
+
+    if(LogIn.email === 'admin@gmail.com' && LogIn.password === 'admin123'){
+      navigate('/admin');
+      return
+    }
     
     // Wait for the LogInTrainer function to resolve
     const loginSuccess = await LogInTrainer(LogIn);

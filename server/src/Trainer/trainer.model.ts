@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining,findAllTrainers, userinID } from "./trainer.db";
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
+import { get } from "http";
 
 
 export async function getAllUsers() {
@@ -220,10 +221,18 @@ export async function CloseTraining(date: Date, time: string, email: string) {
     }
 }
 
+
+export async function getUserByEmail(email: string) {
+    try {
+        return await FindUserByEmail(email);
+    } catch (error) {
+        throw error;
+
 export async function getuseremail(email:string) {
     try {
         return await FindUserByEmail(email)
     } catch (error) {
         throw error
+
     }
 }

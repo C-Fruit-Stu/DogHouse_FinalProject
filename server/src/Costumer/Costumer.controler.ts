@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Costumer } from "./Costumer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
-import { ChangePass, CheckInfo, checkUpdate, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer } from "./Costumer.model";
+import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer } from "./Costumer.model";
 import { ObjectId } from "mongodb";
 
 export async function GetAllCostumrs(req: Request, res: Response) {
@@ -9,8 +9,9 @@ export async function GetAllCostumrs(req: Request, res: Response) {
         let costumers = await getallcostumers1();
         if (costumers?.length == 0)
             res.status(200).json({ message: 'no costumers inside', costumers })
-        else
+        else{
             res.status(200).json({ costumers })
+        }
     } catch (error) {
         res.status(500).json({ error })
     }
@@ -133,5 +134,19 @@ export async function UpdatePassword(req: Request, res: Response) {
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
+    }
+}
+
+export async function logicDeleteUser(req: Request, res: Response) {
+    let { id } = req.params;
+
+    if (!id || id.length < 24)
+        return res.status(400).json({ msg: "invalid id" });
+
+    try {
+        let result = await deactiveUser(id);
+        res.status(201).json({ result });
+    } catch (error) {
+        res.status(500).json({ error });
     }
 }

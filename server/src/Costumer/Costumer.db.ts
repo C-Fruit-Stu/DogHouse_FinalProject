@@ -105,3 +105,18 @@ export async function NewPassfunc(password: string, id: ObjectId) {
         mongo.close();
     }
 }
+
+export async function decativateUser(id: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).deleteOne(
+            { _id: new ObjectId(id) }
+        )
+    } catch (error) {
+        throw error
+    }
+    finally {
+        mongo.close();
+    }
+}

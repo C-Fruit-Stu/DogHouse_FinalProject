@@ -1,5 +1,5 @@
 //const BASE_URL = "https://shenkar-2024-b-fullstack-ui.onrender.com/api";
-const BASE_URL = "http://localhost:7777/api";
+const BASE_URL = import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : "https://doghouse-finalproject.onrender.com/api"; 
 //import.meta.env.VITE_ENV == 'dev' ? "http://localhost:7777/api" : "https://doghouse-finalproject.onrender.com/api"; 
 
 export async function POST(url: string, obj: Object) {
@@ -30,9 +30,16 @@ export async function POST(url: string, obj: Object) {
     }
 }
 
+
+export async function GET(url: string,obj: Object) {
+
 export async function GET(url: string, p0: any) {
+
     try {
+        console.log(BASE_URL)
+        console.log(url)
         let res = await fetch(`${BASE_URL}/${url}`, {
+            mode: 'cors',
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"
@@ -79,6 +86,7 @@ export async function PUT(url: string, obj: Object) {
 
 export async function DELETE(url: string) {
     try {
+        console.log('url ====>>>', url)
         let res = await fetch(`${BASE_URL}/${url}`, {
             method: 'DELETE',
             headers: {
