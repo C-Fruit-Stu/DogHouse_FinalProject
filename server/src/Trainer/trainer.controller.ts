@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail,getUserByEmail,getuseremail } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail,getUserByEmail } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -365,22 +365,12 @@ export async function getUserByemail(req: Request, res: Response) {
 
     try {
         let result = await getUserByEmail(email)
-
-export async function getuserbyemail(req: Request, res: Response) {
-    let { email } = req.body
-
-    if(!email)
-        return res.status(400).json({ msg: "invalid info" })
-    try {
-        let result = await getuseremail(email)
-
         res.status(200).json({ result })
-    } catch (error) {
+
+    }
+    catch(error){
         res.status(500).json({ error })
     }
-
 }
-
-}   
 
 

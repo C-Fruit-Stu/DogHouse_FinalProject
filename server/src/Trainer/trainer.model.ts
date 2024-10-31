@@ -265,12 +265,6 @@ export async function getUserByEmail(email: string) {
         return await FindUserByEmail(email);
     } catch (error) {
         throw error;
-
-export async function getuseremail(email:string) {
-    try {
-        return await FindUserByEmail(email)
-    } catch (error) {
-        throw error
-
     }
 }
+

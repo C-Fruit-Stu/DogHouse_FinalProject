@@ -14,6 +14,7 @@ export default function FindTrainer() {
     const [localTrainers, setLocalTrainers] = useState<any[]>([]); // Ensure this is always an array
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
     const clientType = route.params?.clientType;
+    
 
     // Load trainers from AsyncStorage
     const TrainersRawData = async () => {
