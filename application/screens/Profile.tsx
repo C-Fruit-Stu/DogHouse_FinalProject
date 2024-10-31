@@ -64,9 +64,9 @@ export default function Profile() {
                 <Text style={styles.TextContainer}>Stats</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('FindTrainer', { clientType })}>
+            <TouchableOpacity onPress={() => navigation.navigate('FindTrainer')}>
               <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>costumers</Text>
+                <Text style={styles.TextContainer}>Find new trainers</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>

@@ -30,7 +30,11 @@ export async function POST(url: string, obj: Object) {
     }
 }
 
+
 export async function GET(url: string,obj: Object) {
+
+export async function GET(url: string, p0: any) {
+
     try {
         console.log(BASE_URL)
         console.log(url)

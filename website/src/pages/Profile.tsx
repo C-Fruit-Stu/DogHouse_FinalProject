@@ -9,13 +9,30 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
+
     const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,getuserByEmail } = useContext(TrainerContext);
+
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,GettrainerById } = useContext(TrainerContext);
+
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
     useEffect(() => {
+
         setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
     }  , []);
+
+
+          setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
+          fetchtrainer()
+    }  , []);
+
+    async function fetchtrainer(){
+      let user = await GettrainerById(currentTrainer._id)
+      console.log(user)
+    }
+
+
 
     function handleAddPost(): void {
         navigate('/addpost');

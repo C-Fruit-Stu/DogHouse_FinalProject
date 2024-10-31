@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+
 import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo, getUserByEmail } from "./trainer.model";
+
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo, getuseremail } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -19,21 +22,23 @@ export async function getAll(req: Request, res: Response) {
 
 export async function getAllTrainers(req: Request, res: Response) {
     try {
-        let trainers = await getAllTrainersInfo();
+        let trainers = await getAllTrainersInfo();  // Retrieves all trainers
         if (trainers?.length === 0) {
             res.status(200).json({ message: 'No trainers found', trainers });
         } else {
             res.status(200).json({ trainers });
         }
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error });  // Log the exact error for better debugging
     }
 }
 
+
 export async function getUserById(req: Request, res: Response) {
     let { id } = req.params; //url שליפת הפרמטר מתוך ה 
-    if (id.length != 24)
+    if (id.length != 24){
         return res.status(500).json({ message: 'must provide a valid id' });
+    }
     try {
         let user = await findUserById(id);
         if (!user)
@@ -329,6 +334,7 @@ export async function closeTrainingDates(req: Request, res: Response) {
     }
 }
 
+
 export async function getUserByemail(req: Request, res: Response) {
     let { email } = req.body
     console.log(email)
@@ -337,9 +343,22 @@ export async function getUserByemail(req: Request, res: Response) {
 
     try {
         let result = await getUserByEmail(email)
+
+export async function getuserbyemail(req: Request, res: Response) {
+    let { email } = req.body
+
+    if(!email)
+        return res.status(400).json({ msg: "invalid info" })
+    try {
+        let result = await getuseremail(email)
+
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
     }
+
 }
+
+}   
+
 

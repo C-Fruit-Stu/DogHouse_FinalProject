@@ -1,6 +1,11 @@
 import { createContext, useEffect, useState } from "react";
+
 import { CoustumerType, TrainerType } from "../types/TrainerType";
 import { POST, PUT,GET, DELETE } from "../api";
+
+import { TrainerType } from "../types/TrainerType";
+import { GET, POST, PUT } from "../api";
+
 
 
 export const TrainerContext = createContext<any>({});
@@ -126,6 +131,7 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
+
     async function getuserByEmail() {
         try {
             let email = currentTrainer?.email
@@ -201,6 +207,25 @@ function TrainerContextProvidor({ children }: any) {
 
 
 
+    async function GettrainerById(id:string){
+        if(currentTrainer){
+            try{
+                console.log(id)
+                let data = await GET('trainer/' + id, id)
+                console.log("data===>", data)
+                if(data)
+                    return data
+                return false
+            }
+            catch(error){
+                console.log(error)
+                return false
+            }
+        }
+    }
+
+
+
     return (
         <TrainerContext.Provider
             value={{
@@ -212,12 +237,16 @@ function TrainerContextProvidor({ children }: any) {
                 AddPost,
                 openNewDate,
                 DeleteNewDate,
+
                 getuserByEmail,
                 getAllUsers,
                 DeleteTrainer,
                 getAllCostumers,
                 allCostumers,
                 DeleteCostumer
+
+                GettrainerById
+
             }}>
             {children}
         </TrainerContext.Provider>

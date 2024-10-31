@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 import { TrainerType } from "../types/trainer_type";
-import { POST } from "../api";
+import { GET, POST } from "../api";
 
 export const TrainerContext = createContext<any>({});
 
@@ -44,21 +44,24 @@ export default function TrainerContextProvider({ children }: any) {
             return false;
         }
     }
+
+    
     async function GetAllTrainers() {
         try {
-            let data = await POST('trainer/getalltrainer', {});
+            let data = await GET('trainer/getalltrainer');  // No ID required here
             console.log("Fetched trainers:", data);
 
             if (data && data.trainers) {
-                setAllTrainer(data.trainers);
+                setAllTrainer(data.trainers);  // Assuming you're storing all trainers
                 return true;
             }
             return false;
         } catch (error) {
-            console.log(error);
+            console.log('error: ', error);
             return false;
         }
     }
+
 
     async function AddPost(newPost: any) {
         if (currentTrainer) {

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining,findAllTrainers, userinID } from "./trainer.db";
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
 
@@ -15,22 +15,13 @@ export async function getAllUsers() {
 }
 
 export async function getAllTrainersInfo() {
-    let query = {
-        clientType: "1"
-    };
-    let projection = {
-        first_name: 1,
-        last_name: 1,
-        Posts: 1,
-        email: 1,
-        dob: 1,
-        experience: 1,
-        phone: 1,
-        image: 1,
-        trainingSchedule: 1
-    };
-
-    return await findUsers(query, projection);
+    try {
+        const trainers = await findAllTrainers();
+        return trainers;
+    } catch (error) {
+        console.error('Error in getAllTrainersInfo:', error);
+        throw error;
+    }
 }
 
 export async function getAllPosts() {
@@ -55,8 +46,8 @@ export async function getAllPosts1() {
 export async function findUserById(id: string) {
     try {
         let query = { id }
-        let users = await findUsers(query);
-        return users[0];
+        let users = await userinID(query);
+        return users;
     } catch (error) {
         throw error;
     }
@@ -230,10 +221,18 @@ export async function CloseTraining(date: Date, time: string, email: string) {
     }
 }
 
+
 export async function getUserByEmail(email: string) {
     try {
         return await FindUserByEmail(email);
     } catch (error) {
         throw error;
+
+export async function getuseremail(email:string) {
+    try {
+        return await FindUserByEmail(email)
+    } catch (error) {
+        throw error
+
     }
 }
