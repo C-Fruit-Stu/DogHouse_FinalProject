@@ -53,6 +53,7 @@ export type Post = {
 
 
 export type CoustumerType = {
+    id: string
     dogBreed: string,
     first_name: string,
     last_name: string,

@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { GetAllCostumrs, getCostumerById, LoginCostumer, RegisterCostumer, UpdateInfo, UpdatePassword, updatePayment } from "./Costumer.controler";
+import { GetAllCostumrs, getCostumerById, logicDeleteUser, LoginCostumer, RegisterCostumer, UpdateInfo, UpdatePassword, updatePayment } from "./Costumer.controler";
+
 
 
 
@@ -13,5 +14,6 @@ CostumerRouter
     .put('/updatePayment/:id', updatePayment)
     .put('/updateinfo/:id',UpdateInfo)
     .put('/updatepassword/:id',UpdatePassword)
+    .delete('/physic/delete/:id', logicDeleteUser)
 
 export default CostumerRouter;

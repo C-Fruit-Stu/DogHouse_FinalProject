@@ -1,4 +1,7 @@
 import { Request, Response } from "express";
+
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo, getUserByEmail } from "./trainer.model";
+
 import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining,getAllTrainersInfo, getuseremail } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
@@ -114,7 +117,7 @@ export async function RegisterTrainer(req: Request, res: Response) {
 
 export async function physicDeleteUser(req: Request, res: Response) {
     let { id } = req.params;
-
+    console.log('id ====>', id)
     if (!id || id.length < 24)
         return res.status(400).json({ message: 'must provide a valid id' });
 
@@ -331,6 +334,16 @@ export async function closeTrainingDates(req: Request, res: Response) {
     }
 }
 
+
+export async function getUserByemail(req: Request, res: Response) {
+    let { email } = req.body
+    console.log(email)
+    if(!email)
+        return res.status(400).json({ msg: "invalid info" })
+
+    try {
+        let result = await getUserByEmail(email)
+
 export async function getuserbyemail(req: Request, res: Response) {
     let { email } = req.body
 
@@ -338,9 +351,14 @@ export async function getuserbyemail(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
     try {
         let result = await getuseremail(email)
+
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
     }
+
+}
+
 }   
+
 
