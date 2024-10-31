@@ -27,26 +27,56 @@ export async function POST(url: string, obj: Object) {
 
 export async function GET(url: string) {
     try {
+        console.log(`Sending GET request to ${BASE_URL}/${url}`);
         let res = await fetch(`${BASE_URL}/${url}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"
             }
         });
-        //הסטטוס הוא לא מקבוצת 200
+
+        // Log the full response
+        console.log('Full response:', res);
+
+        // Check if response is not ok (status code outside 200-299 range)
         if (!res.ok) {
-            console.log({ res });
+            console.error('Response error:', res);
             return;
         }
 
+        // Attempt to parse the response JSON
         let data = await res.json();
+        console.log('Parsed JSON data:', data);
         return data;
 
     } catch (error) {
-        console.error("Error in GET:", error);
+        console.error('Fetch error:', error);
     }
-
 }
+
+// export async function GET(url: string) {
+//     try {
+//         let res = await fetch(`${BASE_URL}/${url}`, {
+//             method: 'GET',
+//             headers: {
+//                 "Content-Type": "application/json"
+//             }
+//         });
+
+//         if (!res.ok) {
+//             console.log('Response error:', res);
+//             return;
+//         }
+
+//         let data = await res.json();
+//         console.log('Data received from server:', data); // Add this
+//         return data;
+
+//     } catch (error) {
+//         console.error('Error in GET request:', error);
+//     }
+// }
+
 
 export async function PUT(url: string, obj: Object) {
     try {

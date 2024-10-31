@@ -26,6 +26,7 @@ export async function findUsers(query = {}, projection = {}) {
     }
 }
 
+
 export async function userinID(query : {}) {
     let mongo = new MongoClient(DB_INFO.connection)
     try {

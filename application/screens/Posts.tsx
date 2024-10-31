@@ -3,12 +3,15 @@ import { View, Modal, FlatList, Button, StyleSheet, TextInput, Image, Text, Touc
 import * as ImagePicker from 'expo-image-picker';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { Post, Comment, TrainerType } from '../types/trainer_type';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { Post, Comment } from '../types/trainer_type';
 import PostView from '../components/ViewPost';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RouteParams = {
   clientType?: number;
+  trainerEmail?: string;
+  posts?: Post[];
 };
 
 export default function Posts() {
@@ -16,28 +19,40 @@ export default function Posts() {
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [galleryImg, setGalleryImg] = useState<string[]>([]);
-  const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({}); // For managing comment visibility
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({});
 
-  const { currentTrainer, AddPost } = useContext(TrainerContext);
+  const { currentTrainer, AddPost, GetTrainerPosts } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
+  const trainerEmail = route.params?.trainerEmail;
+  const navigation = useNavigation();
 
-  // Get the correct posts based on client type
-  const posts = clientType === 1
-    ? currentTrainer?.Posts || []
-    : currentCoustumer?.HisTrainer.flatMap((trainer: TrainerType) => trainer.Posts || []) || [];
+  useEffect(() => {
+    const loadPosts = async () => {
+      console.log('clientType', clientType);
+      console.log('trainerEmail', trainerEmail);
+      if (clientType == 2 && trainerEmail) {
+        try {
+          const fetchedPosts = await GetTrainerPosts(trainerEmail); // Fetch posts by trainer's email
+          setPosts(fetchedPosts);
+        } catch (error) {
+          console.error('Error fetching trainer posts:', error);
+        }
+      } else if (clientType === 1 && currentTrainer?.Posts) {
+        setPosts(currentTrainer.Posts);
+      }
+    };
+    loadPosts();
+  }, []);
 
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
-
+  const toggleModal = () => setModalVisible(!modalVisible);
 
   const handleSubmit = () => {
     if (clientType === 1 && AddPost) {
       const newPost: Post = {
-        id: Math.random().toString() + "11",
+        id: Math.random().toString(),
         title: input1,
         description: input2,
         image: imageUri || undefined,
@@ -46,13 +61,11 @@ export default function Posts() {
         comments: [],
         isOwner: true,
       };
-
       AddPost(newPost);
       setInput1('');
       setInput2('');
-      setImageUri(null); // Clear image input
+      setImageUri(null);
       setModalVisible(false);
-      useEffect;
     }
   };
 
@@ -65,12 +78,10 @@ export default function Posts() {
     });
 
     if (!result.canceled && result.assets) {
-      setGalleryImg([...galleryImg, result.assets[0].uri]);
       setImageUri(result.assets[0].uri);
     }
   };
 
-  // Like/unlike posts for trainers and customers
   const handleLike = (postId: string) => {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
@@ -81,72 +92,37 @@ export default function Posts() {
         }
         : post
     );
+    setPosts(updatedPosts);
   };
 
-  // Comment handler for posts (trainers and customers)
   const handleComment = (postId: string, newComment: Comment) => {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
         ? { ...post, comments: [...post.comments, newComment] }
         : post
     );
+    setPosts(updatedPosts);
   };
 
-  // Toggle comment visibility for posts
   const toggleComments = (postId: string) => {
     setCommentsVisible((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
-  // Delete any comment (trainers only)
   const handleDeleteComment = (postId: string, commentId: string) => {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
         ? { ...post, comments: post.comments.filter((comment) => comment.id !== commentId) }
         : post
     );
-    // Update context with new comments after deletion
+    setPosts(updatedPosts);
   };
-
-  // Restore delete handler for trainers
-  const handleDelete = (postId: string) => {
-    if (clientType === 1) {
-      // Implement delete post logic later
+  if (clientType == 1) {
+    if (!posts.length) {
+      return <Text>No posts available</Text>;
     }
-  };
-
-  // Restore edit handler for trainers
-  const handleEdit = (postId: string, updatedPost: Post) => {
-    if (clientType === 1) {
-      // Implement edit post logic later
-    }
-  };
-  if (clientType === 2) {
     return (
       <View style={styles.container}>
-        <FlatList
-          data={posts}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <PostView
-              post={item}
-              clientType={clientType!}
-              isOwner={false}
-              onLike={() => handleLike(item.id)}
-              onComment={(newComment: Comment) => handleComment(item.id, newComment)}
-              onDelete={undefined} // Customers can't delete posts
-              onEdit={undefined} // Customers can't edit posts
-            />
-          )}
-        />
-      </View>
-    );
-    //  למאמנים
-  } else {
-    return (
-      <View style={styles.container}>
-        {clientType === 1 && (
-          <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />
-        )}
+        {clientType === 1 && <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />}
 
         <Modal visible={modalVisible} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
@@ -162,7 +138,7 @@ export default function Posts() {
         </Modal>
 
         <FlatList
-          data={posts.filter((post: Post) => post.title)}
+          data={posts}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.postContainer}>
@@ -203,78 +179,65 @@ export default function Posts() {
       </View>
     );
   }
+  else {
+    return (
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.postContainer}>
+            <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
+            <View style={styles.postActions}>
+              <Text style={styles.likesCount}>Likes: {item.likes}</Text>
+              <TouchableOpacity onPress={() => handleLike(item.id)}>
+                <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => toggleComments(item.id)}>
+                <Text style={styles.commentsCount}>Comments: {item.comments.length}</Text>
+              </TouchableOpacity>
+              {commentsVisible[item.id] && (
+                <ScrollView style={styles.commentsSection}>
+                  {item.comments.map((comment: Comment) => (
+                    <View key={comment.id} style={styles.commentContainer}>
+                      <Text style={styles.commentText}>{comment.text}</Text>
+                      {clientType === 1 && (
+                        <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.id)}>
+                          <Text style={styles.deleteComment}>Delete</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ))}
+                  <TextInput
+                    placeholder="Add a comment"
+                    onSubmitEditing={(event) =>
+                      handleComment(item.id, { id: Math.random().toString(), text: event.nativeEvent.text, userId: 'currentUserId' })
+                    }
+                    style={styles.commentInput}
+                  />
+                </ScrollView>
+              )}
+            </View>
+          </View>
+        )}
+      />
+    )
+  }
 }
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 10,
-  },
-  imagePreview: {
-    width: 100,
-    height: 100,
-    marginVertical: 10,
-  },
-  postContainer: {
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-  },
-  postActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  likesCount: {
-    fontSize: 16,
-  },
-  likeButton: {
-    color: 'blue',
-    marginBottom: 10,
-  },
-  commentsCount: {
-    fontSize: 16,
-  },
-  commentsSection: {
-    maxHeight: 100,
-    marginTop: 10,
-  },
-  commentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  commentText: {
-    fontSize: 14,
-  },
-  deleteComment: {
-    color: 'red',
-  },
-  commentInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 5,
-    marginTop: 10,
-  },
+  container: { flex: 1, padding: 10 },
+  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' },
+  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10 },
+  imagePreview: { width: 100, height: 100, marginVertical: 10 },
+  postContainer: { marginBottom: 20, backgroundColor: '#fff', padding: 10, borderRadius: 10, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 5 },
+  postActions: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
+  likesCount: { fontSize: 16 },
+  likeButton: { color: 'blue', marginBottom: 10 },
+  commentsCount: { fontSize: 16 },
+  commentsSection: { maxHeight: 100, marginTop: 10 },
+  commentContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
+  commentText: { fontSize: 14 },
+  deleteComment: { color: 'red' },
+  commentInput: { borderWidth: 1, borderColor: '#ccc', padding: 5, marginTop: 10 },
 });

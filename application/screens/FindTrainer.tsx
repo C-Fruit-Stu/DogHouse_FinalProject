@@ -1,12 +1,63 @@
 import { View, Text, Image, Button, FlatList, StyleSheet } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 
+type RouteParams = {
+    clientType?: number;
+    trainerEmail?: string;
+};
 export default function FindTrainer() {
-    const { allTrainer, GetAllTrainers } = useContext(TrainerContext);
+    const { GetTrainerPosts, GetAllTrainers } = useContext(TrainerContext);
+    const navigation = useNavigation();
+    const [localTrainers, setLocalTrainers] = useState<any[]>([]); // Ensure this is always an array
+    const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
+    const clientType = route.params?.clientType;
+
+    // Load trainers from AsyncStorage
+    const TrainersRawData = async () => {
+        try {
+            GetAllTrainers();
+            const storedTrainers = await AsyncStorage.getItem('allTrainer');
+            if (storedTrainers) {
+                const trainersArray = JSON.parse(storedTrainers);
+
+                if (Array.isArray(trainersArray)) {
+                    setLocalTrainers(trainersArray); // Set the local state with trainers from AsyncStorage
+                    console.log("Loaded trainers from AsyncStorage:", trainersArray);
+                } else {
+                    console.error("Data in AsyncStorage is not an array");
+                }
+            } else {
+                console.log("No trainers found in AsyncStorage");
+            }
+        } catch (error) {
+            console.error('Error loading trainers from AsyncStorage:', error);
+        }
+    };
+
+    const addTrainerToList = async (email: string) => {
+        try {
+
+        }
+        catch (error) {
+            console.error('Error adding trainer to list:', error);
+        }
+    }
+    // Fetch posts by trainer email and navigate to Posts screen
+    const showPosts = async (trainerEmail: string) => {
+        try {
+            console.log('trainerEmail ', trainerEmail);
+            navigation.navigate('Posts', { clientType, trainerEmail });
+
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    };
 
     useEffect(() => {
-        GetAllTrainers();
+        TrainersRawData(); // Load trainers from AsyncStorage
     }, []);
 
     const calculateAge = (dob: string) => {
@@ -28,21 +79,25 @@ export default function FindTrainer() {
                     <Text style={styles.trainerName}>
                         {item.first_name} {item.last_name}
                     </Text>
-                    <Text style={styles.trainerExperience}>Experience: {item.experience} years</Text>
-                    <Text style={styles.trainerAge}>Age: {calculateAge(item.dob)}</Text>
+                    <Text style={styles.trainerExperience}>Experience: {item.experience || 0} years</Text>
+                    <Text style={styles.trainerAge}>Age: {item.dob ? calculateAge(item.dob) : 'N/A'}</Text>
                     <View style={styles.buttonsContainer}>
-                        <Button title="View" onPress={() => { }} />
-                        <Button title="Message" onPress={() => { }} />
-                        <Button title="Follow" onPress={() => { }} />
+                        <Button title="ViewPosts" onPress={() => showPosts(item.email)} />
+                        <Button title="Like" onPress={() => { }} />
+                        <Button title="Follow" onPress={() => addTrainerToList(item.email)} />
                     </View>
                 </View>
             </View>
         );
     };
 
+    if (!localTrainers || localTrainers.length === 0) {
+        return <Text>No trainers found</Text>;
+    }
+
     return (
         <FlatList
-            data={allTrainer}
+            data={localTrainers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderTrainer}
         />
@@ -57,7 +112,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: '#f8f8f8',
         borderRadius: 10,
-        elevation: 2, // Adds shadow for Android
+        elevation: 2,
     },
     trainerImage: {
         width: 80,
