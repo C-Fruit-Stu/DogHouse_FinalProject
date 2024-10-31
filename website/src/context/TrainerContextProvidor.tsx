@@ -3,9 +3,6 @@ import { createContext, useEffect, useState } from "react";
 import { CoustumerType, TrainerType } from "../types/TrainerType";
 import { POST, PUT,GET, DELETE } from "../api";
 
-import { TrainerType } from "../types/TrainerType";
-import { GET, POST, PUT } from "../api";
-
 
 
 export const TrainerContext = createContext<any>({});
@@ -244,8 +241,6 @@ function TrainerContextProvidor({ children }: any) {
                 getAllCostumers,
                 allCostumers,
                 DeleteCostumer
-
-                GettrainerById
 
             }}>
             {children}

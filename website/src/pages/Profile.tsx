@@ -12,7 +12,6 @@ const Profile: React.FC = () => {
 
     const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,getuserByEmail } = useContext(TrainerContext);
 
-    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,GettrainerById } = useContext(TrainerContext);
 
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
@@ -23,14 +22,6 @@ const Profile: React.FC = () => {
     }  , []);
 
 
-          setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
-          fetchtrainer()
-    }  , []);
-
-    async function fetchtrainer(){
-      let user = await GettrainerById(currentTrainer._id)
-      console.log(user)
-    }
 
 
 
