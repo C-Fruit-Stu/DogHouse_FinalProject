@@ -27,6 +27,49 @@ export async function findUsers(query = {}, projection = {}) {
 }
 
 
+export async function userinID(query : {}) {
+    let mongo = new MongoClient(DB_INFO.connection)
+    try {
+        await mongo.connect();
+
+        let user = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne(query)
+        console.log("user===>", user)
+        return user
+    } catch (error) {
+        throw error
+    }
+    finally{
+        mongo.close();
+    }
+}
+
+export async function findAllTrainers() {
+    let mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        const projection = {
+            first_name: 1,
+            last_name: 1,
+            email: 1,
+            dob: 1,
+            experience: 1,
+            phone: 1,
+            image: 1,
+            Posts: 1
+        };
+        let trainers = await mongo.db(DB_INFO.name)
+            .collection(DB_INFO.collection)
+            .find({ clientType: "1" }, { projection })
+            .toArray();
+        console.log('Trainers fetched from DB:', trainers);
+        return trainers;
+    } catch (error) {
+        console.error('Error fetching trainers from DB:', error);
+        throw error;
+    } finally {
+        await mongo.close();
+    }
+}
 
 export async function FindUserByEmail(email: string) {
     let mongo = new MongoClient(DB_INFO.connection);
@@ -342,4 +385,6 @@ export async function closeTraining(newdate: opendates, email: string) {
     }
 
 }
+
+
 

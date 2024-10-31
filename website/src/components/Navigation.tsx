@@ -11,7 +11,7 @@ const Navigation = () => {
         const timeout = setTimeout(() => {
             const trainer = sessionStorage.getItem('trainer');
             if (trainer) {
-                console.log('Current Trainer:', JSON.parse(trainer as any));
+                // console.log('Current Trainer:', JSON.parse(trainer as any));
             }
         }, 10); // 3000 milliseconds = 3 seconds
     

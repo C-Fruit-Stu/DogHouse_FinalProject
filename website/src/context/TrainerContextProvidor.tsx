@@ -1,6 +1,11 @@
 import { createContext, useEffect, useState } from "react";
+
+import { CoustumerType, TrainerType } from "../types/TrainerType";
+import { POST, PUT,GET, DELETE } from "../api";
+
 import { TrainerType } from "../types/TrainerType";
-import { POST } from "../api";
+import { GET, POST, PUT } from "../api";
+
 
 
 export const TrainerContext = createContext<any>({});
@@ -8,14 +13,15 @@ export const TrainerContext = createContext<any>({});
 function TrainerContextProvidor({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
+    const [allCostumers, setAllCostumers] = useState<CoustumerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
 
-    useEffect(() => {
-        const trainer = sessionStorage.getItem('trainer');
-        if (trainer) {
-            setCurrentTrainer(JSON.parse(trainer as any));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const trainer = sessionStorage.getItem('trainer');
+    //     if (trainer) {
+    //         setCurrentTrainer(JSON.parse(trainer as any));
+    //     }
+    // }, []);
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
         try {
@@ -85,15 +91,16 @@ function TrainerContextProvidor({ children }: any) {
     }
 
 
-    async function openNewDate(opendate: any) {
+    async function openNewDate(date: Date,hour:string) {
         if(currentTrainer){
             const email = currentTrainer.email;
-            opendate = { ...opendate, email };
+            const opendate = { date: date, hour: hour, email: email };
             try {
                 console.log('opendate ====>>>', opendate)
                 let data = await POST('trainer/opentrainingdates', (opendate));
                 console.log("data" + data);
-                if (data && data.post) {
+                if (data) {
+                    setCurrentTrainer(data.user);
                     return true;
                 }
                 return false;
@@ -104,15 +111,16 @@ function TrainerContextProvidor({ children }: any) {
         }
     }
 
-    async function DeleteNewDate(opendate: any) {
+    async function DeleteNewDate(date: Date,time:string) {
         if(currentTrainer){
             const email = currentTrainer.email;
-            opendate = { ...opendate, email };
+            const opendate = { date:date,time:time, email:email };
             try {
                 console.log('opendate ====>>>', opendate)
-                let data = await POST('trainer/deleteopenDate', (opendate));
+                let data = await PUT('trainer/deleteopenDate', (opendate));
                 console.log("data" + data);
-                if (data && data.post) {
+                if (data) {
+                    console.log('data===>',data.user);
                     return true;
                 }
                 return false;
@@ -122,6 +130,100 @@ function TrainerContextProvidor({ children }: any) {
             }
         }
     }
+
+
+    async function getuserByEmail() {
+        try {
+            let email = currentTrainer?.email
+            console.log('email ====>>>', email)
+            let data = await POST('trainer/gettrainerbyemail', { email: email })
+            console.log("data" + data.user?.email);
+            if (data && data.user) {
+                setCurrentTrainer(data.user);
+                return data.user;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function getAllUsers() {
+        try {
+            let data = await GET('trainer/', {})
+            console.log("data" + data);
+            if (data && data.users) {
+                setAllTrainer(data.users);
+                return data.users;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function getAllCostumers() {
+        try {
+            let data = await GET('costumer/', {})
+            console.log("data   " + data.costumers);
+            if (data && data.costumers) {
+                setAllCostumers(data.costumers);
+                return data.users;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteTrainer(id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await DELETE('trainer/physic/delete/' + id)
+            console.log("data" + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteCostumer (id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await DELETE('costumer/physic/delete/' + id)
+            console.log("data" + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+
+
+
+    async function GettrainerById(id:string){
+        if(currentTrainer){
+            try{
+                console.log(id)
+                let data = await GET('trainer/' + id, id)
+                console.log("data===>", data)
+                if(data)
+                    return data
+                return false
+            }
+            catch(error){
+                console.log(error)
+                return false
+            }
+        }
+    }
+
 
 
     return (
@@ -134,7 +236,17 @@ function TrainerContextProvidor({ children }: any) {
                 LogInTrainer,
                 AddPost,
                 openNewDate,
-                DeleteNewDate
+                DeleteNewDate,
+
+                getuserByEmail,
+                getAllUsers,
+                DeleteTrainer,
+                getAllCostumers,
+                allCostumers,
+                DeleteCostumer
+
+                GettrainerById
+
             }}>
             {children}
         </TrainerContext.Provider>

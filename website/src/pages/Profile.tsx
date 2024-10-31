@@ -9,20 +9,31 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Profile: React.FC = () => {
-    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate } = useContext(TrainerContext);
+
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,getuserByEmail } = useContext(TrainerContext);
+
+    const { currentTrainer,setCurrentTrainer,openNewDate,DeleteNewDate,GettrainerById } = useContext(TrainerContext);
+
     const navigate = useNavigate();
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            const trainer = sessionStorage.getItem('trainer');
-            if (trainer) {
-                setCurrentTrainer(JSON.parse(trainer as any));
-            }
-        }, 3000); // 3000 milliseconds = 3 seconds
-    
-        return () => clearTimeout(timeout); 
-    }  , [currentTrainer]);
+
+        setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
+    }  , []);
+
+
+          setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
+          fetchtrainer()
+    }  , []);
+
+    async function fetchtrainer(){
+      let user = await GettrainerById(currentTrainer._id)
+      console.log(user)
+    }
+
+
+
     function handleAddPost(): void {
         navigate('/addpost');
     }
@@ -54,6 +65,8 @@ const Profile: React.FC = () => {
         console.log(`Selected Date: ${date}, Selected Time: ${time}`);
         alert(`Schedule for ${date} at ${time} has been deleted!`);
         await DeleteNewDate(date, time);
+        let trainer = await getuserByEmail();
+        console.log(currentTrainer.openDates);
         setScheduleDate('');
         setScheduleTime('');
       } else {

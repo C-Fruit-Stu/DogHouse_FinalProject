@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Costumer, credit } from "./Costumer.type";
-import { addcostumer, checkifexists, findCostumer, NewPassfunc, updateDoc, Updateuserinfo } from "./Costumer.db";
+import { addcostumer, checkifexists, decativateUser, findCostumer, NewPassfunc, updateDoc, Updateuserinfo } from "./Costumer.db";
 
 export async function getallcostumers1() {
     let query = {
@@ -72,6 +72,14 @@ export async function ChangePass(password: string,id:string) {
         let newPass: string = password
         let _id = new ObjectId(id)
         return await NewPassfunc(newPass,_id);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deactiveUser(id:string) {
+    try {
+        return await decativateUser(id);
     } catch (error) {
         throw error;
     }

@@ -15,8 +15,14 @@ const PORT = process.env.PORT || 7777;
 const server = express();
  
 //הגדרת יכולות שונות
-server.use(express.json()); //json עבודה עם 
-server.use(cors()); //רשימת הכתובות שיכולות לגשת לשרת
+server.use(express.urlencoded({ extended: true }));
+server.use(express.json({ limit: '1000mb' })); //json עבודה עם 
+// Define the CORS options
+const corsOptions = {
+    credentials: true,
+    origin: ['http://localhost:5173', 'http://localhost:3000'] // Whitelist the domains you want to allow
+};
+server.use(cors(corsOptions)); //רשימת הכתובות שיכולות לגשת לשרת
 
 //שימוש בקבצים סטטיים - בהמשך
 
