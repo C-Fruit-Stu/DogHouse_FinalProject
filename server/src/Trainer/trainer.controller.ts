@@ -343,6 +343,11 @@ export async function getUserByemail(req: Request, res: Response) {
 
     try {
         let result = await getUserByEmail(email)
+    }
+    catch(error){
+        res.status(500).json({ error })
+    }
+}
 
 export async function getuserbyemail(req: Request, res: Response) {
     let { email } = req.body
@@ -358,7 +363,5 @@ export async function getuserbyemail(req: Request, res: Response) {
     }
 
 }
-
-}   
 
 
