@@ -44,6 +44,11 @@ export default function LogIn() {
         email: values.email,
         password: values.password
       }
+      if(loggingUser.email === 'Admin@gmail.com' && loggingUser.password === 'admin123'){
+        navigation.navigate('Admin');
+        resetForm();
+        return
+      }
       console.log("Client loggingUser:", loggingUser);
       const isTrainerLoggedIn = await LogInTrainer({ ...loggingUser });
       console.log("isTrainerLoggedIn: ",isTrainerLoggedIn)

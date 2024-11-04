@@ -1,7 +1,8 @@
 import React, { createContext, useState } from "react";
 import { TrainerType } from "../types/trainer_type";
-import { GET, POST } from "../api";
+import { DELETE, GET, POST } from "../api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CoustumerType } from "../types/coustumer_type";
 
 
 export const TrainerContext = createContext<any>({});
@@ -11,6 +12,7 @@ export default function TrainerContextProvider({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
     const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
+    const [allCostumers, setAllCostumers] = useState<CoustumerType[]>([]);
 
 
     async function RegisterNewTrainer(newTrainer: TrainerType) {
@@ -44,6 +46,35 @@ export default function TrainerContextProvider({ children }: any) {
         } catch (error) {
             console.log(error);
             return false;
+        }
+    }
+
+    async function getAllUsers() {
+        try {
+            let data = await GET('trainer/')
+            console.log("data" + data);
+            console.log("data" + data);
+            if (data && data.users) {
+                setAllTrainer(data.users);
+                return data.users;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteTrainer(id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await DELETE('trainer/physic/delete/' + id)
+            console.log("data" + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
         }
     }
 
@@ -82,7 +113,7 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function GetTrainerPosts(email: string){
         try{
-            let data = await GET(`trainer/getallpostsbyemail/${email}`);
+            let data = await GET(`trainer/getallpostsbyemail/` + email);
             console.log(data);
             if(data && data.posts){
                 return data.posts;
@@ -121,6 +152,36 @@ export default function TrainerContextProvider({ children }: any) {
             return false;
         }
     }
+
+    async function getAllCostumers() {
+        try {
+            let data = await GET('costumer/')
+            console.log("data   " + data.costumers.length);
+            if (data && data.costumers) {
+                setAllCostumers(data.costumers);
+                return data.costumers;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteCostumer (id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await DELETE('costumer/physic/delete/' + id)
+            console.log("data" + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+
     async function DeletePost() { }
     async function EditPost() { }
 
@@ -136,7 +197,12 @@ export default function TrainerContextProvider({ children }: any) {
                 DeletePost,
                 EditPost,
                 GetAllTrainers,
-                GetTrainerPosts
+                GetTrainerPosts,
+                getAllUsers,
+                DeleteTrainer,
+                getAllCostumers,
+                allCostumers,
+                DeleteCostumer
             }}>
             {children}
         </TrainerContext.Provider>

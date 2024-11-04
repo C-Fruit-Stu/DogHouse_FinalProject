@@ -1,6 +1,7 @@
 import { TrainerType } from "./trainer_type";
 
 export type CoustumerType = {
+    id(id: any): void;
     dogBreed: string,
     first_name: string,
     last_name: string,
