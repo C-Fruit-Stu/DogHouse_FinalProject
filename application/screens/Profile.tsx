@@ -69,16 +69,11 @@ export default function Profile() {
                 <Text style={styles.TextContainer}>Find new trainers</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>costumers</Text>
-              </View>
-            </TouchableOpacity>
           </View>
           <View style={styles.containerButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
+            <TouchableOpacity onPress={() => navigation.navigate('TrainingSchedules', { clientType })}>
               <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Scheduals</Text>
+                <Text style={styles.TextContainer}>Training Scheduals</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
@@ -86,30 +81,6 @@ export default function Profile() {
                 <Text style={styles.TextContainer}>Posts</Text>
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.moneyContainer}>
-            <View>
-              <Text style={styles.textMoney}>Income</Text>
-            </View>
-            <View style={styles.Line}></View>
-            <View>
-              <Text style={styles.textMoney}>Outcome</Text>
-            </View>
-          </View>
-          <View>
-          </View>
-          <View style={styles.CharContainer}>
-            <BarChart
-              data={data}
-              width={screenWidth}
-              height={290}
-              chartConfig={chartConfig}
-              verticalLabelRotation={30}
-              yAxisLabel="$"
-              yAxisSuffix="" // התווסף בשביל הוריד תקלה
-              showValuesOnTopOfBars
-              fromZero
-            />
           </View>
         </ScrollView>
       </SafeAreaView>

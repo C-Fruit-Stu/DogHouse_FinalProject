@@ -30,6 +30,7 @@ import ManageTrainers from './screens/ManageTrainers';
 import ManageCostumers from './screens/ManageCostumers';
 import AdminSettings from './screens/AdminSettings';
 import StatisticAdmin from './screens/StatisticAdmin';
+import TrainingSchedules from './screens/Trainingscheduals';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -109,6 +110,7 @@ function StackNav() {
       <Stack.Screen name="ManageCostumers" component={ManageCostumers} options={{ headerShown: false }} />
       <Stack.Screen name="AdminSettings" component={AdminSettings} options={{ headerShown: false }} />
       <Stack.Screen name="StatisticAdmin" component={StatisticAdmin} options={{ headerShown: false }} />
+      <Stack.Screen name="TrainingSchedules" component={TrainingSchedules} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
