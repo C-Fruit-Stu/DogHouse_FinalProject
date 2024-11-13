@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Costumer, credit } from "./Costumer.type";
-import { addcostumer, checkifexists, decativateUser, findCostumer, NewPassfunc, updateDoc, Updateuserinfo } from "./Costumer.db";
+import { addcostumer, checkifexists, decativateUser, findCostumer, NewPassfunc, updateDoc, Updateuserinfo,addTrainerEmail } from "./Costumer.db";
 
 export async function getallcostumers1() {
     let query = {
@@ -80,6 +80,14 @@ export async function ChangePass(password: string,id:string) {
 export async function deactiveUser(id:string) {
     try {
         return await decativateUser(id);
+    } catch (error) {
+        throw error;
+    }
+}
+export async function addEmailToArray(email:string)
+{
+    try {
+        return await addTrainerEmail(email);
     } catch (error) {
         throw error;
     }

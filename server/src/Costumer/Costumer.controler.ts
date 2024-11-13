@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Costumer } from "./Costumer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
-import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer } from "./Costumer.model";
+import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer,addEmailToArray } from "./Costumer.model";
 import { ObjectId } from "mongodb";
 
 export async function GetAllCostumrs(req: Request, res: Response) {
@@ -148,5 +148,22 @@ export async function logicDeleteUser(req: Request, res: Response) {
         res.status(201).json({ result });
     } catch (error) {
         res.status(500).json({ error });
+    }
+}
+
+
+export async function addTrainer(req: Request, res: Response) {
+    let { trainerEmail } = req.body;    
+    if(!trainerEmail)
+        return res.status(400).json({ msg: "invalid info" })
+
+    try {
+        let result = await addEmailToArray(trainerEmail);
+        if(!result)
+            res.status(400).json({ msg: "there is no trainer" })
+        else
+            res.status(200).json({ result })
+    } catch (error) {
+        res.status(500).json({ error })
     }
 }

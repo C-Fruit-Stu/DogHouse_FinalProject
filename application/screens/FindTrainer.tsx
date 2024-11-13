@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 type RouteParams = {
     clientType?: number;
@@ -10,11 +11,12 @@ type RouteParams = {
 };
 export default function FindTrainer() {
     const { GetTrainerPosts, GetAllTrainers } = useContext(TrainerContext);
+    const { addTrainer } = useContext(CoustumerContext);
     const navigation = useNavigation();
     const [localTrainers, setLocalTrainers] = useState<any[]>([]); // Ensure this is always an array
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
     const clientType = route.params?.clientType;
-    
+
 
     // Load trainers from AsyncStorage
     const TrainersRawData = async () => {
@@ -40,7 +42,8 @@ export default function FindTrainer() {
 
     const addTrainerToList = async (email: string) => {
         try {
-
+            console.log("email: " + email); 
+            addTrainer(email);
         }
         catch (error) {
             console.error('Error adding trainer to list:', error);

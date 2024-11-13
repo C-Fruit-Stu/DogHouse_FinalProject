@@ -71,7 +71,8 @@ export default function CoustumerContextProvider({ children }: any) {
                 currentCoustumer,
                 RegisterNewCoustumer,
                 setCurrentCoustumer,
-                LogInCoustumer
+                LogInCoustumer,
+                addTrainer
             }}>
             {children}
         </CoustumerContext.Provider>
