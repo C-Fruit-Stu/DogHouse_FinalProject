@@ -46,7 +46,7 @@ const ManageTrainers: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size={200} color="#007AFF" />
         <Text style={styles.loadingText}>Loading users...</Text>
       </View>
     );

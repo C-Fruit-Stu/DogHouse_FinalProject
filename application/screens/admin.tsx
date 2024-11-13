@@ -3,8 +3,7 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-
-const admin = () => {
+const Admin = () => {
     const navigation = useNavigation();
   return (
     <ScrollView style={styles.container}>
@@ -12,7 +11,7 @@ const admin = () => {
 
     <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('Managetrainers')}>
+        onPress={() => navigation.navigate('ManageTrainers')}>
         <Icon name="people-outline" size={30} color="#2E86AB" />
         <Text style={styles.cardText}>Manage Trainers</Text>
     </TouchableOpacity>
@@ -47,7 +46,7 @@ const admin = () => {
   )
 }
 
-export default admin
+export default Admin
 const styles = StyleSheet.create({
     container: {
         flex: 1,

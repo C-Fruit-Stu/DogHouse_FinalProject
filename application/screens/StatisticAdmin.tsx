@@ -6,7 +6,7 @@ import { TrainerContext } from '../context/TrainerContextProvider'; // Adjust pa
 const StatisticAdmin: React.FC = () => {
   const navigation = useNavigation();
   const { fetchStatistics } = useContext(TrainerContext); // Adjust this based on your context
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState({}) as any;
 
   useEffect(() => {
     const getStats = async () => {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
     borderRadius: 5,
     alignSelf: 'flex-start',
-    marginTop: 310100,
+    marginTop: 10,
   },
   backButtonText: {
     color: '#fff',

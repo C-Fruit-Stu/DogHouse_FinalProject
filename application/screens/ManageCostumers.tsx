@@ -6,10 +6,10 @@ import { CoustumerType } from '../types/coustumer_type';
 
 
 interface User {
-    id: string;
-    first_name: string;
-    last_name: string;
-  }
+  id: string;
+  first_name: string;
+  last_name: string;
+}
 const ManageCostumers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -47,7 +47,7 @@ const ManageCostumers: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size={200} color="#007AFF" />
         <Text style={styles.loadingText}>Loading customers...</Text>
       </View>
     );

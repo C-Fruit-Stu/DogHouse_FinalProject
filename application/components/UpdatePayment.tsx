@@ -103,7 +103,7 @@ export default function Payment(NewUser: any) {
       }
       else if (NewUser.clientType == '2') {
         console.log('CustomerInfo:', JSON.stringify(NewUser, null, 2)); // Updated to display values
-        const NewCustomer: CoustumerType = {
+        const NewCustomer: Partial<CoustumerType> = {
           first_name: NewUser.first_name,
           last_name: NewUser.last_name,
           email: NewUser.email,
@@ -113,7 +113,7 @@ export default function Payment(NewUser: any) {
           image: NewUser.image,
           phone: NewUser.phone,
           clientType: NewUser.clientType,
-          update_details:NewUser.update_details,
+          update_details: NewUser.update_details,
           payment: payment
         }
         AddCoustumer(NewCustomer);
@@ -333,29 +333,29 @@ const styles = StyleSheet.create({
     width: 150,
     margin: 'auto',
   },
-    dot1:{
-      width:25,
-      height:25,
-      backgroundColor:'#63E381',
-      borderRadius: 100,
+  dot1: {
+    width: 25,
+    height: 25,
+    backgroundColor: '#63E381',
+    borderRadius: 100,
   },
-  dot2:{
-      width:25,
-      height:25,
-      backgroundColor:'#63E381',
-      borderRadius: 100,
+  dot2: {
+    width: 25,
+    height: 25,
+    backgroundColor: '#63E381',
+    borderRadius: 100,
   },
-  dot3:{
-      width:25,
-      height:25,
-      backgroundColor:'#63E381',
-      borderRadius: 100,
+  dot3: {
+    width: 25,
+    height: 25,
+    backgroundColor: '#63E381',
+    borderRadius: 100,
   },
-  dot4:{
-      width:25,
-      height:25,
-      backgroundColor:'#024738',
-      borderRadius: 100,
+  dot4: {
+    width: 25,
+    height: 25,
+    backgroundColor: '#024738',
+    borderRadius: 100,
   },
   error: {
     fontSize: 12,
