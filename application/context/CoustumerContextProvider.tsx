@@ -53,7 +53,7 @@ export default function CoustumerContextProvider({ children }: any) {
     async function addTrainer(trainerEmail: any) {
         try{
             console.log('trainerEmail ====>>>', trainerEmail)
-            let data = await POST('trainer/addTrainer', trainerEmail);  // Adjust the endpoint to match your server
+            let data = await POST('costumer/addTrainer', trainerEmail);  // Adjust the endpoint to match your server
             console.log(data);
             if (data && data.trainer) {
                 return true;
