@@ -16,5 +16,6 @@ CostumerRouter
     .put('/updatepassword/:id',UpdatePassword)
     .delete('/physic/delete/:id', logicDeleteUser)
     .post('/addTrainer', addTrainer)
+    
 
 export default CostumerRouter;

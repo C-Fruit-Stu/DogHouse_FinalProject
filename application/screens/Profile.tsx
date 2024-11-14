@@ -1,20 +1,17 @@
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Trainers from '../data/Trainers.json'
-import BarChart from 'react-native-chart-kit/dist/BarChart';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
-import { TrainerContext } from '../context/TrainerContextProvider';
-import { CoustumerContext } from '../context/CoustumerContextProvider';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler'
+import { useNavigation } from '@react-navigation/native'
+import { TrainerContext } from '../context/TrainerContextProvider'
+import { CoustumerContext } from '../context/CoustumerContextProvider'
+import { useRoute, RouteProp } from '@react-navigation/native'
 
 type RouteParams = {
   clientType?: number;
 };
 
 export default function Profile() {
-
   const navigation = useNavigation();
   const screenWidth = Dimensions.get('window').width;
   const { currentTrainer } = useContext(TrainerContext);
@@ -52,33 +49,27 @@ export default function Profile() {
       <SafeAreaView>
         <ScrollView>
           <View style={styles.Header}>
-            <Text style={styles.profileName}> hello {currentCoustumer.first_name} {currentCoustumer.last_name}</Text>
+            <Text style={styles.profileName}> hello {currentCoustumer.first_name}</Text>
             <Image
-              source={{ uri: currentCoustumer.image }}
-              style={styles.profileImage}
-            />
+                source={{ uri: currentCoustumer.image || "../assets/AutoProfilePic.png" }}
+                style={styles.profileImage}
+              />
+
           </View>
           <View style={styles.containerButton}>
-            <TouchableOpacity>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Stats</Text>
-              </View>
-            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('FindTrainer', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Find new trainers</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Find new trainers</Text>
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.containerButton}>
             <TouchableOpacity onPress={() => navigation.navigate('TrainingSchedules', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Training Scheduals</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Training Schedules</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Posts</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Posts</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -99,25 +90,23 @@ export default function Profile() {
           </View>
           <View style={styles.containerButton}>
             <TouchableOpacity>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Stats</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Stats</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>costumers</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Customers</Text>
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.containerButton}>
             <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Scheduals</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Schedules</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>
-              <View style={styles.StatesContainer}>
-                <Text style={styles.TextContainer}>Posts</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Posts</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -130,8 +119,6 @@ export default function Profile() {
               <Text style={styles.textMoney}>Outcome</Text>
             </View>
           </View>
-          <View>
-          </View>
           <View style={styles.CharContainer}>
             <BarChart
               data={data}
@@ -140,7 +127,7 @@ export default function Profile() {
               chartConfig={chartConfig}
               verticalLabelRotation={30}
               yAxisLabel="$"
-              yAxisSuffix="" // התווסף בשביל הוריד תקלה
+              yAxisSuffix=""
               showValuesOnTopOfBars
               fromZero
             />
@@ -162,25 +149,32 @@ const styles = StyleSheet.create({
     marginTop: 50
   },
   profileImage: {
-    height: 130,
-    width: 130,
-    borderRadius: 70
-  },
-  StatesContainer: {
-    backgroundColor: "rgba(29,189,123,0.6)",
-    height: 130,
-    width: 130,
-    borderRadius: 20
+    width: 100,  // Adjust the width and height according to your needs
+    height: 100,
+    borderRadius: 50,  // Optional: If you want to make it circular
+    resizeMode: 'cover', 
   },
   containerButton: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 50
+    flexDirection: "column", // Changed from row to column
+    alignItems: "center", // Center buttons in the column
+    marginTop: 50,
+    width: "100%",
   },
-  TextContainer: {
+  button: {
+    backgroundColor: '#1DBD7B', // Green background
+    borderRadius: 8, // Rounded corners
+    marginVertical: 10, // Space between buttons
+    paddingVertical: 15, // Vertical padding for button height
+    paddingHorizontal: 20, // Horizontal padding for button width
+    alignItems: 'center',
+    width: 350,
+    height:60 // Space between buttons
+  },
+  buttonText: {
     textAlign: "center",
-    margin: "auto",
-    fontSize: 18
+    fontSize: 18,
+    color: "#fff", // White text color
+    fontWeight: "600", // Semi-bold text
   },
   moneyContainer: {
     backgroundColor: "rgba(29,189,123,0.6)",

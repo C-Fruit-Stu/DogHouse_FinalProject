@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState, useContext } from 'react'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
@@ -8,16 +8,18 @@ import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function LogIn() {
-
   const { LogInTrainer } = useContext(TrainerContext);
   const { LogInCoustumer } = useContext(CoustumerContext);
   const [visiblePassword, setVisiblePassword] = useState(false);
+  const [formKey, setFormKey] = useState(0); // State to control the key prop for resetting
+  const [loading, setLoading] = useState(false); // State for loading indicator
 
   const navigation = useNavigation();
 
   const togglePasswordVisibility = () => {
     setVisiblePassword(!visiblePassword);
   };
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -44,38 +46,50 @@ export default function LogIn() {
         email: values.email,
         password: values.password
       }
+
+      setLoading(true); // Start loading when submitting
+
       if(loggingUser.email === 'Admin@gmail.com' && loggingUser.password === 'admin123'){
-        navigation.navigate('Admin');
         resetForm();
+        setLoading(false); // Stop loading once the action is complete
+        navigation.navigate('Admin');
+        setFormKey(formKey + 1); // Increment the key to force re-render
         return
       }
+
       console.log("Client loggingUser:", loggingUser);
       const isTrainerLoggedIn = await LogInTrainer({ ...loggingUser });
-      console.log("isTrainerLoggedIn: ",isTrainerLoggedIn)
+      console.log("isTrainerLoggedIn: ", isTrainerLoggedIn)
+
       if (!isTrainerLoggedIn) {
         const isCoustumerLoggedIn = await LogInCoustumer({ ...loggingUser });
-        console.log("isCoustumerLoggedIn: ",isCoustumerLoggedIn)
+        console.log("isCoustumerLoggedIn: ", isCoustumerLoggedIn)
         if (!isCoustumerLoggedIn) {
           alert('Wrong email or password');
           resetForm();
+          setLoading(false); // Stop loading if login fails
+          setFormKey(formKey + 1); // Increment the key to force re-render
           return;
         }
         let clientType = 2;
+        resetForm();
+        setLoading(false); // Stop loading once the action is complete
         navigation.navigate("BackToPre", { clientType });
         return;
       }
       let clientType = 1;
+      resetForm();
+      setLoading(false); // Stop loading once the action is complete
       navigation.navigate("BackToPre", { clientType });
-      return;
     }
   });
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <View>
+        <View key={formKey}> {/* This key will reset the form upon submission */}
           <Image
-            source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwz_L0tKaK7Ni3mvOkA7uGfvbe2yesmHV5fQ&s' }}
+            source={(require('../assets/2.png'))}
             style={styles.mainImage}
           />
         </View>
@@ -112,14 +126,20 @@ export default function LogIn() {
         {formik.touched.password && formik.errors.password ? (
           <Text style={styles.error}>{formik.errors.password}</Text>
         ) : null}
+
         <View style={styles.buttonNext}>
           <TouchableOpacity onPress={() => formik.handleSubmit()} style={styles.link}>
             <Text style={styles.TextButton}>Next</Text>
           </TouchableOpacity>
         </View>
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="rgba(7,140,101,0.6)" />
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -131,49 +151,29 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   mainImage: {
-    height: 200,
+    height: 220,
     width: 300,
     borderRadius: 20,
     marginTop: 50
   },
-  form: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
   input: {
     height: 40,
-    borderColor: 'rgba(255,159,71,0.8)',
+    borderColor: 'rgba(2,71,56,0.8)',
     borderWidth: 1,
     paddingHorizontal: 8,
-    marginTop: 35,
+    marginTop: 15,
     width: 300,
     borderRadius: 15,
     marginBottom: 5
   },
-  dateInput: {
-    height: 40,
-    borderColor: 'rgba(255,159,71,0.8)',
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    marginTop: 10,
-    width: 300,
-    borderRadius: 15,
-    marginBottom: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dateText: {
-    color: '#000',
-  },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: 'rgba(255,159,71,0.8)',
+    borderColor: 'rgba(2,71,56,0.8)',
     borderWidth: 1,
     borderRadius: 15,
     width: 300,
-    marginTop: 10,
+    marginTop: 15,
     paddingHorizontal: 8,
   },
   inputPassword: {
@@ -182,14 +182,10 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     marginLeft: 10,
-
   },
-  toggleButtonText: {
-    width: 170,
-    height: 30,
-    marginTop: 10,
-    textAlign: 'center',
-    fontSize: 18,
+  check: {
+    width: 20,
+    height: 20,
   },
   error: {
     color: 'red',
@@ -197,77 +193,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: 10,
   },
-  check: {
-    width: 20,
-    height: 20,
-  },
-  dropdown: {
-    height: 40,
-    borderColor: 'rgba(255,159,71,0.8)',
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    width: 300,
-    marginTop: 30
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-  dot1: {
-    width: 25,
-    height: 25,
-    backgroundColor: 'rgba(255,159,71,0.4)',
-    borderRadius: 100,
-  },
-  dot2: {
-    width: 25,
-    height: 25,
-    backgroundColor: 'rgba(255,159,71,0.4)',
-    borderRadius: 100,
-  },
-  dot3: {
-    width: 25,
-    height: 25,
-    backgroundColor: 'rgba(255,159,71,1)',
-    borderRadius: 100,
-  },
-  dot4: {
-    width: 25,
-    height: 25,
-    backgroundColor: 'rgba(255,159,71,0.4)',
-    borderRadius: 100,
-  },
-  dotcontainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 50,
-    width: 150,
-  },
   buttonNext: {
-    backgroundColor: 'rgba(255,159,71,0.4)',
+    backgroundColor: 'rgba(7,140,101,0.6)',
     width: '40%',
     height: 50,
     borderRadius: 15,
@@ -279,6 +206,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   link: {
-    height: 50
+    height: 50,
   },
+  loadingContainer: {
+    marginTop: 20,
+  }
 });

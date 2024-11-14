@@ -1,39 +1,34 @@
-import { View, Text, Image, Button, FlatList, StyleSheet } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
+import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type RouteParams = {
     clientType?: number;
     trainerEmail?: string;
 };
+
 export default function FindTrainer() {
     const { GetTrainerPosts, GetAllTrainers } = useContext(TrainerContext);
     const { addTrainer } = useContext(CoustumerContext);
     const navigation = useNavigation();
-    const [localTrainers, setLocalTrainers] = useState<any[]>([]); // Ensure this is always an array
+    const [localTrainers, setLocalTrainers] = useState<any[]>([]); 
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
     const clientType = route.params?.clientType;
 
-
-    // Load trainers from AsyncStorage
     const TrainersRawData = async () => {
         try {
             GetAllTrainers();
             const storedTrainers = await AsyncStorage.getItem('allTrainer');
             if (storedTrainers) {
                 const trainersArray = JSON.parse(storedTrainers);
-
                 if (Array.isArray(trainersArray)) {
-                    setLocalTrainers(trainersArray); // Set the local state with trainers from AsyncStorage
-                    console.log("Loaded trainers from AsyncStorage:", trainersArray);
-                } else {
-                    console.error("Data in AsyncStorage is not an array");
+                    setLocalTrainers(trainersArray);
                 }
-            } else {
-                console.log("No trainers found in AsyncStorage");
             }
         } catch (error) {
             console.error('Error loading trainers from AsyncStorage:', error);
@@ -42,26 +37,22 @@ export default function FindTrainer() {
 
     const addTrainerToList = async (email: string) => {
         try {
-            console.log("email: " + email); 
             addTrainer(email);
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error adding trainer to list:', error);
         }
     }
-    // Fetch posts by trainer email and navigate to Posts screen
+
     const showPosts = async (trainerEmail: string) => {
         try {
-            console.log('trainerEmail ', trainerEmail);
             navigation.navigate('Posts', { clientType, trainerEmail });
-
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
     };
 
     useEffect(() => {
-        TrainersRawData(); // Load trainers from AsyncStorage
+        TrainersRawData(); 
     }, []);
 
     const calculateAge = (dob: string) => {
@@ -77,7 +68,7 @@ export default function FindTrainer() {
 
     const renderTrainer = ({ item }: { item: any }) => {
         return (
-            <View style={styles.trainerContainer}>
+            <Animatable.View style={styles.trainerContainer} animation="fadeInUp" duration={1000}>
                 <Image source={{ uri: item.image }} style={styles.trainerImage} />
                 <View style={styles.trainerInfo}>
                     <Text style={styles.trainerName}>
@@ -86,12 +77,27 @@ export default function FindTrainer() {
                     <Text style={styles.trainerExperience}>Experience: {item.experience || 0} years</Text>
                     <Text style={styles.trainerAge}>Age: {item.dob ? calculateAge(item.dob) : 'N/A'}</Text>
                     <View style={styles.buttonsContainer}>
-                        <Button title="ViewPosts" onPress={() => showPosts(item.email)} />
-                        <Button title="Like" onPress={() => { }} />
-                        <Button title="Follow" onPress={() => addTrainerToList(item.email)} />
+                        <Animatable.View animation="bounceIn" duration={1500}>
+                            <TouchableOpacity style={[styles.button, styles.viewPostsButton]} onPress={() => showPosts(item.email)}>
+                                <Icon name="eye" size={20} color="#fff" style={styles.icon} />
+                                <Text style={styles.buttonText}>View Posts</Text>
+                            </TouchableOpacity>
+                        </Animatable.View>
+                        <Animatable.View animation="zoomIn" duration={1500}>
+                            <TouchableOpacity style={[styles.button, styles.likeButton]} onPress={() => { }}>
+                                <Icon name="thumbs-up" size={20} color="#fff" style={styles.icon} />
+                                <Text style={styles.buttonText}>Like</Text>
+                            </TouchableOpacity>
+                        </Animatable.View>
+                        <Animatable.View animation="fadeIn" duration={1500}>
+                            <TouchableOpacity style={[styles.button, styles.followButton]} onPress={() => addTrainerToList(item.email)}>
+                                <Icon name="plus" size={20} color="#fff" style={styles.icon} />
+                                <Text style={styles.buttonText}>Follow</Text>
+                            </TouchableOpacity>
+                        </Animatable.View>
                     </View>
                 </View>
-            </View>
+            </Animatable.View>
         );
     };
 
@@ -112,39 +118,75 @@ const styles = StyleSheet.create({
     trainerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 10,
-        marginBottom: 10,
-        backgroundColor: '#f8f8f8',
-        borderRadius: 10,
-        elevation: 2,
+        padding: 15,
+        marginBottom: 20,
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
     },
     trainerImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginRight: 10,
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        marginRight: 20,
+        borderWidth: 3,
+        borderColor: '#ddd',
     },
     trainerInfo: {
         flex: 1,
         justifyContent: 'center',
     },
     trainerName: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
+        color: '#333',
     },
     trainerExperience: {
         fontSize: 14,
-        color: 'gray',
+        color: '#777',
         marginTop: 5,
     },
     trainerAge: {
         fontSize: 14,
-        color: 'gray',
+        color: '#777',
         marginTop: 5,
     },
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 15,
+    },
+    button: {
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 100,
+        flexDirection: 'row',
+        marginHorizontal: 5,
+    },
+    viewPostsButton: {
+        backgroundColor: '#007BFF',
+        height: 40
+    },
+    likeButton: {
+        backgroundColor: '#28a745',
+    },
+    followButton: {
+        backgroundColor: '#ffc107',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginLeft: 10,
+    },
+    icon: {
+        marginRight: 5,
     },
 });
