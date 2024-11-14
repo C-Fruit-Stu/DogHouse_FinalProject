@@ -134,7 +134,7 @@ export default function Payment() {
       }
       else {
         console.log('CustomerInfo:', JSON.stringify(currentCoustumer, null, 2)); // Updated to display values
-        const NewCustomer: CoustumerType = {
+        const NewCustomer: Partial<CoustumerType> = {
           dogBreed: '',
           first_name: currentCoustumer.first_name,
           last_name: currentCoustumer.last_name,

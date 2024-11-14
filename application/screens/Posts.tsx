@@ -117,7 +117,7 @@ export default function Posts() {
     setPosts(updatedPosts);
   };
   if (clientType == 1) {
-    if (!posts.length) {
+    if (!posts.length || posts.length == null) {
       return <Text>No posts available</Text>;
     }
     return (
