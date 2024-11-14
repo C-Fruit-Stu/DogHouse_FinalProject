@@ -153,12 +153,12 @@ export async function logicDeleteUser(req: Request, res: Response) {
 
 
 export async function addTrainer(req: Request, res: Response) {
-    let { trainerEmail } = req.body;    
-    if(!trainerEmail)
+    let { email } = req.body;    
+    if(!email)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await addEmailToArray(trainerEmail);
+        let result = await addEmailToArray(email);
         if(!result)
             res.status(400).json({ msg: "there is no trainer" })
         else
