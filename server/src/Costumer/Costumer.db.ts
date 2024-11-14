@@ -123,14 +123,15 @@ export async function decativateUser(id: string) {
 
 export async function addTrainerEmail(email: string) {
     let mongo = new MongoClient(DB_INFO.connection);
-    try {    
+    try {
         return await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).updateOne(
-            { email: email }, // condition to match the document
-            { $addToSet: { trainersArray: email } } // adds email if not already present
+            { email: email }, 
+            { $addToSet: { HisTrainer: email } } 
         );
     } catch (error) {
         throw error;
     } finally {
-        mongo.close();
+        await mongo.close();
     }
 }
+
