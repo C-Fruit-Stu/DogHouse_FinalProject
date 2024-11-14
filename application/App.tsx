@@ -25,7 +25,7 @@ import Membership from './components/Membership';
 import CoustumerContextProvider from './context/CoustumerContextProvider';
 import TrainerContextProvider from './context/TrainerContextProvider';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import Admin from './screens/Admin';
+import Admin from './screens/admin';
 import ManageTrainers from './screens/ManageTrainers';
 import ManageCostumers from './screens/ManageCostumers';
 import AdminSettings from './screens/AdminSettings';
@@ -40,7 +40,7 @@ type RouteParams = {
 };
 
 function BackToPre() {
-  const route = useRoute<RouteProp<any, any>>(); // Access route params
+  const route = useRoute<RouteProp<any, any>>(); 
   const clientType = route.params?.clientType;
 
   return (
