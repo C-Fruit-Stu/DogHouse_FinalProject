@@ -33,7 +33,7 @@ export default function HomePage() {
             />
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('FindTrainer')}>
+        <TouchableOpacity onPress={() => navigation.navigate('FindTrainer', { clientType })}>
           <View style={styles.StatesContainer}>
             <Text style={styles.TextContainer}>Find new Trainers</Text>
           </View>

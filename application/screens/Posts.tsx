@@ -31,8 +31,6 @@ export default function Posts() {
 
   useEffect(() => {
     const loadPosts = async () => {
-      console.log('clientType', clientType);
-      console.log('trainerEmail', trainerEmail);
       if (clientType == 2 && trainerEmail) {
         try {
           const fetchedPosts = await GetTrainerPosts(trainerEmail); // Fetch posts by trainer's email
@@ -117,7 +115,7 @@ export default function Posts() {
     setPosts(updatedPosts);
   };
   if (clientType == 1) {
-    if (!posts.length) {
+    if (!posts.length || posts.length === null) {
       return <Text>No posts available</Text>;
     }
     return (

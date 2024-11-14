@@ -25,6 +25,12 @@ import Membership from './components/Membership';
 import CoustumerContextProvider from './context/CoustumerContextProvider';
 import TrainerContextProvider from './context/TrainerContextProvider';
 import { useRoute, RouteProp } from '@react-navigation/native';
+//import Admin from './screens/Admin';
+//import ManageTrainers from './screens/ManageTrainers';
+//import ManageCostumers from './screens/ManageCostumers';
+//import AdminSettings from './screens/AdminSettings';
+//import StatisticAdmin from './screens/StatisticAdmin';
+//import TrainingSchedules from './screens/Trainingscheduals';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -34,7 +40,7 @@ type RouteParams = {
 };
 
 function BackToPre() {
-  const route = useRoute<RouteProp<any, any>>(); // Access route params
+  const route = useRoute<RouteProp<any, any>>(); 
   const clientType = route.params?.clientType;
 
   return (
@@ -99,6 +105,12 @@ function StackNav() {
       <Stack.Screen name="Update Payment" component={UpdatePayment} options={{ headerShown: true }} />
       <Stack.Screen name="Mambership" component={Membership} options={{ headerShown: true }} />
       <Stack.Screen name="BackToPre" component={BackToPre} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
+      <Stack.Screen name="Managetrainers" component={ManageTrainers} options={{ headerShown: false }} />
+      <Stack.Screen name="ManageCostumers" component={ManageCostumers} options={{ headerShown: false }} />
+      <Stack.Screen name="AdminSettings" component={AdminSettings} options={{ headerShown: false }} />
+      <Stack.Screen name="StatisticAdmin" component={StatisticAdmin} options={{ headerShown: false }} />
+      <Stack.Screen name="TrainingSchedules" component={TrainingSchedules} options={{ headerShown: false }} /> */}
     </Stack.Navigator>
   );
 }
