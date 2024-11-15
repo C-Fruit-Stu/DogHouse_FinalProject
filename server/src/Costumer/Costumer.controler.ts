@@ -153,7 +153,15 @@ export async function logicDeleteUser(req: Request, res: Response) {
 
 
 export async function addTrainer(req: Request, res: Response) {
-    let { email } = req.body;    
+    let { email } = req.body;  
+    console.log("Controller email value: " + email);  
+
+    // Sanitize input to remove extra double quotes if present
+    if (typeof email === 'string') {
+        email = email.replace(/^"+|"+$/g, '');
+    }
+    console.log("Sanitized email:", email);
+
     if(!email)
         return res.status(400).json({ msg: "invalid info" })
 
