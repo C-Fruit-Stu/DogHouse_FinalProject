@@ -122,11 +122,15 @@ export async function decativateUser(id: string) {
 }
 
 export async function addTrainerEmail(email: string) {
-    let mongo = new MongoClient(DB_INFO.connection);
+    const mongo = new MongoClient(DB_INFO.connection);
     try {
+        // Log to check if the document exists
+        const matchedDoc = await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+        console.log("Matched document:", matchedDoc);
+
         return await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).updateOne(
-            { email: email }, 
-            { $addToSet: { HisTrainer: email } } 
+            { email: { $regex: new RegExp(`^${email}$`, 'i') } }, // Case-insensitive match
+            { $addToSet: { HisTrainer: email } }
         );
     } catch (error) {
         throw error;
