@@ -153,25 +153,21 @@ export async function logicDeleteUser(req: Request, res: Response) {
 
 
 export async function addTrainer(req: Request, res: Response) {
-    let { email } = req.body;  
-    console.log("Controller email value: " + email);  
+    let { email } = req.body;    
+    console.log('Incoming email:', email); // Log the incoming email to check formatting
 
-    // Sanitize input to remove extra double quotes if present
-    if (typeof email === 'string') {
-        email = email.replace(/^"+|"+$/g, '');
+    if (!email) {
+        return res.status(400).json({ msg: "invalid info" });
     }
-    console.log("Sanitized email:", email);
-
-    if(!email)
-        return res.status(400).json({ msg: "invalid info" })
 
     try {
         let result = await addEmailToArray(email);
-        if(!result)
-            res.status(400).json({ msg: "there is no trainer" })
-        else
-            res.status(200).json({ result })
+        if (!result) {
+            res.status(400).json({ msg: "there is no trainer" });
+        } else {
+            res.status(200).json({ result });
+        }
     } catch (error) {
-        res.status(500).json({ error })
+        res.status(500).json({ error });
     }
 }
