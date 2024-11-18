@@ -11,7 +11,7 @@ CostumerRouter
     .get('/:id/', getCostumerById)
     .post('/login',LoginCostumer)
     .post('/register', RegisterCostumer)
-    .put('/updatePayment/:id', updatePayment)
+    .post('/updatePayment/:id', updatePayment)
     .put('/updateinfo/:id',UpdateInfo)
     .put('/updatepassword/:id',UpdatePassword)
     .delete('/physic/delete/:id', logicDeleteUser)

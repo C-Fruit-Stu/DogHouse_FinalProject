@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 import { CoustumerType } from "../types/coustumer_type";
-import { POST } from "../api";
+import { POST, PUT } from "../api";
 export const CoustumerContext = createContext<any>({});
 
 
@@ -65,6 +65,26 @@ export default function CoustumerContextProvider({ children }: any) {
             return false;
         }
     }
+
+    async function UpdatePayment( card: any, date: any, ccv: any) {
+        try {
+            console.log('card ====>>>', card);
+            console.log('date ====>>>', date);
+            console.log('ccv ====>>>', ccv);
+            console.log('currentCoustumer ====>>>', currentCoustumer?.id);
+            const payload = {card: card, date: date, ccv: ccv};
+            let data = await POST('costumer/updatePayment/' + currentCoustumer?.id, payload); 
+            console.log('Response from server:', data.trainer);
+            if (data && data.trainer) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Error in addTrainer:', error);
+            return false;
+        }
+    }
+
     return (
         <CoustumerContext.Provider
             value={{
@@ -73,7 +93,8 @@ export default function CoustumerContextProvider({ children }: any) {
                 RegisterNewCoustumer,
                 setCurrentCoustumer,
                 LogInCoustumer,
-                addTrainer
+                addTrainer,
+                UpdatePayment
             }}>
             {children}
         </CoustumerContext.Provider>

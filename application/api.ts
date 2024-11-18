@@ -2,6 +2,8 @@
 const BASE_URL = "https://doghouse-la1b.onrender.com/api";
 
 export async function POST(url: string, obj: Object) {
+    console.log(BASE_URL)
+    console.log(url)
     try {
         let res = await fetch(`${BASE_URL}/${url}`, {
             method: 'POST',

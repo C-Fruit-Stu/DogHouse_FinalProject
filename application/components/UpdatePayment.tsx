@@ -8,13 +8,14 @@ import { useFormik } from 'formik';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { TrainerType } from '../types/trainer_type';
 import { CoustumerType } from '../types/coustumer_type';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 
 
 // # Connection for yuval - eMcWHJbuAdzLwDEf
 export default function Payment(NewUser: any) {
   const { AddTrainer } = useContext(TrainerContext);
-  const { AddCoustumer } = useContext(TrainerContext);
+  const { UpdatePayment,currentCoustumer,setCurrentCoustumer } = useContext(CoustumerContext);
   const navigation = useNavigation();
   const route = useRoute();
   const [isFocus, setIsFocus] = useState(false);
@@ -76,7 +77,7 @@ export default function Payment(NewUser: any) {
       }
       return errors;
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
       const payment: any = {
         card: values.card,
         date: values.year + '-' + values.month,
@@ -101,7 +102,7 @@ export default function Payment(NewUser: any) {
         AddTrainer(NewTrainer);
         console.log('New Trainer: ' + NewTrainer);
       }
-      else if (NewUser.clientType == '2') {
+      else if (currentCoustumer.clientType == '2') {
         console.log('CustomerInfo:', JSON.stringify(NewUser, null, 2)); // Updated to display values
         const NewCustomer: Partial<CoustumerType> = {
           first_name: NewUser.first_name,
@@ -116,13 +117,15 @@ export default function Payment(NewUser: any) {
           update_details: NewUser.update_details,
           payment: payment
         }
-        AddCoustumer(NewCustomer);
-        console.log('New Customer: ' + NewCustomer);
+        await UpdatePayment(payment.card, payment.date, payment.cvv);
+        setCurrentCoustumer(NewCustomer);
+        console.log('New Customer: ' + NewCustomer.payment?.card);
       }
+      console.log('Payment: ' + currentCoustumer.payment?.card);
       resetForm();
-      if (payment.card) {
-        navigation.navigate('BackToPre');
-      }
+      // if (payment.card) {
+      //   navigation.navigate('BackToPre');
+      // }
     }
   });
   return (
