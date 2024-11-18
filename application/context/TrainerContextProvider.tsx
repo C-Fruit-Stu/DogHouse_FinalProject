@@ -115,6 +115,7 @@ export default function TrainerContextProvider({ children }: any) {
         try{
             let data = await GET(`trainer/getallpostsbyemail/` + email);
             if(data && data.posts){
+                console.log("data" + data.posts);
                 return data.posts;
             }
             return [];
