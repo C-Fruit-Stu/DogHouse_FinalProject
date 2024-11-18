@@ -13,8 +13,8 @@ type RouteParams = {
 };
 
 export default function FindTrainer() {
-    const { GetTrainerPosts, GetAllTrainers } = useContext(TrainerContext);
-    const { addTrainer } = useContext(CoustumerContext);
+    const { GetTrainerPosts, GetAllTrainers, AddCostumerToArr } = useContext(TrainerContext);
+    const { addTrainer,currentCoustumer } = useContext(CoustumerContext);
     const navigation = useNavigation();
     const [localTrainers, setLocalTrainers] = useState<any[]>([]); 
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
@@ -42,7 +42,9 @@ export default function FindTrainer() {
             console.error('Error adding trainer to list:', error);
         }
         try{
-            
+            AddCostumerToArr(currentCoustumer.email);
+        }catch(error){
+            console.error('Error adding trainer to list:', error);
         }
     }
 
