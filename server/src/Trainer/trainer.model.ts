@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining ,findAllTrainers, userinID} from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining ,findAllTrainers, userinID, addCostumerEmail} from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -197,6 +197,13 @@ export async function showallpostsbyid(title: string) {
         return users[0];
     } catch (error) {
         throw error;
+    }
+}
+export async function addEmailToArray(TrainerEmail: string, CostumerEmail: string) {
+    try {
+        return await addCostumerEmail(TrainerEmail, CostumerEmail);
+    } catch (error) {
+        throw error ;
     }
 }
 

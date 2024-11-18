@@ -90,6 +90,28 @@ export async function FindUserByEmail(email: string) {
         mongo.close();
     }
 }
+export async function addCostumerEmail(TrainerEmail: string, CostumerEmail: string) {
+    const mongo = new MongoClient(DB_INFO.connection);
+    try {
+        const matchedDoc = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne({ 
+            email: TrainerEmail
+        });
+        console.log("Matched document:", matchedDoc);
+        if (matchedDoc) {
+            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+                { email: TrainerEmail },
+                { $addToSet: { CostumersArr: CostumerEmail } }
+            );
+        } else {
+            console.log("No document found with the specified trainer email");
+            return null;
+        }    
+    } catch (error) {
+        throw error;
+    } finally {
+        await mongo.close();
+    }
+}
 export async function FindAllPosts(query = {}, projection = {}) {
     let mongo = new MongoClient(DB_INFO.connection);
 

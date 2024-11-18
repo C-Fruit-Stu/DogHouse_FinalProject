@@ -181,19 +181,37 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function updateEmail(costumer:CoustumerType) {
-        try {
-            console.log('costumer ====>>>', costumer);
-            let data = await PUT('costumer/updateinfo/'+ currentTrainer.id, costumer); 
-            console.log('Response from server:', data.costumer);
-            if (data) {
-                console.log('data.costumer ====>>>', data.trainer);
-                return true;
+    // async function updateEmail(costumer:CoustumerType) {
+    //     try {
+    //         console.log('costumer ====>>>', costumer);
+    //         let data = await PUT('costumer/updateinfo/'+ currentTrainer.id, costumer); 
+    //         console.log('Response from server:', data.costumer);
+    //         if (data) {
+    //             console.log('data.costumer ====>>>', data.trainer);
+    //             return true;
+    //         }
+    //         return false;
+    //     } catch (error) {
+    //         console.log('Error in addTrainer:', error);
+    //         return false;
+    //     }
+    // }
+
+
+
+    async function AddCostumerToArr(email : string){
+        try{
+            let trainerEmail = currentTrainer?.email;
+            let info =[email, trainerEmail];
+            let data = await POST(`trainer/addEmailToArr` ,info);
+            if(data && data.costumer){
+                console.log("data" + data.costumer);
+                return data.costumer;
             }
-            return false;
-        } catch (error) {
-            console.log('Error in addTrainer:', error);
-            return false;
+            return [];
+        }catch(error){
+            console.log(error);
+            return [];
         }
     }
 
@@ -217,7 +235,8 @@ export default function TrainerContextProvider({ children }: any) {
                 DeleteTrainer,
                 getAllCostumers,
                 allCostumers,
-                DeleteCostumer
+                DeleteCostumer,
+                AddCostumerToArr
             }}>
             {children}
         </TrainerContext.Provider>

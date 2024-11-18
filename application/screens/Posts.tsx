@@ -33,19 +33,43 @@ export default function Posts() {
     const loadPosts = async () => {
       console.log('clientType', clientType);
       console.log('trainerEmail', trainerEmail);
-      if (clientType == 2 && trainerEmail) {
+      console.log('currentCoustumer:', currentCoustumer);
+
+      // Ensure currentCoustumer is defined and has trainers
+      if(clientType === 2 && trainerEmail){
         try {
-          const fetchedPosts = await GetTrainerPosts(trainerEmail); // Fetch posts by trainer's email
+          const fetchedPosts = await GetTrainerPosts(trainerEmail);
           setPosts(fetchedPosts);
+        }
+        catch (error) {
+          console.error('Error fetching trainer posts:', error);
+        }
+      }
+      if (clientType === 2 && Array.isArray(currentCoustumer?.HisTrainer) && currentCoustumer.HisTrainer.length > 0 && !trainerEmail) {
+        try {
+          // Fetch posts for each trainer asynchronously
+          const fetchedPostsPromises = currentCoustumer.HisTrainer.map((email: string) => {
+            console.log('Fetching posts for trainer email:', email);
+            return GetTrainerPosts(email).catch((error:string) => {
+              console.error(`Error fetching posts for ${email}:`, error);
+              return []; // Return empty array if fetching fails for a trainer
+            });
+          });
+
+          const allFetchedPosts = await Promise.all(fetchedPostsPromises);
+          const flattenedPosts = allFetchedPosts.flat(); // Flatten array of arrays to a single array
+          setPosts(flattenedPosts);
         } catch (error) {
           console.error('Error fetching trainer posts:', error);
         }
       } else if (clientType === 1 && currentTrainer?.Posts) {
+        // Retain existing behavior for clientType === 1
         setPosts(currentTrainer.Posts);
       }
     };
+
     loadPosts();
-  }, []);
+  }, [clientType, trainerEmail, currentCoustumer, currentTrainer]);
 
   const toggleModal = () => setModalVisible(!modalVisible);
 
@@ -116,6 +140,7 @@ export default function Posts() {
     );
     setPosts(updatedPosts);
   };
+
   if (clientType == 1) {
     if (!posts.length || posts.length == null) {
       return <Text>No posts available</Text>;
@@ -178,8 +203,7 @@ export default function Posts() {
         />
       </View>
     );
-  }
-  else {
+  } else {
     return (
       <FlatList
         data={posts}
@@ -220,7 +244,7 @@ export default function Posts() {
           </View>
         )}
       />
-    )
+    );
   }
 }
 

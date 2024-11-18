@@ -41,6 +41,9 @@ export default function FindTrainer() {
         } catch (error) {
             console.error('Error adding trainer to list:', error);
         }
+        try{
+            
+        }
     }
 
     const showPosts = async (trainerEmail: string) => {
