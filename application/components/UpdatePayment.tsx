@@ -117,11 +117,12 @@ export default function Payment(NewUser: any) {
           update_details: NewUser.update_details,
           payment: payment
         }
+        console.log('New Customer: ' + currentCoustumer.id);
         await UpdatePayment(payment.card, payment.date, payment.cvv);
         setCurrentCoustumer(NewCustomer);
-        console.log('New Customer: ' + NewCustomer.payment?.card);
+        //console.log('New Customer: ' + NewCustomer.payment?.card);
       }
-      console.log('Payment: ' + currentCoustumer.payment?.card);
+      //console.log('Payment: ' + currentCoustumer.payment?.card);
       resetForm();
       // if (payment.card) {
       //   navigation.navigate('BackToPre');

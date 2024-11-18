@@ -27,6 +27,7 @@ export type Costumer = {
 }
 
 export type credit = {
+    id: ObjectId
     card: string,
     date: string,
     cvv: string

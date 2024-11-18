@@ -71,11 +71,12 @@ export default function CoustumerContextProvider({ children }: any) {
             console.log('card ====>>>', card);
             console.log('date ====>>>', date);
             console.log('ccv ====>>>', ccv);
-            console.log('currentCoustumer ====>>>', currentCoustumer?.id);
+            console.log('currentCoustumer id ====>>>', currentCoustumer?.payment.id);
             const payload = {card: card, date: date, ccv: ccv};
-            let data = await POST('costumer/updatePayment/' + currentCoustumer?.id, payload); 
-            console.log('Response from server:', data.trainer);
-            if (data && data.trainer) {
+            let data = await POST('costumer/updatePayment/' + currentCoustumer?.payment.id, payload); 
+            console.log('Response from server:', data.costumer);
+            if (data) {
+                console.log('data.costumer ====>>>', data.costumer);
                 return true;
             }
             return false;

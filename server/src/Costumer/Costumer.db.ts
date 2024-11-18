@@ -41,7 +41,7 @@ export async function checkifexists(query = {}) {
 
 export async function addcostumer(costumer: Costumer) {
     let mongo = new MongoClient(DB_INFO.connection);
-    costumer.id = new ObjectId();
+    //costumer.id = new ObjectId();
     console.log("This is DataBase new ObjectID: "+costumer)
     try {
         await mongo.connect();
@@ -56,10 +56,12 @@ export async function addcostumer(costumer: Costumer) {
 // יכול להיות טעות 
 export async function updateDoc(card1: credit) {
     let mongo = new MongoClient(DB_INFO.connection);
+    console.log("This is DataBase new ObjectID: " + card1.id)
     try {
+        console.log("This is DataBase new ObjectID: " + card1)
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.Collection).updateOne(
-            { card: card1.card },
+            { _id: card1.id },
             { $set: { payment: card1 } }
         );
     } catch (error) {

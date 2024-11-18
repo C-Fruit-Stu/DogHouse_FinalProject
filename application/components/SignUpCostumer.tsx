@@ -226,10 +226,10 @@ export default function SignUpCustomer() {
             style={styles.toggleButton}
             onPress={togglePasswordVisibility}
           >
-            <Image
+            {/* <Image
               source={{ uri: visiblePassword ? 'https://icon2.cleanpng.com/20180424/pxq/kisspng-computer-icons-cross-eye-5adf65ca6e96c2.927735901524590026453.jpg' : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_KjU4cWc-z6DWOwvoC06bAS_wA4MzgIQJiw&s' }}
               style={styles.check}
-            />
+            /> */}
           </TouchableOpacity>
         </View>
         {formik.touched.password && formik.errors.password ? (
@@ -284,7 +284,7 @@ export default function SignUpCustomer() {
             {formik.values.image ? formik.values.image : "Select Your Image"}
           </Text>
         </View>
-        <Image source={{ uri: formik.values.image ? formik.values.image : AutoProfilePic}} style={styles.imageStyle} />
+        {/* <Image source={{ uri: formik.values.image ? formik.values.image : AutoProfilePic}} style={styles.imageStyle} /> */}
         {formik.touched.image && formik.errors.image ? (
           <Text style={styles.error}>{formik.errors.image}</Text>
         ) : null}

@@ -1,7 +1,7 @@
 import { TrainerType } from "./trainer_type";
 
 export type CoustumerType = {
-    id(id: any): void;
+    id?: string,
     dogBreed: string,
     first_name: string,
     last_name: string,
@@ -14,6 +14,7 @@ export type CoustumerType = {
     update_details: string,
     clientType:string, // 1 for trainer 2 for costumer
     payment: {
+        id?: string
         card: string,
         date: string,
         ccv: string
