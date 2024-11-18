@@ -84,10 +84,10 @@ export async function deactiveUser(id:string) {
         throw error;
     }
 }
-export async function addEmailToArray(email:string)
+export async function addEmailToArray(TrainerEmail:string,CostumerEmail:string)
 {
     try {
-        return await addTrainerEmail(email);
+        return await addTrainerEmail(TrainerEmail,CostumerEmail);
     } catch (error) {
         throw error;
     }
