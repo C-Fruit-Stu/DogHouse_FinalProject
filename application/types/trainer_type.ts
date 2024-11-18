@@ -1,6 +1,7 @@
 
 import { CoustumerType } from './coustumer_type'
 export type TrainerType = {
+    id: string,
     first_name: string,
     last_name: string,
     email: string,

@@ -110,7 +110,7 @@ export default function Profile() {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.moneyContainer}>
+          {/* <View style={styles.moneyContainer}>
             <View>
               <Text style={styles.textMoney}>Income</Text>
             </View>
@@ -118,20 +118,7 @@ export default function Profile() {
             <View>
               <Text style={styles.textMoney}>Outcome</Text>
             </View>
-          </View>
-          <View style={styles.CharContainer}>
-            <BarChart
-              data={data}
-              width={screenWidth}
-              height={290}
-              chartConfig={chartConfig}
-              verticalLabelRotation={30}
-              yAxisLabel="$"
-              yAxisSuffix=""
-              showValuesOnTopOfBars
-              fromZero
-            />
-          </View>
+          </View> */}
         </ScrollView>
       </SafeAreaView>
     )

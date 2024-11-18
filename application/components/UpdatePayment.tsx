@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -118,7 +118,11 @@ export default function Payment(NewUser: any) {
           payment: payment
         }
         console.log('New Customer: ' + currentCoustumer.id);
-        await UpdatePayment(payment.card, payment.date, payment.cvv);
+        if(await UpdatePayment(payment.card, payment.date, payment.cvv)){
+          setCurrentCoustumer(NewCustomer);
+          Alert.alert("Payment Updated");
+          navigation.navigate('BackToPre');
+        }
         setCurrentCoustumer(NewCustomer);
         //console.log('New Customer: ' + NewCustomer.payment?.card);
       }

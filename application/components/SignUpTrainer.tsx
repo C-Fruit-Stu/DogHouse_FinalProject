@@ -279,7 +279,7 @@ export default function SignUpTrainer() {
             {formik.values.image ? formik.values.image : "Select Your Image"}
           </Text>
         </View>
-        <Image source={{ uri: formik.values.image ? formik.values.image : AutoProfilePic}} style={styles.imageStyle} />
+        {/* <Image source={{ uri: formik.values.image ? formik.values.image : AutoProfilePic}} style={styles.imageStyle} /> */}
         {formik.touched.image && formik.errors.image ? (
           <Text style={styles.error}>{formik.errors.image}</Text>
         ) : null}
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 40,
-    borderColor: 'rgba(255,159,71,0.8)',
+    borderColor: 'rgba(2,71,56,0.8)',
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,

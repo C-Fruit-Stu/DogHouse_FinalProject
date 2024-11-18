@@ -58,9 +58,9 @@ export async function checkUpdate(id: string, card: string, date: string, cvv: s
     }
 }
 
-export async function CheckInfo(id:string,first_name:string,last_name:string,email:string,phone:string,dob:string,image:string,update_details:string,clientType:string,location:string,password:string,payment:credit) {
+export async function CheckInfo(id:string,first_name: string, last_name: string, email: string, phone: string, dob: string, image: string, update_details: string, clientType: string, location: string, password: string,payment:credit) {
     try {
-        let updateuser : Costumer = {id : new ObjectId(id),first_name,last_name,email,phone,dob,image,update_details,clientType,location,password,payment};
+        let updateuser : Costumer = { id: new ObjectId(id), first_name, last_name, email, phone, dob, image, update_details, clientType, location, password,payment};
         return await Updateuserinfo(updateuser)
     } catch (error) {
         throw error;

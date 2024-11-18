@@ -88,6 +88,22 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
+    async function updateEmail(costumer:CoustumerType) {
+        try {
+            console.log('costumer ====>>>', costumer);
+            let data = await PUT('costumer/updateinfo/'+ currentCoustumer?.payment.id, costumer); 
+            console.log('Response from server:', data.costumer);
+            if (data) {
+                console.log('data.costumer ====>>>', data.costumer);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Error in addTrainer:', error);
+            return false;
+        }
+    }
+
     return (
         <CoustumerContext.Provider
             value={{
@@ -97,7 +113,8 @@ export default function CoustumerContextProvider({ children }: any) {
                 setCurrentCoustumer,
                 LogInCoustumer,
                 addTrainer,
-                UpdatePayment
+                UpdatePayment,
+                updateEmail
             }}>
             {children}
         </CoustumerContext.Provider>
