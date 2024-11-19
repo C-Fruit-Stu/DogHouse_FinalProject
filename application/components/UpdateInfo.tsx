@@ -5,9 +5,12 @@ import { useFormik } from 'formik';
 import { CoustumerType } from '../types/coustumer_type';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 import { useNavigation } from '@react-navigation/native';
+import { TrainerContext } from '../context/TrainerContextProvider';
+import { TrainerType } from '../types/trainer_type';
 
 export default function UpdateEmail() {
   const { currentCoustumer,updateEmail } = useContext(CoustumerContext);
+  const { currentTrainer } = useContext(TrainerContext);
   const navigation = useNavigation();
   
 
@@ -24,33 +27,50 @@ export default function UpdateEmail() {
     },
     onSubmit: async (values) => {
       console.log('Updated email:', values.email);
-      let costumer : CoustumerType ={
-        first_name: currentCoustumer.first_name,
-        last_name: currentCoustumer.last_name,
-        email: values.email,
-        password: currentCoustumer.password,
-        dob: currentCoustumer.dob,
-        location: currentCoustumer.location,
-        image: currentCoustumer.image,
-        phone: currentCoustumer.phone,
-        clientType: currentCoustumer.clientType,
-        payment: currentCoustumer.payment,
-        dogBreed: currentCoustumer.dogBreed,
-        update_details: currentCoustumer.update_details,
-        stayLogIn: currentCoustumer.stayLogIn,
-      }
-      if (currentCoustumer.clientType == '2') {
-        console.log('CustomerInfo:', JSON.stringify(costumer, null, 2)); 
-        if(await updateEmail(costumer)) {
-          Alert.alert("Success", "Email updated successfully");
+      if(currentCoustumer) {
+        let costumer : CoustumerType ={
+          first_name: currentCoustumer.first_name,
+          last_name: currentCoustumer.last_name,
+          email: values.email,
+          password: currentCoustumer.password,
+          dob: currentCoustumer.dob,
+          location: currentCoustumer.location,
+          image: currentCoustumer.image,
+          phone: currentCoustumer.phone,
+          clientType: currentCoustumer.clientType,
+          payment: currentCoustumer.payment,
+          dogBreed: currentCoustumer.dogBreed,
+          update_details: currentCoustumer.update_details,
+          stayLogIn: currentCoustumer.stayLogIn,
         }
+        if (currentCoustumer.clientType == '1') {
+          console.log('TrainerInfo:', JSON.stringify(costumer, null, 2)); 
+          if(await updateEmail(costumer)) {
+            Alert.alert("Success", "Email updated successfully");
+            navigation.navigate('BackToPre');
+          }
       }
-      else if (currentCoustumer.clientType == '1') {
-        console.log('TrainerInfo:', JSON.stringify(costumer, null, 2)); 
-        if(await updateEmail(costumer)) {
+      else if(currentTrainer){
+        let trainerupdate : TrainerType = {
+          first_name: currentTrainer.first_name,
+          last_name: currentTrainer.last_name,
+          email: values.email,
+          password: currentTrainer.password,
+          dob: currentTrainer.dob,
+          location: currentTrainer.location,
+          experience: currentTrainer.experience,
+          image: currentTrainer.image,
+          phone: currentTrainer.phone,
+          clientType: currentTrainer.clientType,
+          stayLogIn: currentTrainer.stayLogIn,
+          payment: currentTrainer.payment,
+          id: currentTrainer.id
+        }
+        if(await updateEmail(trainerupdate)) {
           Alert.alert("Success", "Email updated successfully");
           navigation.navigate('BackToPre');
         }
+      }
       }
     },
   });

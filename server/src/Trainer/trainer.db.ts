@@ -409,4 +409,21 @@ export async function closeTraining(newdate: opendates, email: string) {
 }
 
 
+export async function Updateuserinfo(updateuser: TrainerUser) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { _id: updateuser._id },
+            { $set: updateuser }
+        )
+    } catch (error) {
+        throw error
+    }
+    finally {
+        mongo.close();
+    }
+}
+
 

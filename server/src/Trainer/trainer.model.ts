@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining ,findAllTrainers, userinID, addCostumerEmail} from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining ,findAllTrainers, userinID, addCostumerEmail, Updateuserinfo} from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -270,6 +270,18 @@ export async function CloseTraining(date: Date, time: string, email: string) {
 export async function getUserByEmail(email: string) {
     try {
         return await FindUserByEmail(email);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string) {
+    try {
+        let updateuser : TrainerUser = {
+            _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
+            experience
+        };
+        return await Updateuserinfo(updateuser)
     } catch (error) {
         throw error;
     }
