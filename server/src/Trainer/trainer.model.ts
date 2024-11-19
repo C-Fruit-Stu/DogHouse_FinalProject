@@ -281,6 +281,7 @@ export async function CheckInfo(id :string, first_name : string, last_name : str
             _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
             experience
         };
+        console.log(updateuser)
         return await Updateuserinfo(updateuser)
     } catch (error) {
         throw error;

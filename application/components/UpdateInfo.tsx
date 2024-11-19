@@ -10,7 +10,7 @@ import { TrainerType } from '../types/trainer_type';
 
 export default function UpdateEmail() {
   const { currentCoustumer,updateEmail } = useContext(CoustumerContext);
-  const { currentTrainer } = useContext(TrainerContext);
+  const { currentTrainer,updateEmailTrainer } = useContext(TrainerContext);
   const navigation = useNavigation();
   
 
@@ -27,6 +27,7 @@ export default function UpdateEmail() {
     },
     onSubmit: async (values) => {
       console.log('Updated email:', values.email);
+      console.log(currentTrainer);
       if(currentCoustumer) {
         let costumer : CoustumerType ={
           first_name: currentCoustumer.first_name,
@@ -66,7 +67,7 @@ export default function UpdateEmail() {
           payment: currentTrainer.payment,
           id: currentTrainer.id
         }
-        if(await updateEmail(trainerupdate)) {
+        if(await updateEmailTrainer(trainerupdate)) {
           Alert.alert("Success", "Email updated successfully");
           navigation.navigate('BackToPre');
         }
