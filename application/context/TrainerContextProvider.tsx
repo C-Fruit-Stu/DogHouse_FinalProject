@@ -181,7 +181,7 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function updateEmailTrainer(costumer:CoustumerType) {
+    async function updateEmailTrainer(costumer:TrainerType) {
         try {
             console.log('costumer ====>>>', costumer);
             let data = await PUT('costumer/updateinfo/'+ currentTrainer?.id, costumer); 
