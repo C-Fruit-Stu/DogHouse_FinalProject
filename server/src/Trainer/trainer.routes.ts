@@ -19,7 +19,7 @@ TrainerRouter
     .get('/getallpostsbyemail/:email', getAllPostsByEmail)
     .post('/gettrainerbyemail', getUserByemail)
     .post('/addEmailToArr', AddCostumerToArr)
-    .put('/updateinfo/:id',Update`Info)
+    .put('/updateinfo/:id',UpdateInfo)
 
 
     // מוסיף פוסט
