@@ -376,15 +376,15 @@ export async function getUserByemail(req: Request, res: Response) {
 }
 
 export async function AddCostumerToArr(req: Request, res: Response) {
-    let { email, trainerEmail } = req.body
-    console.log('email:',email)
+    let { trainerEmail, costumerEmail } = req.body
+    console.log('costumerEmail:',costumerEmail)
     console.log('trainerEmail: ',trainerEmail)
 
-    if(!email || !trainerEmail) 
+    if(!costumerEmail || !trainerEmail) 
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await addEmailToArray(email, trainerEmail)
+        let result = await addEmailToArray(costumerEmail, trainerEmail)
         res.status(200).json({ result })
 
 

@@ -199,10 +199,9 @@ export default function TrainerContextProvider({ children }: any) {
 
 
 
-    async function AddCostumerToArr(email : string){
+    async function AddCostumerToArr(trainerEmail : string,costumerEmail : string){
         try{
-            let trainerEmail = currentTrainer?.email;
-            let info ={email, trainerEmail};
+            const info = {trainerEmail,costumerEmail};
             let data = await POST(`trainer/addEmailToArr` ,info);
             if(data && data.costumer){
                 console.log("data" + data.costumer);

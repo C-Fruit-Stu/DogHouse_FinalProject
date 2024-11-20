@@ -42,7 +42,10 @@ export default function FindTrainer() {
             console.error('Error adding trainer to list:', error);
         }
         try{
-            AddCostumerToArr(currentCoustumer.email);
+            console.log('trainerEmail ====>>>', email);
+
+            console.log('currentCoustumer.email ====>>>', currentCoustumer.email);
+            AddCostumerToArr(email, currentCoustumer.email);
         }catch(error){
             console.error('Error adding trainer to list:', error);
         }

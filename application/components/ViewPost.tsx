@@ -28,47 +28,47 @@ const PostView: React.FC<PostViewProps> = ({ post, clientType, isOwner, onLike, 
       });
     }
   };
-
-  return (
-    <View style={styles.postContainer}>
-      {isOwner && isEditing ? (
+  if (post.description === '') {
+    return null;
+  }
+    return (
+      <View style={styles.postContainer}>
+        {isOwner && isEditing ? (
+          <View>
+            <TextInput style={styles.input} value={editedTitle} onChangeText={setEditedTitle} />
+            <TextInput style={styles.input} value={editedDescription} onChangeText={setEditedDescription} />
+            <Button title="Save" onPress={handleEdit} />
+          </View>
+        ) : (
+          <>
+            <Text style={styles.title}>{post.title}</Text>
+            <Text style={styles.description}>{post.description}</Text>
+            {post.image && <Image source={{ uri: post.image }} style={styles.image} />}
+          </>
+        )}
+        {
+        !isOwner && (
+          <View>
+            <TouchableOpacity onPress={onLike}>
+              <Text>{post.likedByUser ? 'Unlike' : 'Like'} ({post.likes})</Text>
+            </TouchableOpacity>
+            <TextInput placeholder="Add a comment" value={newComment} onChangeText={setNewComment} />
+            <Button title="Comment" onPress={() => onComment && onComment({ id: Math.random().toString(), text: newComment, userId: '' })} />
+          </View>
+        )}
+        {isOwner && (
+          <View style={styles.ownerButtons}>
+            <Button title="Edit" onPress={handleEdit} />
+            <Button title="Delete" onPress={onDelete} />
+          </View>
+        )}
         <View>
-          <TextInput style={styles.input} value={editedTitle} onChangeText={setEditedTitle} />
-          <TextInput style={styles.input} value={editedDescription} onChangeText={setEditedDescription} />
-          <Button title="Save" onPress={handleEdit} />
+          {(post.comments || []).map((comment) => (
+            <Text key={comment.id}>{comment.text}</Text>
+          ))}
         </View>
-      ) : (
-        <>
-          <Text style={styles.title}>{post.title}</Text>
-          <Text style={styles.description}>{post.description}</Text>
-          {post.image && <Image source={{ uri: post.image }} style={styles.image} />}
-        </>
-      )}
-
-      {!isOwner && (
-        <View>
-          <TouchableOpacity onPress={onLike}>
-            <Text>{post.likedByUser ? 'Unlike' : 'Like'} ({post.likes})</Text>
-          </TouchableOpacity>
-          <TextInput placeholder="Add a comment" value={newComment} onChangeText={setNewComment} />
-          <Button title="Comment" onPress={() => onComment && onComment({ id: Math.random().toString(), text: newComment, userId: '' })} />
-        </View>
-      )}
-
-      {isOwner && (
-        <View style={styles.ownerButtons}>
-          <Button title="Edit" onPress={handleEdit} />
-          <Button title="Delete" onPress={onDelete} />
-        </View>
-      )}
-
-      <View>
-        {post.comments.map(comment => (
-          <Text key={comment.id}>{comment.text}</Text>
-        ))}
       </View>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
