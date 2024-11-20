@@ -386,7 +386,7 @@ export async function AddCostumerToArr(req: Request, res: Response) {
     console.log('costumerEmail:', costumerEmail)
     console.log('trainerEmail: ', trainerEmail)
     try {
-        let result = await addEmailToArray(costumerEmail, trainerEmail)
+        let result = await addEmailToArray(trainerEmail, costumerEmail);
         res.status(200).json({ result })
 
     }
