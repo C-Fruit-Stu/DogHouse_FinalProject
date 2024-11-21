@@ -39,11 +39,25 @@ export default function Posts() {
 
   useEffect(() => {
     const loadPosts = async () => {
-      if (clientType === 2 && trainerEmail) {
+      if (clientType === 2) {
         try {
-          const fetchedPosts = await GetTrainerPosts(trainerEmail);
-          const validPosts = fetchedPosts.filter((post: Post) => post.description !== '');
-          setPosts(validPosts);
+          if (currentCoustumer?.HisTrainer?.length) {
+            // Fetch posts for each trainer in HisTrainers
+            const fetchedPostsPromises = currentCoustumer.HisTrainer.map((email: string) =>
+              GetTrainerPosts(email).catch((error: Error) => {
+                console.error(`Error fetching posts for ${email}:`, error);
+                return []; // Return empty array if fetching fails for a trainer
+              })
+            );
+  
+            const allFetchedPosts = await Promise.all(fetchedPostsPromises);
+            const flattenedPosts = allFetchedPosts.flat(); // Combine all posts into a single array
+            const validPosts = flattenedPosts.filter((post: Post) => post.description !== ''); // Filter out invalid posts
+            setPosts(validPosts);
+          } else {
+            console.log("No trainers found in HisTrainer.");
+            setPosts([]); // No trainers to fetch posts for
+          }
         } catch (error) {
           console.error('Error fetching trainer posts:', error);
           setPosts([]);
@@ -52,9 +66,9 @@ export default function Posts() {
         setPosts(currentTrainer.Posts);
       }
     };
-
+  
     loadPosts();
-  }, [clientType, trainerEmail, currentTrainer]);
+  }, [clientType, trainerEmail, currentTrainer, currentCoustumer]);
 
   const toggleModal = () => setModalVisible(!modalVisible);
 
