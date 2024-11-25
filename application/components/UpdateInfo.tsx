@@ -26,7 +26,7 @@ export default function UpdateEmail() {
       return errors;
     },
     onSubmit: async (values) => {
-      if (currentCoustumer) {
+      if (currentCoustumer != undefined) {
         let costumer : CoustumerType ={
           first_name: currentCoustumer.first_name,
           last_name: currentCoustumer.last_name,
@@ -51,7 +51,7 @@ export default function UpdateEmail() {
           }
       } 
       }
-      console.log(currentTrainer);
+      console.log(currentTrainer != undefined || currentTrainer != null);
         if (currentTrainer) {
           let trainerupdate : TrainerType = {
             first_name: currentTrainer.first_name,

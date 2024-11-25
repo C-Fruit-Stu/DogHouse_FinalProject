@@ -83,7 +83,7 @@ export default function Payment(NewUser: any) {
         date: values.year + '-' + values.month,
         cvv: values.cvv
       }
-      console.log(currentTrainer.id);
+
       if (currentTrainer) {
         const NewTrainer: Partial<TrainerType> = {
           first_name: currentTrainer.first_name,
@@ -117,7 +117,8 @@ export default function Payment(NewUser: any) {
           phone: currentCoustumer.phone,
           clientType: currentCoustumer.clientType,
           update_details: currentCoustumer.update_details,
-          payment: payment
+          payment: payment,
+          id: currentCoustumer.id,
         }
         console.log('New Customer: ' + currentCoustumer.id);
         if(await UpdatePayment(payment.card, payment.date, payment.cvv)){

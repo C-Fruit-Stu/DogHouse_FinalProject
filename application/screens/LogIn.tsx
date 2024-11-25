@@ -8,13 +8,15 @@ import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function LogIn() {
-  const { LogInTrainer } = useContext(TrainerContext);
-  const { LogInCoustumer } = useContext(CoustumerContext);
+  const { LogInTrainer,setcurrentTrainer,currcurrentTrainer } = useContext(TrainerContext);
+  const { LogInCoustumer,setCurrentCoustumer,currentCoustumer } = useContext(CoustumerContext);
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [formKey, setFormKey] = useState(0); // State to control the key prop for resetting
   const [loading, setLoading] = useState(false); // State for loading indicator
 
   const navigation = useNavigation();
+
+
 
   const togglePasswordVisibility = () => {
     setVisiblePassword(!visiblePassword);

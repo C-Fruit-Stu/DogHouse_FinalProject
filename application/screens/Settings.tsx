@@ -1,11 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { TrainerContext } from '../context/TrainerContextProvider';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function Settings() {
   const navigation = useNavigation();
+  
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.safeArea}>
@@ -48,7 +52,8 @@ export default function Settings() {
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.button} 
-            onPress={() => navigation.navigate('LogIn')}
+            onPress={() => {
+            navigation.navigate('LogIn')}}
           >
             <Text style={styles.buttonText}>Logout</Text>
           </TouchableOpacity>
