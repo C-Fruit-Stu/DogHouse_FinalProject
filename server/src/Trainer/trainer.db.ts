@@ -93,25 +93,32 @@ export async function FindUserByEmail(email: string) {
 export async function addCostumerEmail(TrainerEmail: string, CostumerEmail: string) {
     const mongo = new MongoClient(DB_INFO.connection);
     try {
-        const matchedDoc = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne({ 
-            email: TrainerEmail
+        // Case-insensitive match for email
+        const matchedDoc = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne({
+            email: { $regex: `^${TrainerEmail.trim()}$`, $options: "i" }
         });
+
+        console.log("Trainer Email:", TrainerEmail);
         console.log("Matched document:", matchedDoc);
+
         if (matchedDoc) {
             return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-                { email: TrainerEmail },
-                { $addToSet: { CostumersArr: CostumerEmail } }
+                { email: { $regex: `^${TrainerEmail.trim()}$`, $options: "i" } },
+                { $addToSet: { CostumersArr: CostumerEmail.trim() } } // Add user to trainer's CostumersArr
             );
         } else {
             console.log("No document found with the specified trainer email");
             return null;
-        }    
+        }
     } catch (error) {
+        console.error("Error updating trainer document:", error);
         throw error;
     } finally {
         await mongo.close();
     }
 }
+
+
 export async function FindAllPosts(query = {}, projection = {}) {
     let mongo = new MongoClient(DB_INFO.connection);
 

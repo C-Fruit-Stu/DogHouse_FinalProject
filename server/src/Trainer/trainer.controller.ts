@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail,getUserByEmail,addEmailToArray, CheckInfo } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, CheckInfo } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -42,7 +42,7 @@ export async function getAllTrainers(req: Request, res: Response) {
 
 export async function getUserById(req: Request, res: Response) {
     let { id } = req.params; //url שליפת הפרמטר מתוך ה 
-    if (id.length != 24){
+    if (id.length != 24) {
         return res.status(500).json({ message: 'must provide a valid id' });
     }
     try {
@@ -331,13 +331,13 @@ export async function deleteTrainiging(req: Request, res: Response) {
 
 export async function openTrainingDates(req: Request, res: Response) {
 
-    let { date,hour,email } = req.body
+    let { date, hour, email } = req.body
     console.log(hour)
-    if(!date || !hour)
+    if (!date || !hour)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await OpenTraining(date,hour,email)
+        let result = await OpenTraining(date, hour, email)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -362,7 +362,7 @@ export async function closeTrainingDates(req: Request, res: Response) {
 export async function getUserByemail(req: Request, res: Response) {
     let { email } = req.body
     console.log(email)
-    if(!email)
+    if (!email)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
@@ -370,34 +370,35 @@ export async function getUserByemail(req: Request, res: Response) {
         res.status(200).json({ result })
 
     }
-    catch(error){
+    catch (error) {
         res.status(500).json({ error })
     }
 }
 
 export async function AddCostumerToArr(req: Request, res: Response) {
-    let { email, trainerEmail } = req.body
-    console.log('email:',email)
-    console.log('trainerEmail: ',trainerEmail)
+    let { trainerEmail, costumerEmail } = req.body
 
-    if(!email || !trainerEmail) 
+    if (!costumerEmail || !trainerEmail)
         return res.status(400).json({ msg: "invalid info" })
 
+    trainerEmail = trainerEmail.trim();
+    costumerEmail = costumerEmail.trim();
+    console.log('costumerEmail:', costumerEmail)
+    console.log('trainerEmail: ', trainerEmail)
     try {
-        let result = await addEmailToArray(email, trainerEmail)
+        let result = await addEmailToArray(trainerEmail, costumerEmail);
         res.status(200).json({ result })
 
-
-    }   
-    catch(error){
+    }
+    catch (error) {
         res.status(500).json({ error })
-    }   
+    }
 }
 
 export async function UpdateInfo(req: Request, res: Response) {
     let { id } = req.params;
-    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment,experience } = req.body;
-    
+    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience } = req.body;
+
     if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
@@ -405,7 +406,7 @@ export async function UpdateInfo(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await CheckInfo(id, first_name, last_name, email, phone, dob, image, update_details, clientType, location, password, payment,experience);
+        let result = await CheckInfo(id, first_name, last_name, email, phone, dob, image, update_details, clientType, location, password, payment, experience);
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
