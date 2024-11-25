@@ -30,6 +30,24 @@ export default function Settings() {
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.button} 
+            onPress={() => navigation.navigate('faq')}
+          >
+            <Text style={styles.buttonText}>FAQ</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('support')}
+          >
+            <Text style={styles.buttonText}>Support</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('termcondition')}
+          >
+            <Text style={styles.buttonText}>Term And Conditions</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button} 
             onPress={() => navigation.navigate('LogIn')}
           >
             <Text style={styles.buttonText}>Logout</Text>

@@ -32,6 +32,9 @@ import AdminSettings from './screens/AdminSettings';
 import StatisticAdmin from './screens/StatisticAdmin';
 import TrainingSchedules from './screens/Trainingscheduals';
 import MembershipDetails from './screens/MembershipDetails';
+import FAQ from './components/FAQ';
+import Support from './components/Support';
+import TermsAndConditions from './components/TermCondition';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -113,6 +116,9 @@ function StackNav() {
       <Stack.Screen name="StatisticAdmin" component={StatisticAdmin} options={{ headerShown: false }} />
       <Stack.Screen name="TrainingSchedules" component={TrainingSchedules} options={{ headerShown: false }} />
       <Stack.Screen name="Membership Details" component={MembershipDetails} options={{ headerShown: true }} />
+      <Stack.Screen name="faq" component={FAQ} options={{ headerShown: true }} />
+      <Stack.Screen name="support" component={Support} options={{ headerShown: true }} />
+      <Stack.Screen name="termcondition" component={TermsAndConditions} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 }

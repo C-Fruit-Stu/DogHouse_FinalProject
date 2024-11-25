@@ -181,11 +181,12 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function updateEmailTrainer(costumer:TrainerType) {
+    async function updateEmailTrainer(trainer:TrainerType) {
         try {
-            console.log('costumer ====>>>', costumer);
-            let data = await POST('trainer/updateinfo/'+ currentTrainer?.id, costumer); 
-            console.log('Response from server:', data.costumer);
+            //console.log('costumer ====>>>', trainer);
+            console.log('currentTrainer ====>>>', currentTrainer?.id);
+            let data = await POST('trainer/updateinfo/'+ currentTrainer?.id, trainer); 
+            console.log('Response from server:', data.trainer);
             if (data) {
                 console.log('data.costumer ====>>>', data.trainer);
                 return true;
@@ -212,8 +213,9 @@ export default function TrainerContextProvider({ children }: any) {
             console.log(error);
             return [];
         }
-
     }
+
+
 
     async function DeletePost() { }
     async function EditPost() { }
