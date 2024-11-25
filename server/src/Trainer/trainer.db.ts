@@ -268,7 +268,7 @@ export async function UpdateCard(card1: credit) {
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { card: card1.card },
+            { _id: card1.id },
             { $set: { payment: card1 } }
         );
     } catch (error) {

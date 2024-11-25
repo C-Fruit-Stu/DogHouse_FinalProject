@@ -201,7 +201,7 @@ export default function TrainerContextProvider({ children }: any) {
     async function UpdatePaymentTrainer( NewTrainer: TrainerType) {
         try {
             console.log('currentCoustumer id ====>>>', NewTrainer.id);
-            const payload = {card: NewTrainer.payment.card, date: NewTrainer.payment.date, ccv: NewTrainer.payment.cvv};
+            const payload = {card: NewTrainer.payment.card, date: NewTrainer.payment.date, ccv: NewTrainer.payment.cvv, id: NewTrainer.id};
             console.log('payload ====>>>', payload);
             let data = await POST('trainer/updatePayment/' + NewTrainer.id, payload); 
             console.log('Response from server:', data.trainer);

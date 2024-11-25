@@ -21,6 +21,7 @@ export type TrainerUser = {
 } 
 
 export type credit = {
+    id: ObjectId
     card: string,
     date: string,
     ccv: string

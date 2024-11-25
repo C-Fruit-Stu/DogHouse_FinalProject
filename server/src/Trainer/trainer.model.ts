@@ -169,9 +169,10 @@ export async function ChangePass(password: string, id: string) {
     }
 }
 
-export async function checkUpdate(card: string, date: string, ccv: string) {
+export async function checkUpdate(card: string, date: string, ccv: string, id: ObjectId) {
     try {
-        let credit1: credit = { card, date, ccv }
+        let credit1: credit = { card, date, ccv, id }
+        console.log(credit1)
         return await UpdateCard(credit1);
     } catch (error) {
         throw error;

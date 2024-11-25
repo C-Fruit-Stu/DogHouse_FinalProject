@@ -179,7 +179,7 @@ export async function updatePayment(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await checkUpdate(card, date, ccv);
+        let result = await checkUpdate(card, date, ccv,new ObjectId(id));
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
