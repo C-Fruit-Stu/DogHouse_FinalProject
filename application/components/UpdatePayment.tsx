@@ -105,8 +105,7 @@ export default function Payment(NewUser: any) {
           navigation.navigate('BackToPre');
         }
       }
-      else if (currentCoustumer) {
-        console.log('CustomerInfo:', JSON.stringify(NewUser, null, 2)); // Updated to display values
+      if (currentCoustumer) {
         const NewCustomer: Partial<CoustumerType> = {
           first_name: currentCoustumer.first_name,
           last_name: currentCoustumer.last_name,
