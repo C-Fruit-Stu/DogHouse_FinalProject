@@ -184,8 +184,26 @@ export default function TrainerContextProvider({ children }: any) {
     async function updateEmailTrainer(trainer:TrainerType) {
         try {
             //console.log('costumer ====>>>', trainer);
-            console.log('currentTrainer ====>>>', currentTrainer?.id);
-            let data = await POST('trainer/updateinfo/'+ currentTrainer?.id, trainer); 
+            console.log('currentTrainer ====>>>', trainer.id);
+            let data = await POST('trainer/updateinfo/'+ trainer.id, trainer); 
+            console.log('Response from server:', data.trainer);
+            if (data) {
+                console.log('data.costumer ====>>>', data.trainer);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Error in addTrainer:', error);
+            return false;
+        }
+    }
+
+    async function UpdatePaymentTrainer( NewTrainer: TrainerType) {
+        try {
+            console.log('currentCoustumer id ====>>>', NewTrainer.id);
+            const payload = {card: NewTrainer.payment.card, date: NewTrainer.payment.date, ccv: NewTrainer.payment.cvv};
+            console.log('payload ====>>>', payload);
+            let data = await POST('trainer/updatePayment/' + NewTrainer.id, payload); 
             console.log('Response from server:', data.trainer);
             if (data) {
                 console.log('data.costumer ====>>>', data.trainer);
@@ -239,7 +257,8 @@ export default function TrainerContextProvider({ children }: any) {
                 allCostumers,
                 DeleteCostumer,
                 AddCostumerToArr,
-                updateEmailTrainer
+                updateEmailTrainer,
+                UpdatePaymentTrainer
             }}>
             {children}
         </TrainerContext.Provider>

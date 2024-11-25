@@ -13,6 +13,7 @@ export type TrainerType = {
     phone: string,
     clientType: string, // 1 for trainer 2 for costumer
     payment: {
+        cvv: any
         card: string,
         date: string,
         ccv: string

@@ -90,7 +90,7 @@ export default function CoustumerContextProvider({ children }: any) {
 
     async function updateEmail(costumer:CoustumerType) {
         try {
-            console.log('costumer ====>>>', costumer);
+            console.log('costumer ====>>>', costumer.email);
             let data = await PUT('costumer/updateinfo/'+ currentCoustumer?.payment.id, costumer); 
             console.log('Response from server:', data.costumer);
             if (data) {

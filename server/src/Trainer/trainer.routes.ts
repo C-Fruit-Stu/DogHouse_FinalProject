@@ -14,7 +14,7 @@ TrainerRouter
     .post('/register', RegisterTrainer) 
     .delete('/physic/delete/:id', physicDeleteUser)
     .put('/updatepassword/:id',UpdatePassword)
-    .put('/updatePayment/:id', updatePayment)
+    .post('/updatePayment/:id', updatePayment)
     .post('/getalltrainer', getAllTrainers)
     .get('/getallpostsbyemail/:email', getAllPostsByEmail)
     .post('/gettrainerbyemail', getUserByemail)

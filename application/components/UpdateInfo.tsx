@@ -26,6 +26,7 @@ export default function UpdateEmail() {
       return errors;
     },
     onSubmit: async (values) => {
+      if (currentCoustumer) {
         let costumer : CoustumerType ={
           first_name: currentCoustumer.first_name,
           last_name: currentCoustumer.last_name,
@@ -41,38 +42,39 @@ export default function UpdateEmail() {
           update_details: currentCoustumer.update_details,
           stayLogIn: currentCoustumer.stayLogIn,
         }
-        if (currentCoustumer.clientType == '1') {
+        console.log(costumer);
+        if (currentCoustumer) {
           console.log('TrainerInfo:', JSON.stringify(costumer, null, 2)); 
           if(await updateEmail(costumer)) {
             Alert.alert("Success", "Email updated successfully");
             navigation.navigate('BackToPre');
           }
+      } 
       }
-      // if(currentTrainer) {
-      //   if (currentTrainer.clientType == '1') {
-      //     let trainerupdate : TrainerType = {
-      //       first_name: currentTrainer.first_name,
-      //       last_name: currentTrainer.last_name,
-      //       email: values.email,
-      //       password: currentTrainer.password,
-      //       dob: currentTrainer.dob,
-      //       location: currentTrainer.location,
-      //       experience: currentTrainer.experience,
-      //       image: currentTrainer.image,
-      //       phone: currentTrainer.phone,
-      //       clientType: currentTrainer.clientType,
-      //       stayLogIn: currentTrainer.stayLogIn,
-      //       payment: currentTrainer.payment,
-      //       id: currentTrainer.id
-      //     }
-      //     if (currentTrainer.clientType == '2') {
-      //       if(await updateEmailTrainer(trainerupdate)) {
-      //         Alert.alert("Success", "Email updated successfully");
-      //         navigation.navigate('BackToPre');
-      //       } 
-      //     }   
-      //   }
-      // }
+      console.log(currentTrainer);
+        if (currentTrainer) {
+          let trainerupdate : TrainerType = {
+            first_name: currentTrainer.first_name,
+            last_name: currentTrainer.last_name,
+            email: values.email,
+            password: currentTrainer.password,
+            dob: currentTrainer.dob,
+            location: currentTrainer.location,
+            experience: currentTrainer.experience,
+            image: currentTrainer.image,
+            phone: currentTrainer.phone,
+            clientType: currentTrainer.clientType,
+            stayLogIn: currentTrainer.stayLogIn,
+            payment: currentTrainer.payment,
+            id: currentTrainer._id
+          }
+          if (currentTrainer) {
+            if(await updateEmailTrainer(trainerupdate)) {
+              Alert.alert("Success", "Email updated successfully");
+              navigation.navigate('BackToPre');
+            } 
+          }   
+        }
     },
   });
 

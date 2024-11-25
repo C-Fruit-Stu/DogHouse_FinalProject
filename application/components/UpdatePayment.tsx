@@ -14,7 +14,7 @@ import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 // # Connection for yuval - eMcWHJbuAdzLwDEf
 export default function Payment(NewUser: any) {
-  const { AddTrainer } = useContext(TrainerContext);
+  const { UpdatePaymentTrainer,currentTrainer } = useContext(TrainerContext);
   const { UpdatePayment,currentCoustumer,setCurrentCoustumer } = useContext(CoustumerContext);
   const navigation = useNavigation();
   const route = useRoute();
@@ -83,38 +83,41 @@ export default function Payment(NewUser: any) {
         date: values.year + '-' + values.month,
         cvv: values.cvv
       }
-      // console.log('TrainerInfo:', JSON.stringify(TrainerInfo, null, 2)); // Updated to display values
-      if (NewUser.clientType == '1') {
-        console.log('TrainerInfo:', JSON.stringify(NewUser, null, 2)); // Updated to display values
-        const NewTrainer: TrainerType = {
-          first_name: NewUser.first_name,
-          last_name: NewUser.last_name,
-          email: NewUser.email,
-          password: NewUser.password,
-          dob: NewUser.dob,
-          location: NewUser.location,
-          experience: NewUser.experience,
-          image: NewUser.image,
-          phone: NewUser.phone,
-          clientType: NewUser.clientType,
-          payment: payment
+      console.log(currentTrainer.id);
+      if (currentTrainer) {
+        const NewTrainer: Partial<TrainerType> = {
+          first_name: currentTrainer.first_name,
+          last_name: currentTrainer.last_name,
+          email: currentTrainer.email,
+          password: currentTrainer.password,
+          dob: currentTrainer.dob,
+          location: currentTrainer.location,
+          experience: currentTrainer.experience,
+          image: currentTrainer.image,
+          phone: currentTrainer.phone,
+          clientType: currentTrainer.clientType,
+          payment: payment,
+          id: currentTrainer._id,
         }
-        AddTrainer(NewTrainer);
-        console.log('New Trainer: ' + NewTrainer);
+        console.log('New Trainer: ' + currentTrainer.id);
+        if(await UpdatePaymentTrainer(NewTrainer)){
+          Alert.alert("Payment Updated");
+          navigation.navigate('BackToPre');
+        }
       }
-      else if (currentCoustumer.clientType == '2') {
+      else if (currentCoustumer) {
         console.log('CustomerInfo:', JSON.stringify(NewUser, null, 2)); // Updated to display values
         const NewCustomer: Partial<CoustumerType> = {
-          first_name: NewUser.first_name,
-          last_name: NewUser.last_name,
-          email: NewUser.email,
-          password: NewUser.password,
-          dob: NewUser.dob,
-          location: NewUser.location,
-          image: NewUser.image,
-          phone: NewUser.phone,
-          clientType: NewUser.clientType,
-          update_details: NewUser.update_details,
+          first_name: currentCoustumer.first_name,
+          last_name: currentCoustumer.last_name,
+          email: currentCoustumer.email,
+          password: currentCoustumer.password,
+          dob: currentCoustumer.dob,
+          location: currentCoustumer.location,
+          image: currentCoustumer.image,
+          phone: currentCoustumer.phone,
+          clientType: currentCoustumer.clientType,
+          update_details: currentCoustumer.update_details,
           payment: payment
         }
         console.log('New Customer: ' + currentCoustumer.id);
@@ -123,14 +126,8 @@ export default function Payment(NewUser: any) {
           Alert.alert("Payment Updated");
           navigation.navigate('BackToPre');
         }
-        setCurrentCoustumer(NewCustomer);
-        //console.log('New Customer: ' + NewCustomer.payment?.card);
       }
-      //console.log('Payment: ' + currentCoustumer.payment?.card);
       resetForm();
-      // if (payment.card) {
-      //   navigation.navigate('BackToPre');
-      // }
     }
   });
   return (
