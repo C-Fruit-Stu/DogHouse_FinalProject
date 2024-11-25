@@ -67,6 +67,7 @@ export default function UpdateEmail() {
           payment: currentTrainer.payment,
           id: currentTrainer.id
         }
+        console.log('TrainerInfo:', await updateEmailTrainer(trainerupdate));
         if(await updateEmailTrainer(trainerupdate)) {
           Alert.alert("Success", "Email updated successfully");
           navigation.navigate('BackToPre');
