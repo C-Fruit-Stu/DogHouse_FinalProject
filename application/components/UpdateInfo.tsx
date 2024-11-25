@@ -26,9 +26,6 @@ export default function UpdateEmail() {
       return errors;
     },
     onSubmit: async (values) => {
-      console.log('Updated email:', values.email);
-      console.log(currentTrainer);
-      if(currentCoustumer) {
         let costumer : CoustumerType ={
           first_name: currentCoustumer.first_name,
           last_name: currentCoustumer.last_name,
@@ -51,29 +48,31 @@ export default function UpdateEmail() {
             navigation.navigate('BackToPre');
           }
       }
-      else if(currentTrainer){
-        let trainerupdate : TrainerType = {
-          first_name: currentTrainer.first_name,
-          last_name: currentTrainer.last_name,
-          email: values.email,
-          password: currentTrainer.password,
-          dob: currentTrainer.dob,
-          location: currentTrainer.location,
-          experience: currentTrainer.experience,
-          image: currentTrainer.image,
-          phone: currentTrainer.phone,
-          clientType: currentTrainer.clientType,
-          stayLogIn: currentTrainer.stayLogIn,
-          payment: currentTrainer.payment,
-          id: currentTrainer.id
-        }
-        console.log('TrainerInfo:', await updateEmailTrainer(trainerupdate));
-        if(await updateEmailTrainer(trainerupdate)) {
-          Alert.alert("Success", "Email updated successfully");
-          navigation.navigate('BackToPre');
-        }
-      }
-      }
+      // if(currentTrainer) {
+      //   if (currentTrainer.clientType == '1') {
+      //     let trainerupdate : TrainerType = {
+      //       first_name: currentTrainer.first_name,
+      //       last_name: currentTrainer.last_name,
+      //       email: values.email,
+      //       password: currentTrainer.password,
+      //       dob: currentTrainer.dob,
+      //       location: currentTrainer.location,
+      //       experience: currentTrainer.experience,
+      //       image: currentTrainer.image,
+      //       phone: currentTrainer.phone,
+      //       clientType: currentTrainer.clientType,
+      //       stayLogIn: currentTrainer.stayLogIn,
+      //       payment: currentTrainer.payment,
+      //       id: currentTrainer.id
+      //     }
+      //     if (currentTrainer.clientType == '2') {
+      //       if(await updateEmailTrainer(trainerupdate)) {
+      //         Alert.alert("Success", "Email updated successfully");
+      //         navigation.navigate('BackToPre');
+      //       } 
+      //     }   
+      //   }
+      // }
     },
   });
 
