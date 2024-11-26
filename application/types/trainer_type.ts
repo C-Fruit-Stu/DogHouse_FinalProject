@@ -22,7 +22,8 @@ export type TrainerType = {
     trainingSchedule?: trainingSchedule[],
     Posts?: Post[],
     CostumersArr?: CoustumerType[],
-    openDates?: opendates[]
+    openDates?: opendates[],
+    totalIncome:number
 
 }
 
@@ -34,7 +35,8 @@ export type opendates = {
 export type trainingSchedule = {
     name?: string,
     date: Date,
-    time: string
+    time: string,
+    price:number
 }
 
 export type Comment = {

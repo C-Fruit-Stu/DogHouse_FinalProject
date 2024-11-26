@@ -194,6 +194,7 @@ const SignUp: React.FC = () => {
             name: '',
             date: new Date(),
             time: '',
+            price: 0
           },
         ],
         Posts: [
@@ -209,17 +210,18 @@ const SignUp: React.FC = () => {
           },
         ],
         CostumersArr: [],
+        totalIncome:0
       };
 
       // Debugging: Log the NewUser object
       console.log('NewUser:', NewUser);
 
       try {
-        // Update the current trainer state
-        setCurrentTrainer(NewUser);
-
         // Register the new trainer (replace with actual API call)
         await RegisterNewTrainer(NewUser);
+        
+        // Update the current trainer state
+        setCurrentTrainer(NewUser);
 
         // Navigate to the sign-in page after successful registration
         navigate('/signin');

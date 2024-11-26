@@ -79,7 +79,7 @@ export async function LoginTrainer(req: Request, res: Response) {
 
 
 export async function RegisterTrainer(req: Request, res: Response) {
-    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr } = req.body;
+    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr,totalIncome } = req.body;
 
     if (!first_name || !last_name || !password || !email) {
         return res.status(400).json({ message: 'missing info' });
@@ -88,7 +88,7 @@ export async function RegisterTrainer(req: Request, res: Response) {
     try {
         password = encryptPassword(password);
         console.log("This is Server / Controler  " + password);
-        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr };
+        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr,totalIncome };
 
         let result = await RegisterUser(trainer);
         if (result == null)

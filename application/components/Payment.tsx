@@ -95,7 +95,7 @@ export default function Payment() {
       let succses: any;
       if (route.params?.clientType == 1) {
         console.log('TrainerInfo:', JSON.stringify(currentTrainer, null, 2)); // Updated to display values
-        const NewTrainer: TrainerType = {
+        const NewTrainer: Partial<TrainerType> = {
           first_name: currentTrainer.first_name,
           last_name: currentTrainer.last_name,
           email: currentTrainer.email,
@@ -112,7 +112,8 @@ export default function Payment() {
             {
               name: '',
               date: new Date(),
-              time: ''
+              time: '',
+              price: 0
             }
           ],
           Posts: [
@@ -127,7 +128,8 @@ export default function Payment() {
               isOwner: false,
             }
           ],
-          CostumersArr: []
+          CostumersArr: [],
+          totalIncome:0
         }
         console.log('New Trainer: ' + NewTrainer);
         succses = await RegisterNewTrainer(NewTrainer);
