@@ -13,7 +13,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@google/generative-ai": "^0.14.0",
     "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-community/datetimepicker": "8.2.0",
+    "@react-native-community/datetimepicker": "^8.2.0",
     "@react-native-picker/picker": "^2.9.0",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.18",
@@ -22,9 +22,11 @@
     "cloudinary-react-native": "^0.0.2",
     "expo": "^52.0.4",
     "expo-camera": "~16.0.5",
+    "expo-file-system": "~18.0.3",
     "expo-font": "~13.0.1",
     "expo-image": "^2.0.0",
     "expo-image-picker": "~16.0.1",
+    "expo-media-library": "~17.0.2",
     "expo-speech": "~13.0.0",
     "expo-status-bar": "~2.0.0",
     "formik": "^2.4.6",
@@ -46,9 +48,7 @@
     "react-native-screens": "~4.0.0",
     "react-native-svg": "15.8.0",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-web": "~0.19.10",
-    "expo-file-system": "~18.0.3",
-    "expo-media-library": "~17.0.2"
+    "react-native-web": "~0.19.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

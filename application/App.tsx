@@ -60,7 +60,7 @@ function BackToPre() {
 
       <Tab.Screen name="Posts" component={Posts} options={{
         tabBarLabel: 'Posts',
-        headerShown: true,
+        headerShown: false,
         tabBarIcon: () => <MaterialCommunityIcons name='post' size={35} color='#1DBD7B' />
       }}
         initialParams={{ clientType }}
@@ -68,7 +68,7 @@ function BackToPre() {
 
       <Tab.Screen name="Profile" component={Profile} options={{
         tabBarLabel: 'Profile',
-        headerShown: true,
+        headerShown: false,
         tabBarIcon: () => <MaterialCommunityIcons name='account' size={35} color='#1DBD7B' />
       }}
         initialParams={{ clientType }}
@@ -84,7 +84,7 @@ function BackToPre() {
 
       <Tab.Screen name="Settings" component={Settings} options={{
         tabBarLabel: 'Settings',
-        headerShown: true,
+        headerShown: false,
         tabBarIcon: () => <Feather name="settings" size={24} color="#1DBD7B" />
       }}
         initialParams={{ clientType }}
@@ -101,14 +101,14 @@ function StackNav() {
       <Stack.Screen name="SignUpCostumer" component={SignUpCostumer} options={{ headerShown: false }} />
       <Stack.Screen name="SignUpTrainer" component={SignUpTrainer} options={{ headerShown: false }} />
       <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
-      <Stack.Screen name="LogIn" component={LogIn} options={{ headerShown: true }} />
-      <Stack.Screen name="AllCostumers" component={AllCostumers} options={{ headerShown: true }} />
-      <Stack.Screen name="Calander" component={Calanders} options={{ headerShown: true }} />
-      <Stack.Screen name="Posts" component={Posts} options={{ headerShown: true }} />
-      <Stack.Screen name="Update Info" component={UpdateInfo} options={{ headerShown: true }} />
-      <Stack.Screen name="FindTrainer" component={FindTrainer} options={{ headerShown: true }} />
-      <Stack.Screen name="Update Payment" component={UpdatePayment} options={{ headerShown: true }} />
-      <Stack.Screen name="Mambership" component={Membership} options={{ headerShown: true }} />
+      <Stack.Screen name="LogIn" component={LogIn} options={{ headerShown: false }} />
+      <Stack.Screen name="AllCostumers" component={AllCostumers} options={{ headerShown: false }} />
+      <Stack.Screen name="Calander" component={Calanders} options={{ headerShown: false }} />
+      <Stack.Screen name="Posts" component={Posts} options={{ headerShown: false }} />
+      <Stack.Screen name="Update Info" component={UpdateInfo} options={{ headerShown: false }} />
+      <Stack.Screen name="FindTrainer" component={FindTrainer} options={{ headerShown: false }} />
+      <Stack.Screen name="Update Payment" component={UpdatePayment} options={{ headerShown: false }} />
+      <Stack.Screen name="Mambership" component={Membership} options={{ headerShown: false }} />
       <Stack.Screen name="BackToPre" component={BackToPre} options={{ headerShown: false }} />
       <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
       <Stack.Screen name="Managetrainers" component={ManageTrainers} options={{ headerShown: false }} />
@@ -116,11 +116,11 @@ function StackNav() {
       <Stack.Screen name="AdminSettings" component={AdminSettings} options={{ headerShown: false }} />
       <Stack.Screen name="StatisticAdmin" component={StatisticAdmin} options={{ headerShown: false }} />
       <Stack.Screen name="TrainingSchedules" component={TrainingSchedules} options={{ headerShown: false }} />
-      <Stack.Screen name="Membership Details" component={MembershipDetails} options={{ headerShown: true }} />
-      <Stack.Screen name="faq" component={FAQ} options={{ headerShown: true }} />
-      <Stack.Screen name="support" component={Support} options={{ headerShown: true }} />
-      <Stack.Screen name="termcondition" component={TermsAndConditions} options={{ headerShown: true }} />
-      <Stack.Screen name="updatepassword" component={UpdatePassword} options={{ headerShown: true }} />
+      <Stack.Screen name="Membership Details" component={MembershipDetails} options={{ headerShown: false }} />
+      <Stack.Screen name="faq" component={FAQ} options={{ headerShown: false }} />
+      <Stack.Screen name="support" component={Support} options={{ headerShown: false }} />
+      <Stack.Screen name="termcondition" component={TermsAndConditions} options={{ headerShown: false }} />
+      <Stack.Screen name="updatepassword" component={UpdatePassword} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

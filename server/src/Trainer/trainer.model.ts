@@ -229,18 +229,18 @@ export async function addEmailToArray(TrainerEmail: string, CostumerEmail: strin
 //     }
 // }
 
-export async function AddTraining(email: string, name: string, date: Date, time: string) {
+export async function AddTraining(email: string, name: string, date: Date, time: string ,price: number) {
     try {
-        let newTraining: trainingSchedule = { name, date, time }
+        let newTraining: trainingSchedule = { name, date, time,price }
         return await newTrainingFunc(newTraining, email);
     } catch (error) {
         throw error;
     }
 }
 
-export async function DeleteTraining(email: string, name: string, date: Date, time: string) {
+export async function DeleteTraining(email: string, name: string, date: Date, time: string, price: number) {
     try {
-        let newTraining: trainingSchedule = { name, date, time }
+        let newTraining: trainingSchedule = { name, date, time,price }
         return await deleteTrainingFunc(newTraining, email);
     } catch (error) {
         throw error;
@@ -276,16 +276,16 @@ export async function getUserByEmail(email: string) {
     }
 }
 
-export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string) {
-    try {
-        let updateuser : TrainerUser = {
-            _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
-            experience
-        };
-        console.log(updateuser)
-        return await Updateuserinfo(updateuser)
-    } catch (error) {
-        throw error;
-    }
-}
+// export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string) {
+//     try {
+//         let updateuser : TrainerUser = {
+//             _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
+//             experience
+//         };
+//         console.log(updateuser)
+//         return await Updateuserinfo(updateuser)
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 

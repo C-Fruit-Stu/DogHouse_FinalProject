@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, CheckInfo } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -302,13 +302,13 @@ export async function deletePost(req: Request, res: Response) {
 
 
 export async function addNewTraining(req: Request, res: Response) {
-    let { email, name, date, time } = req.body
+    let { email, name, date, time,price } = req.body
 
     if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await AddTraining(email, name, date, time)
+        let result = await AddTraining(email, name, date, time,price)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -316,13 +316,13 @@ export async function addNewTraining(req: Request, res: Response) {
 }
 
 export async function deleteTrainiging(req: Request, res: Response) {
-    let { email, name, date, time } = req.body
+    let { email, name, date, time,price } = req.body
 
     if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await DeleteTraining(email, name, date, time)
+        let result = await DeleteTraining(email, name, date, time,price)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -395,20 +395,20 @@ export async function AddCostumerToArr(req: Request, res: Response) {
     }
 }
 
-export async function UpdateInfo(req: Request, res: Response) {
-    let { id } = req.params;
-    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience } = req.body;
-    if (!id || id.length < 24)
-        return res.status(400).json({ msg: "invalid id" })
+// export async function UpdateInfo(req: Request, res: Response) {
+//     let { id } = req.params;
+//     let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience } = req.body;
+//     if (!id || id.length < 24)
+//         return res.status(400).json({ msg: "invalid id" })
 
-    if (!first_name || !last_name || !location)
-        return res.status(400).json({ msg: "invalid info" })
+//     if (!first_name || !last_name || !location)
+//         return res.status(400).json({ msg: "invalid info" })
 
-    try {
-        let result = await CheckInfo(id, first_name, last_name, email, phone, dob, image, update_details, clientType, location, password, payment, experience);
-        res.status(200).json({ result })
-    } catch (error) {
-        res.status(500).json({ error })
-    }
-}
+//     try {
+//         let result = await CheckInfo(id, first_name, last_name, email, phone, dob, image, update_details, clientType, location, password, payment, experience);
+//         res.status(200).json({ result })
+//     } catch (error) {
+//         res.status(500).json({ error })
+//     }
+// }
 
