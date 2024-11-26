@@ -52,20 +52,20 @@ const UpdatePassword: React.FC = () => {
         // console.log(currentTrainer);
         console.log(currentCoustumer);
         console.log(currentTrainer);
-        // if(currentCoustumer != undefined || currentCoustumer != null){
-        //     if(await updatepasswordCostumer(currentCoustumer.id,values.newPassword)){
-        //         Alert.alert("Password Updated");
-        //         navigation.navigate('BackToPre');
-        //     } 
-        // }  
-        // if(currentTrainer != undefined || currentTrainer != null){
-        //     if(currentTrainer){
-        //         if(await UpdatePassword(currentTrainer._id,values.newPassword)){
-        //             Alert.alert("Password Updated");
-        //             navigation.navigate('BackToPre');
-        //         }
-        //     }
-        // }
+        if(currentCoustumer != undefined || currentCoustumer != null){
+            if(await updatepasswordCostumer(currentCoustumer.id,values.newPassword)){
+                Alert.alert("Password Updated");
+                navigation.navigate('BackToPre');
+            } 
+        }  
+        if(currentTrainer != undefined || currentTrainer != null){
+            if(currentTrainer){
+                if(await UpdatePassword(currentTrainer._id,values.newPassword)){
+                    Alert.alert("Password Updated");
+                    navigation.navigate('BackToPre');
+                }
+            }
+        }
 
     //   try {
     //     console.log('Updating password with values:', values);

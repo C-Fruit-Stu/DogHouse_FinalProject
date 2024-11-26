@@ -252,6 +252,10 @@ export default function TrainerContextProvider({ children }: any) {
 
     }
 
+    function LogOut(){
+        setCurrentTrainer(null);
+    }
+
 
 
     async function DeletePost() { }
@@ -278,7 +282,8 @@ export default function TrainerContextProvider({ children }: any) {
                 AddCostumerToArr,
                 updateEmailTrainer,
                 UpdatePaymentTrainer,
-                UpdatePassword
+                UpdatePassword,
+                LogOut
             }}>
             {children}
         </TrainerContext.Provider>

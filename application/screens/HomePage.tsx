@@ -19,7 +19,7 @@ export default function HomePage() {
   const clientType = route.params?.clientType;
   const navigation = useNavigation();
 
-  if (clientType == 2) {
+  if (clientType == 2 && currentCoustumer !== null && currentCoustumer !== undefined) {
     return (
       <SafeAreaView>
         <View style={styles.headerDiv}>
@@ -41,7 +41,7 @@ export default function HomePage() {
       </SafeAreaView>
     );
   }
-  else {
+  else if(clientType == 1 && currentTrainer !== null && currentTrainer !== undefined) {
     return (
       <SafeAreaView>
         <View style={styles.headerDiv}>

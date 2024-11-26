@@ -123,6 +123,10 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
+    function LogOutCostumer(){
+        setCurrentCoustumer(null);
+    }
+
     return (
         <CoustumerContext.Provider
             value={{
@@ -134,7 +138,8 @@ export default function CoustumerContextProvider({ children }: any) {
                 addTrainer,
                 UpdatePayment,
                 updateEmail,
-                updatepasswordCostumer
+                updatepasswordCostumer,
+                LogOutCostumer
             }}>
             {children}
         </CoustumerContext.Provider>

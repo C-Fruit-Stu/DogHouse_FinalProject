@@ -8,6 +8,19 @@ import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 export default function Settings() {
   const navigation = useNavigation();
+  const { LogOut,currentTrainer } = useContext(TrainerContext);
+  const { LogOutCostumer,currentCoustumer } = useContext(CoustumerContext);
+
+
+  function handleLogout() {
+    if (currentTrainer != null || currentTrainer != undefined) {
+      LogOut();
+    }
+    if (currentCoustumer != null || currentCoustumer != undefined) {
+      LogOutCostumer();
+    }
+    navigation.navigate('LogIn');
+  }
   
 
   return (
@@ -59,7 +72,9 @@ export default function Settings() {
           <TouchableOpacity 
             style={styles.button} 
             onPress={() => {
-            navigation.navigate('LogIn')}}
+              handleLogout();
+            navigation.navigate('LogIn')
+          }}
           >
             <Text style={styles.buttonText}>Logout</Text>
           </TouchableOpacity>
