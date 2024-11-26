@@ -233,6 +233,24 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
+    async function UpdatePassword(id: string, password: string) {
+        try{
+            console.log('currentTrainer id ====>>>', id);
+            console.log('password ====>>>', password);
+            let data = await POST(`trainer/updatePassword/${id}`, {password});
+            if(data && data.trainer){
+                console.log("data" + data.trainer);
+                return true
+            }
+            return false;
+        }
+        catch(error){
+            console.log(error);
+            return false;
+        }
+
+    }
+
 
 
     async function DeletePost() { }
@@ -258,7 +276,8 @@ export default function TrainerContextProvider({ children }: any) {
                 DeleteCostumer,
                 AddCostumerToArr,
                 updateEmailTrainer,
-                UpdatePaymentTrainer
+                UpdatePaymentTrainer,
+                UpdatePassword
             }}>
             {children}
         </TrainerContext.Provider>

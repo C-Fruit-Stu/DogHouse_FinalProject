@@ -52,6 +52,12 @@ export default function Settings() {
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.button} 
+            onPress={() => navigation.navigate('updatepassword')}
+          >
+            <Text style={styles.buttonText}>Update Password</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button} 
             onPress={() => {
             navigation.navigate('LogIn')}}
           >

@@ -35,6 +35,7 @@ import MembershipDetails from './screens/MembershipDetails';
 import FAQ from './components/FAQ';
 import Support from './components/Support';
 import TermsAndConditions from './components/TermCondition';
+import UpdatePassword from './components/UpdatePassword';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -119,6 +120,7 @@ function StackNav() {
       <Stack.Screen name="faq" component={FAQ} options={{ headerShown: true }} />
       <Stack.Screen name="support" component={Support} options={{ headerShown: true }} />
       <Stack.Screen name="termcondition" component={TermsAndConditions} options={{ headerShown: true }} />
+      <Stack.Screen name="updatepassword" component={UpdatePassword} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 }
