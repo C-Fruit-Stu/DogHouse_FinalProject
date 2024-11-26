@@ -237,11 +237,12 @@ export default function TrainerContextProvider({ children }: any) {
         try{
             console.log('currentTrainer id ====>>>', id);
             console.log('password ====>>>', password);
-            let data = await POST(`trainer/updatepassword/${id}`, password);
+            let data = await POST(`trainer/updatepassword/` + id, {password});
             if(data){
                 console.log("data" + data.trainer);
                 return true
             }
+            console.log("data" + data);
             return false;
         }
         catch(error){

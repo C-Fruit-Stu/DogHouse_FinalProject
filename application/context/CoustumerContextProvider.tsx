@@ -104,6 +104,23 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
+    async function updatepasswordCostumer(id: string, password: string) {
+        try{
+            console.log('currentCoustumer id ====>>>', id);
+            console.log('password ====>>>', password);
+            let data = await POST(`costumer/updatepassword/` + id, {password});
+            if(data){
+                return true
+            }
+            console.log("data" + data);
+            return false;
+        }
+        catch(error){
+            console.log(error);
+            return false;
+        }
+    }
+
     return (
         <CoustumerContext.Provider
             value={{
@@ -114,7 +131,8 @@ export default function CoustumerContextProvider({ children }: any) {
                 LogInCoustumer,
                 addTrainer,
                 UpdatePayment,
-                updateEmail
+                updateEmail,
+                updatepasswordCostumer
             }}>
             {children}
         </CoustumerContext.Provider>

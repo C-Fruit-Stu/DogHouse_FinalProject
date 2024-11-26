@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const UpdatePassword: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const { currentTrainer,UpdatePassword } = useContext(TrainerContext);
-  const { currentCoustumer } = useContext(TrainerContext);
+  const { currentCoustumer,updatepasswordCostumer } = useContext(TrainerContext);
   const navigation = useNavigation();
   const validate = (values: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
     const errors: { currentPassword?: string; newPassword?: string; confirmPassword?: string } = {};
@@ -53,6 +53,13 @@ const UpdatePassword: React.FC = () => {
                 navigation.navigate('BackToPre');
             }
         }
+        if(currentCoustumer){
+            if(await updatepasswordCostumer(currentCoustumer._id,values.newPassword)){
+                Alert.alert("Password Updated");
+                navigation.navigate('BackToPre');
+            }
+        }
+
     //   try {
     //     console.log('Updating password with values:', values);
     //     setMessage('Password updated successfully!');

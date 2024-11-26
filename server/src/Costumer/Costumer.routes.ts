@@ -13,7 +13,7 @@ CostumerRouter
     .post('/register', RegisterCostumer)
     .post('/updatePayment/:id', updatePayment)
     .put('/updateinfo/:id',UpdateInfo)
-    .put('/updatepassword/:id',UpdatePassword)
+    .post('/updatepassword/:id',UpdatePassword)
     .delete('/physic/delete/:id', logicDeleteUser)
     .post('/addTrainer', addTrainer)
     
