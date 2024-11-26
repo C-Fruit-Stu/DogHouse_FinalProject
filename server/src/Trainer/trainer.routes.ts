@@ -13,7 +13,7 @@ TrainerRouter
     .post('/login', LoginTrainer) 
     .post('/register', RegisterTrainer) 
     .delete('/physic/delete/:id', physicDeleteUser)
-    .put('/updatepassword/:id',UpdatePassword)
+    .post('/updatepassword/:id',UpdatePassword)
     .post('/updatePayment/:id', updatePayment)
     .post('/getalltrainer', getAllTrainers)
     .get('/getallpostsbyemail/:email', getAllPostsByEmail)
