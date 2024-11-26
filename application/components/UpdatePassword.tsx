@@ -3,11 +3,12 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useFormik } from 'formik';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { useNavigation } from '@react-navigation/native';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 const UpdatePassword: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const { currentTrainer,UpdatePassword } = useContext(TrainerContext);
-  const { currentCoustumer,updatepasswordCostumer } = useContext(TrainerContext);
+  const { currentCoustumer,updatepasswordCostumer } = useContext(CoustumerContext);
   const navigation = useNavigation();
   const validate = (values: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
     const errors: { currentPassword?: string; newPassword?: string; confirmPassword?: string } = {};
@@ -47,18 +48,24 @@ const UpdatePassword: React.FC = () => {
     },
     validate,
     onSubmit: async (values) => {
-        if(currentTrainer){
-            if(await UpdatePassword(currentTrainer._id,values.newPassword)){
-                Alert.alert("Password Updated");
-                navigation.navigate('BackToPre');
-            }
-        }
-        if(currentCoustumer){
-            if(await updatepasswordCostumer(currentCoustumer._id,values.newPassword)){
-                Alert.alert("Password Updated");
-                navigation.navigate('BackToPre');
-            }
-        }
+        // console.log(currentCoustumer);
+        // console.log(currentTrainer);
+        console.log(currentCoustumer);
+        console.log(currentTrainer);
+        // if(currentCoustumer != undefined || currentCoustumer != null){
+        //     if(await updatepasswordCostumer(currentCoustumer.id,values.newPassword)){
+        //         Alert.alert("Password Updated");
+        //         navigation.navigate('BackToPre');
+        //     } 
+        // }  
+        // if(currentTrainer != undefined || currentTrainer != null){
+        //     if(currentTrainer){
+        //         if(await UpdatePassword(currentTrainer._id,values.newPassword)){
+        //             Alert.alert("Password Updated");
+        //             navigation.navigate('BackToPre');
+        //         }
+        //     }
+        // }
 
     //   try {
     //     console.log('Updating password with values:', values);

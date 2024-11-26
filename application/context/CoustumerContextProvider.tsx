@@ -8,7 +8,7 @@ export const CoustumerContext = createContext<any>({});
 export default function CoustumerContextProvider({ children }: any) {
 
     const [allCoustumers, setAllCoustumer] = useState<CoustumerType[]>([]);
-    const [currentCoustumer, setCurrentCoustumer] = useState<CoustumerType>();
+    const [currentCoustumer, setCurrentCoustumer] = useState<CoustumerType | null>(null);
 
     // const AddNewCoustumer = (costumerInfo: CoustumerType) => {
     //     try {
@@ -39,8 +39,10 @@ export default function CoustumerContextProvider({ children }: any) {
             console.log('email ====>>>', loggingInfo.email, '\npassword ====>>>', loggingInfo.password);
             let data = await POST('costumer/login', loggingInfo);  // Adjust the endpoint to match your server
             console.log(data);
+            console.log('data.user ====>>>', data.user);
             if (data && data.user) {
                 setCurrentCoustumer(data.user);
+                console.log('currentCoustumer ====>>>', currentCoustumer);
                 return true;
             }
             return false;

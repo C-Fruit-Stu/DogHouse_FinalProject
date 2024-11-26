@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
+import { CoustumerType } from '../types/coustumer_type';
+import { TrainerType } from '../types/trainer_type';
 
 export default function LogIn() {
   const { LogInTrainer,setcurrentTrainer,currcurrentTrainer } = useContext(TrainerContext);
@@ -14,7 +16,11 @@ export default function LogIn() {
   const [formKey, setFormKey] = useState(0); // State to control the key prop for resetting
   const [loading, setLoading] = useState(false); // State for loading indicator
 
+
+
+
   const navigation = useNavigation();
+
 
 
 

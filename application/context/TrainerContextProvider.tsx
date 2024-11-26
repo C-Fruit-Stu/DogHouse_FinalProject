@@ -11,7 +11,7 @@ export const TrainerContext = createContext<any>({});
 export default function TrainerContextProvider({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
-    const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
+    const [currentTrainer, setCurrentTrainer] = useState<TrainerType | null>(null);
     const [allCostumers, setAllCostumers] = useState<CoustumerType[]>([]);
 
 
