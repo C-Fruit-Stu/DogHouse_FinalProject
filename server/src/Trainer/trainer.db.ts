@@ -345,21 +345,31 @@ export async function checkmongopostbyid(query: {}, projection = {}) {
 }
 
 export async function newTrainingFunc(trainingSchedulea: trainingSchedule, email: string) {
-    let mongo = new MongoClient(DB_INFO.connection);
-
+    const mongo = new MongoClient(DB_INFO.connection);
     try {
         await mongo.connect();
-        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { email },
-            { $addToSet: { trainingSchedule: trainingSchedulea } }
-        );
+
+        const trainer = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).findOne({ email });
+
+        if (trainer && trainer.trainingSchedule?.length > 0 && trainer.trainingSchedule[0]?.time === "") {
+            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+                { email },
+                { $set: { "trainingSchedule.0": trainingSchedulea } } // Replace the first element in the array
+            );
+        } else {
+            // Add the new object to the array
+            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+                { email },
+                { $addToSet: { trainingSchedule: trainingSchedulea } }
+            );
+        }
     } catch (error) {
         throw error;
-    }
-    finally {
-        mongo.close();
+    } finally {
+        await mongo.close();
     }
 }
+
 
 export async function deleteTrainingFunc(trainingSchedulea: trainingSchedule, email: string) {
     let mongo = new MongoClient(DB_INFO.connection);

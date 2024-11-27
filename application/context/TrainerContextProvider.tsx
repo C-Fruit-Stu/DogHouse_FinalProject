@@ -153,16 +153,15 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function openNewTraining(date: Date, name: string, hour: string, price: number) {
+    async function openNewTraining(trainingSchedule: any) {
         if (currentTrainer) {
             const email = currentTrainer.email;
-            const opendate = { date: date, name: name, hour: hour, price: price, email: email };
+            const opendate = { date: trainingSchedule.date, name: trainingSchedule.name, time: trainingSchedule.time, price: trainingSchedule.price, email: email };
             try {
                 console.log('opendate ====>>>', opendate)
                 let data = await POST('trainer/addnewtraining', (opendate));
                 console.log("data" + data);
                 if (data) {
-                    setCurrentTrainer(data.user);
                     return true;
                 }
                 return false;
