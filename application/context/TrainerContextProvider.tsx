@@ -78,7 +78,7 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    
+
     async function GetAllTrainers() {
         try {
             let data = await POST('trainer/getalltrainer', {}); // Fetch all trainers
@@ -111,15 +111,15 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function GetTrainerPosts(email: string){
-        try{
+    async function GetTrainerPosts(email: string) {
+        try {
             let data = await GET(`trainer/getallpostsbyemail/` + email);
-            if(data && data.posts){
+            if (data && data.posts) {
                 console.log("data" + data.posts);
                 return data.posts;
             }
             return [];
-        }catch(error){
+        } catch (error) {
             console.log(error);
             return [];
         }
@@ -153,6 +153,26 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
+    async function openNewTraining(date: Date, name: string, hour: string, price: number) {
+        if (currentTrainer) {
+            const email = currentTrainer.email;
+            const opendate = { date: date, name: name, hour: hour, price: price, email: email };
+            try {
+                console.log('opendate ====>>>', opendate)
+                let data = await POST('trainer/addnewtraining', (opendate));
+                console.log("data" + data);
+                if (data) {
+                    setCurrentTrainer(data.user);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+        }
+    }
+
     async function getAllCostumers() {
         try {
             let data = await GET('costumer/')
@@ -167,7 +187,7 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function DeleteCostumer (id: string) {
+    async function DeleteCostumer(id: string) {
         try {
             console.log('id ====>>>', id)
             let data = await DELETE('costumer/physic/delete/' + id)
@@ -181,11 +201,11 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function updateEmailTrainer(trainer:TrainerType) {
+    async function updateEmailTrainer(trainer: TrainerType) {
         try {
             //console.log('costumer ====>>>', trainer);
             console.log('currentTrainer ====>>>', trainer.id);
-            let data = await POST('trainer/updateinfo/'+ trainer.id, trainer); 
+            let data = await POST('trainer/updateinfo/' + trainer.id, trainer);
             console.log('Response from server:', data.trainer);
             if (data) {
                 console.log('data.costumer ====>>>', data.trainer);
@@ -198,12 +218,12 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function UpdatePaymentTrainer( NewTrainer: TrainerType) {
+    async function UpdatePaymentTrainer(NewTrainer: TrainerType) {
         try {
             console.log('currentCoustumer id ====>>>', NewTrainer.id);
-            const payload = {card: NewTrainer.payment.card, date: NewTrainer.payment.date, ccv: NewTrainer.payment.cvv, id: NewTrainer.id};
+            const payload = { card: NewTrainer.payment.card, date: NewTrainer.payment.date, ccv: NewTrainer.payment.cvv, id: NewTrainer.id };
             console.log('payload ====>>>', payload);
-            let data = await POST('trainer/updatePayment/' + NewTrainer.id, payload); 
+            let data = await POST('trainer/updatePayment/' + NewTrainer.id, payload);
             console.log('Response from server:', data.trainer);
             if (data) {
                 console.log('data.costumer ====>>>', data.trainer);
@@ -218,41 +238,41 @@ export default function TrainerContextProvider({ children }: any) {
 
 
 
-    async function AddCostumerToArr(trainerEmail : string,costumerEmail : string){
-        try{
-            const info = {trainerEmail,costumerEmail};
-            let data = await POST(`trainer/addEmailToArr` ,info);
-            if(data && data.costumer){
+    async function AddCostumerToArr(trainerEmail: string, costumerEmail: string) {
+        try {
+            const info = { trainerEmail, costumerEmail };
+            let data = await POST(`trainer/addEmailToArr`, info);
+            if (data && data.costumer) {
                 console.log("data" + data.costumer);
                 return true
             }
             return false;
-        }catch(error){
+        } catch (error) {
             console.log(error);
             return [];
         }
     }
 
     async function UpdatePassword(id: string, password: string) {
-        try{
+        try {
             console.log('currentTrainer id ====>>>', id);
             console.log('password ====>>>', password);
-            let data = await POST(`trainer/updatepassword/` + id, {password});
-            if(data){
+            let data = await POST(`trainer/updatepassword/` + id, { password });
+            if (data) {
                 console.log("data" + data.trainer);
                 return true
             }
             console.log("data" + data);
             return false;
         }
-        catch(error){
+        catch (error) {
             console.log(error);
             return false;
         }
 
     }
 
-    function LogOut(){
+    function LogOut() {
         setCurrentTrainer(null);
     }
 
@@ -283,7 +303,8 @@ export default function TrainerContextProvider({ children }: any) {
                 updateEmailTrainer,
                 UpdatePaymentTrainer,
                 UpdatePassword,
-                LogOut
+                LogOut,
+                openNewTraining
             }}>
             {children}
         </TrainerContext.Provider>

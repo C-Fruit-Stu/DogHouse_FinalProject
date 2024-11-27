@@ -29,8 +29,10 @@ export type credit = {
 }
 
 export type opendates = {
-    date: Date,
-    time: string
+    name?: string,
+    date:Date,
+    time: string,
+    price:number
 }
 
 export type trainingSchedule = {

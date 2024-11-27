@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining ,findAllTrainers, userinID, addCostumerEmail, Updateuserinfo} from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo } from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -17,21 +17,21 @@ export async function getAllUsers() {
 
 export async function getAllTrainersInfo() {
     try {
-       let query = { clientType: "1" };
-       let projection = {
-          first_name: 1,
-          last_name: 1,
-          email:1
-       };
-       let trainers = await findUsers(query, projection);
-       console.log('Trainers fetched:', trainers); // Log the trainers to ensure the data is correct
-       return trainers;
+        let query = { clientType: "1" };
+        let projection = {
+            first_name: 1,
+            last_name: 1,
+            email: 1
+        };
+        let trainers = await findUsers(query, projection);
+        console.log('Trainers fetched:', trainers); // Log the trainers to ensure the data is correct
+        return trainers;
     } catch (error) {
-       console.error('Error in getAllTrainersInfo:', error);
-       throw error;
+        console.error('Error in getAllTrainersInfo:', error);
+        throw error;
     }
- }
- 
+}
+
 
 
 // export async function getAllTrainersInfo() {
@@ -110,17 +110,17 @@ export async function RegisterUser(user: TrainerUser) {
 
 export async function showPostsByEmail(email: string) {
     try {
-      const query = { email };
-      const projection = { Posts: 1, _id: 0 };
-      const users = await findUsers(query, projection);
-      console.log('User fetched:', users);  // Log the fetched user(s)
-      return users[0]?.Posts || [];  // Return posts array or empty if no posts
+        const query = { email };
+        const projection = { Posts: 1, _id: 0 };
+        const users = await findUsers(query, projection);
+        console.log('User fetched:', users);  // Log the fetched user(s)
+        return users[0]?.Posts || [];  // Return posts array or empty if no posts
     } catch (error) {
-      throw error;
+        throw error;
     }
-  }
-  
-  
+}
+
+
 
 // export async function updateUser(id: string, email: string, password: string, location: any) {
 //     try {
@@ -204,7 +204,7 @@ export async function addEmailToArray(TrainerEmail: string, CostumerEmail: strin
     try {
         return await addCostumerEmail(TrainerEmail, CostumerEmail);
     } catch (error) {
-        throw error ;
+        throw error;
     }
 }
 
@@ -229,9 +229,9 @@ export async function addEmailToArray(TrainerEmail: string, CostumerEmail: strin
 //     }
 // }
 
-export async function AddTraining(email: string, name: string, date: Date, time: string ,price: number) {
+export async function AddTraining(email: string, name: string, date: Date, time: string, price: number) {
     try {
-        let newTraining: trainingSchedule = { name, date, time,price }
+        let newTraining: trainingSchedule = { name, date, time, price }
         return await newTrainingFunc(newTraining, email);
     } catch (error) {
         throw error;
@@ -240,16 +240,16 @@ export async function AddTraining(email: string, name: string, date: Date, time:
 
 export async function DeleteTraining(email: string, name: string, date: Date, time: string, price: number) {
     try {
-        let newTraining: trainingSchedule = { name, date, time,price }
+        let newTraining: trainingSchedule = { name, date, time, price }
         return await deleteTrainingFunc(newTraining, email);
     } catch (error) {
         throw error;
     }
 }
 
-export async function OpenTraining(date: Date, time: string, email: string) {
+export async function OpenTraining(date: Date, name: string, time: string, price: number, email: string) {
     try {
-        let newdate: opendates = { date, time }
+        let newdate: opendates = { date, name, time, price }
         return await openTraining(newdate, email);
     }
     catch (error) {
@@ -257,9 +257,9 @@ export async function OpenTraining(date: Date, time: string, email: string) {
     }
 }
 
-export async function CloseTraining(date: Date, time: string, email: string) {
+export async function CloseTraining(date: Date, name: string, time: string, price: number, email: string) {
     try {
-        let newdate: opendates = { date, time }
+        let newdate: opendates = { date, name, time, price }
         return await closeTraining(newdate, email);
     }
     catch (error) {

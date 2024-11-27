@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, Button, Alert, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-
+import { TrainerContext } from '../context/TrainerContextProvider';
 export default function Calanders() {
+  const [openNewTraining] =useContext(TrainerContext);
   const [date, setDate] = useState<Date | null>(null);
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState<'date' | 'time'>('date');
@@ -44,6 +45,7 @@ export default function Calanders() {
     };
 
     console.log('Training Schedule:', trainingSchedule);
+    openNewTraining(trainingSchedule);
     Alert.alert('Success', 'Training schedule added successfully!');
   };
 

@@ -79,7 +79,7 @@ export async function LoginTrainer(req: Request, res: Response) {
 
 
 export async function RegisterTrainer(req: Request, res: Response) {
-    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr,totalIncome } = req.body;
+    let { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr, totalIncome } = req.body;
 
     if (!first_name || !last_name || !password || !email) {
         return res.status(400).json({ message: 'missing info' });
@@ -88,7 +88,7 @@ export async function RegisterTrainer(req: Request, res: Response) {
     try {
         password = encryptPassword(password);
         console.log("This is Server / Controler  " + password);
-        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr,totalIncome };
+        let trainer: TrainerUser = { first_name, last_name, email, password, dob, location, experience, image, phone, clientType, payment, trainingSchedule, Posts, CostumersArr, totalIncome };
 
         let result = await RegisterUser(trainer);
         if (result == null)
@@ -179,7 +179,7 @@ export async function updatePayment(req: Request, res: Response) {
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await checkUpdate(card, date, ccv,new ObjectId(id));
+        let result = await checkUpdate(card, date, ccv, new ObjectId(id));
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -302,13 +302,13 @@ export async function deletePost(req: Request, res: Response) {
 
 
 export async function addNewTraining(req: Request, res: Response) {
-    let { email, name, date, time,price } = req.body
+    let { email, name, date, time, price } = req.body
 
     if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await AddTraining(email, name, date, time,price)
+        let result = await AddTraining(email, name, date, time, price)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -316,13 +316,13 @@ export async function addNewTraining(req: Request, res: Response) {
 }
 
 export async function deleteTrainiging(req: Request, res: Response) {
-    let { email, name, date, time,price } = req.body
+    let { email, name, date, time, price } = req.body
 
     if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await DeleteTraining(email, name, date, time,price)
+        let result = await DeleteTraining(email, name, date, time, price)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -331,13 +331,13 @@ export async function deleteTrainiging(req: Request, res: Response) {
 
 export async function openTrainingDates(req: Request, res: Response) {
 
-    let { date, hour, email } = req.body
-    console.log(hour)
-    if (!date || !hour)
+    let { date, name, time, price, email } = req.body
+    console.log(time)
+    if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await OpenTraining(date, hour, email)
+        let result = await OpenTraining(date, name, time, price, email)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
@@ -345,13 +345,13 @@ export async function openTrainingDates(req: Request, res: Response) {
 }
 
 export async function closeTrainingDates(req: Request, res: Response) {
-    let { date, time, email } = req.body
+    let { date, name, time, price, email } = req.body
 
     if (!date || !time)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await CloseTraining(date, time, email)
+        let result = await CloseTraining(date, name, time, price, email)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
