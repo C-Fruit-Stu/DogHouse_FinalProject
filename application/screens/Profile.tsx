@@ -101,7 +101,12 @@ export default function Profile() {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Calander', { clientType })}>
               <View style={styles.button}>
-                <Text style={styles.buttonText}>Schedules</Text>
+                <Text style={styles.buttonText}>Add new training </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('TrainingSchedules', { clientType })}>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Calander</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Posts', { clientType })}>

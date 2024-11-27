@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray,getAllScheduleInfo } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -395,6 +395,21 @@ export async function AddCostumerToArr(req: Request, res: Response) {
     }
 }
 
+export async function getAllTrainersSchedules(req: Request, res: Response) {
+    let { HisTrainers } = req.body
+    if (HisTrainers.length === 0){
+        return res.status(400).json({ msg: "Empty array" })
+    }
+
+    try {
+        let result = await getAllScheduleInfo(HisTrainers);
+        res.status(200).json({ result })
+
+    }
+    catch (error) {
+        res.status(500).json({ error })
+    }
+}
 // export async function UpdateInfo(req: Request, res: Response) {
 //     let { id } = req.params;
 //     let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience } = req.body;

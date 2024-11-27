@@ -1,6 +1,6 @@
 //ייבוא אובייקט 
 import { Router } from 'express';
-import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, deleteTrainiging, openTrainingDates, closeTrainingDates, getAllTrainers,getAllPostsByEmail,getUserByemail,AddCostumerToArr, } from './trainer.controller';
+import { physicDeleteUser, getAll, getUserById, LoginTrainer, RegisterTrainer, UpdatePassword, updatePayment, addNewPost, getAllPostsById, showallposts, deletePost, addNewTraining, deleteTrainiging, openTrainingDates, closeTrainingDates, getAllTrainers,getAllPostsByEmail,getUserByemail,AddCostumerToArr,getAllTrainersSchedules } from './trainer.controller';
 
 
 
@@ -37,5 +37,8 @@ TrainerRouter
     // פתיחת תורים
     .post('/opentrainingdates',openTrainingDates)
     .put('/deleteopenDate',closeTrainingDates)
+
+    // שולף אימונים
+    .post('/getallschedules',getAllTrainersSchedules)
 
 export default TrainerRouter;

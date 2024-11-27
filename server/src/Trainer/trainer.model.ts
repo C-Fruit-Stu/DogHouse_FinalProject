@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo,getTrainerSchedulesByEmail } from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -267,6 +267,28 @@ export async function CloseTraining(date: Date, name: string, time: string, pric
     }
 }
 
+export async function getAllScheduleInfo(HisTrainers: string[]) {
+    try {
+        const schedules = [];
+
+        for (const trainerEmail of HisTrainers) {
+            const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
+
+            if (trainerSchedules) {
+                // Append trainer email to each schedule object
+                trainerSchedules.forEach((schedule: any) => {
+                    schedule.trainerEmail = trainerEmail;
+                });
+
+                schedules.push(...trainerSchedules);
+            }
+        }
+
+        return schedules;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export async function getUserByEmail(email: string) {
     try {

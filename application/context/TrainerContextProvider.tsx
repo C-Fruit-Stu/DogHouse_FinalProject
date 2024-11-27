@@ -275,7 +275,19 @@ export default function TrainerContextProvider({ children }: any) {
         setCurrentTrainer(null);
     }
 
+    async function getAllTrainersSchedules(HisTrainers: any) {
+        try{
 
+            let data = await POST('trainer/getallschedules', HisTrainers);
+            console.log("data" + data);
+            if (data) {
+                return data;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     async function DeletePost() { }
     async function EditPost() { }
@@ -303,7 +315,8 @@ export default function TrainerContextProvider({ children }: any) {
                 UpdatePaymentTrainer,
                 UpdatePassword,
                 LogOut,
-                openNewTraining
+                openNewTraining,
+                getAllTrainersSchedules
             }}>
             {children}
         </TrainerContext.Provider>

@@ -115,6 +115,7 @@ export default function FindTrainer() {
 
     return (
         <FlatList
+            style={styles.container}
             data={localTrainers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderTrainer}
@@ -123,6 +124,9 @@ export default function FindTrainer() {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        marginTop:50
+    },
     trainerContainer: {
         flexDirection: 'row',
         alignItems: 'center',

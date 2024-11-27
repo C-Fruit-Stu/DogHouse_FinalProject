@@ -426,6 +426,27 @@ export async function closeTraining(newdate: opendates, email: string) {
 }
 
 
+export async function getTrainerSchedulesByEmail(trainerEmail: string) {
+    const mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        const trainer = await mongo
+            .db(DB_INFO.name)
+            .collection(DB_INFO.collection)
+            .findOne(
+                { email: trainerEmail },
+                { projection: { trainingSchedule: 1, _id: 0 } } // Retrieve only the `trainingSchedule` field
+            );
+
+        return trainer?.trainingSchedule || [];
+    } catch (error) {
+        throw error;
+    } finally {
+        await mongo.close();
+    }
+}
+
+
 export async function Updateuserinfo(updateuser: TrainerUser) {
     let mongo = new MongoClient(DB_INFO.connection);
 
