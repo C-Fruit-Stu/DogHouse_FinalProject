@@ -12,7 +12,7 @@ interface User {
   last_name: string;
 }
 const ManageCostumers: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<CoustumerType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigation = useNavigation();
   const { getAllCostumers, allCostumers, DeleteCostumer } = useContext(CoustumerContext);
@@ -38,6 +38,7 @@ const ManageCostumers: React.FC = () => {
   const handleDeleteUser = async (userId: string) => {
     console.log('userId: ', userId);
     const confirmDelete = await DeleteCostumer(userId);
+    console.log('confirmDelete: ', confirmDelete);
     if (confirmDelete) {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
       Alert.alert("Costumer deleted", `Costumer with ID: ${userId} has been deleted.`);
@@ -71,7 +72,7 @@ const ManageCostumers: React.FC = () => {
             <Text style={styles.userName}>{item.first_name} {item.last_name}</Text>
             <TouchableOpacity
               style={styles.deleteButton}
-              onPress={() => handleDeleteUser(item.id)}
+              onPress={() => handleDeleteUser(item.payment?.id)}
             >
               <Text style={styles.deleteButtonText}>Delete</Text>
             </TouchableOpacity>

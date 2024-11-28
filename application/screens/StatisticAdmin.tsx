@@ -2,25 +2,59 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider'; // Adjust path as needed
+import { TrainerType } from '../types/trainer_type';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
+import { CoustumerType } from '../types/coustumer_type';
 
 const StatisticAdmin: React.FC = () => {
+  const [trainers, setalltrainers] = useState<TrainerType[]>([]);
+  const [costumers, setAllCostumers] = useState<CoustumerType[]>([]);
   const navigation = useNavigation();
-  const { fetchStatistics } = useContext(TrainerContext); // Adjust this based on your context
-  const [stats, setStats] = useState({}) as any;
+  const { getAllUsers } = useContext(TrainerContext);
+  const { getAllCostumers, allCostumers } = useContext(CoustumerContext);
+  const [totalearning,settotalearning] = useState(0);
+  const [ totalsessions, settotalsessions] = useState(0);
+
+
+
 
   useEffect(() => {
-    const getStats = async () => {
-      try {
-        const data = await fetchStatistics(); // Fetch statistics from your context or API
-        setStats(data);
-      } catch (error) {
-        console.error("Failed to fetch statistics", error);
+    fetchTrainers();
+    fetchCostumers();
+    console.log('users: ', trainers);
+    console.log('costumers: ', costumers);
+    console.log('totalearning: ', totalearning);
+  }, []);
+  const fetchTrainers = async () => { // Show loading spinner
+    try {
+      const trainers = await getAllUsers();
+      if (trainers) {
+        setalltrainers([...trainers]);
+        let sum = 0
+        for (let i = 0; i < trainers.length; i++) {
+          if(trainers[i].trainingSchedule){
+            sum += trainers[i].trainingSchedule.length;
+          }
+        }
+        settotalsessions(sum);
+        console.log('totalearning: ', totalearning);
+        console.log('totalsessions: ', totalsessions);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch users", error);
+    } 
+  };
 
-    getStats();
-  }, [fetchStatistics]);
-
+  const fetchCostumers = async () => {
+    try {
+      const costumers = await getAllCostumers();
+      if (costumers) {
+        setAllCostumers(costumers);
+      }
+    } catch (error) {
+      console.error("Failed to fetch costumers", error);
+    } 
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -30,16 +64,16 @@ const StatisticAdmin: React.FC = () => {
       <Text style={styles.title}>Statistics</Text>
       <ScrollView>
         <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Total Users: {stats.totalUsers || 0}</Text>
+          <Text style={styles.statTitle}>Total Users: {trainers.length + costumers.length}</Text>
         </View>
         <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Active Trainers: {stats.activeTrainers || 0}</Text>
+          <Text style={styles.statTitle}>Active Trainers: {trainers.length || 0}</Text>
         </View>
         <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Total Sessions: {stats.totalSessions || 0}</Text>
+          <Text style={styles.statTitle}>Total Sessions: {totalsessions || 0}</Text>
         </View>
         <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Total Earnings: ${stats.totalEarnings || 0}</Text>
+          <Text style={styles.statTitle}>Total Earnings: ${trainers.length || 0}</Text>
         </View>
         {/* Add more statistics as needed */}
       </ScrollView>
@@ -56,7 +90,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginBottom: 20,
     padding: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: 'rgba(2,71,56,0.8)',
     borderRadius: 5,
     alignSelf: 'flex-start',
     marginTop: 10,

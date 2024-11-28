@@ -147,6 +147,7 @@ export default function CoustumerContextProvider({ children }: any) {
             let data = await POST('costumer/physic/delete/' + id,{})
             console.log("data   " + data);
             if (data) {
+                console.log("data   " + data);
                 return true;
             }
             return false;

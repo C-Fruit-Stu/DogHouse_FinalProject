@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginBottom: 20,
     padding: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: 'rgba(2,71,56,0.8)',
     borderRadius: 5,
     alignSelf: 'flex-start',
     marginTop: 30,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#007AFF',
+    color: 'rgba(2,71,56,0.8)',
     marginBottom: 10,
   },
   pickerContainer: {
