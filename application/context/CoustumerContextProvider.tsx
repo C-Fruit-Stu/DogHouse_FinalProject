@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 import { CoustumerType } from "../types/coustumer_type";
-import { POST, PUT } from "../api";
+import { DELETE, GET, POST, PUT } from "../api";
 export const CoustumerContext = createContext<any>({});
 
 
@@ -127,6 +127,34 @@ export default function CoustumerContextProvider({ children }: any) {
         setCurrentCoustumer(null);
     }
 
+    async function getAllCostumers() {
+        try {
+            let data = await GET('costumer/')
+            console.log("data   " + data.costumers.length);
+            if (data && data.costumers) {
+                setAllCoustumer(data.costumers);
+                return data.costumers;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async function DeleteCostumer(id: string) {
+        try {
+            console.log('id ====>>>', id)
+            let data = await POST('costumer/physic/delete/' + id,{})
+            console.log("data   " + data);
+            if (data) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            throw error
+        }
+    }
+
     return (
         <CoustumerContext.Provider
             value={{
@@ -139,7 +167,9 @@ export default function CoustumerContextProvider({ children }: any) {
                 UpdatePayment,
                 updateEmail,
                 updatepasswordCostumer,
-                LogOutCostumer
+                LogOutCostumer,
+                DeleteCostumer,
+                getAllCostumers
             }}>
             {children}
         </CoustumerContext.Provider>

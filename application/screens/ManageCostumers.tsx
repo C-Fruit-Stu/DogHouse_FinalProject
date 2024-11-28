@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, ActivityIndi
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider'; // Adjust path as needed
 import { CoustumerType } from '../types/coustumer_type';
+import { CoustumerContext } from '../context/CoustumerContextProvider';
 
 
 interface User {
@@ -14,7 +15,7 @@ const ManageCostumers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigation = useNavigation();
-  const { getAllCostumers, allCostumers, DeleteCostumer } = useContext(TrainerContext);
+  const { getAllCostumers, allCostumers, DeleteCostumer } = useContext(CoustumerContext);
 
   useEffect(() => {
     fetchUsers();
@@ -25,7 +26,7 @@ const ManageCostumers: React.FC = () => {
     try {
       const costumers = await getAllCostumers();
       if (costumers) {
-        setUsers(allCostumers);
+        setUsers(costumers);
       }
     } catch (error) {
       console.error("Failed to fetch costumers", error);
@@ -35,6 +36,7 @@ const ManageCostumers: React.FC = () => {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    console.log('userId: ', userId);
     const confirmDelete = await DeleteCostumer(userId);
     if (confirmDelete) {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));

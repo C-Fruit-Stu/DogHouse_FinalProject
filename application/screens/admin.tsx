@@ -11,35 +11,35 @@ const Admin = () => {
 
     <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('ManageTrainers')}>
-        <Icon name="people-outline" size={30} color="#2E86AB" />
+        onPress={() => navigation.navigate('Managetrainers')}>
+        <Icon name="people-outline" size={30} color="rgba(2,71,56,1)" />
         <Text style={styles.cardText}>Manage Trainers</Text>
     </TouchableOpacity>
 
     <TouchableOpacity
         style={styles.card}
         onPress={() => navigation.navigate('ManageCostumers')}>
-        <Icon name="people-outline" size={30} color="#2E86AB" />
+        <Icon name="people-outline" size={30} color="rgba(2,71,56,1)" />
         <Text style={styles.cardText}>Manage Costumers</Text>
     </TouchableOpacity>
 
     <TouchableOpacity
         style={styles.card}
         onPress={() => navigation.navigate('StatisticAdmin')}>
-        <Icon name="stats-chart-outline" size={30} color="#2E86AB" />
+        <Icon name="stats-chart-outline" size={30} color="rgba(2,71,56,1)" />
         <Text style={styles.cardText}>View Statistics</Text>
     </TouchableOpacity>
 
     <TouchableOpacity
         style={styles.card}
         onPress={() => navigation.navigate('AdminSettings')}>
-        <Icon name="settings-outline" size={30} color="#2E86AB" />
+        <Icon name="settings-outline" size={30} color="rgba(2,71,56,1)" />
         <Text style={styles.cardText}>Settings</Text>
     </TouchableOpacity>
     <TouchableOpacity
         style={styles.card}
         onPress={() => navigation.navigate('LogIn')}>
-        <Icon name="log-out-outline" size={30} color="#2E86AB" />
+        <Icon name="log-out-outline" size={30} color="rgba(2,71,56,1)" />
         <Text style={styles.cardText}>Logout</Text>
     </TouchableOpacity>
 </ScrollView>

@@ -172,33 +172,8 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function getAllCostumers() {
-        try {
-            let data = await GET('costumer/')
-            console.log("data   " + data.costumers.length);
-            if (data && data.costumers) {
-                setAllCostumers(data.costumers);
-                return data.costumers;
-            }
-            return false;
-        } catch (error) {
-            throw error
-        }
-    }
 
-    async function DeleteCostumer(id: string) {
-        try {
-            console.log('id ====>>>', id)
-            let data = await DELETE('costumer/physic/delete/' + id)
-            console.log("data" + data);
-            if (data) {
-                return true;
-            }
-            return false;
-        } catch (error) {
-            throw error
-        }
-    }
+
 
     async function updateEmailTrainer(trainer: TrainerType) {
         try {
@@ -307,9 +282,7 @@ export default function TrainerContextProvider({ children }: any) {
                 GetTrainerPosts,
                 getAllUsers,
                 DeleteTrainer,
-                getAllCostumers,
                 allCostumers,
-                DeleteCostumer,
                 AddCostumerToArr,
                 updateEmailTrainer,
                 UpdatePaymentTrainer,

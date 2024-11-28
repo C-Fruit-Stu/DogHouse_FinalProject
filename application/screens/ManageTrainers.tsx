@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider'; // Adjust path as needed
+import { TrainerType } from '../types/trainer_type';
 
 interface User {
   id: string;
@@ -10,7 +11,7 @@ interface User {
 }
 
 const ManageTrainers: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<TrainerType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigation = useNavigation();
   const { getAllUsers, DeleteTrainer } = useContext(TrainerContext);
@@ -18,13 +19,12 @@ const ManageTrainers: React.FC = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
   const fetchUsers = async () => {
     setLoading(true); // Show loading spinner
     try {
       const trainers = await getAllUsers();
       if (trainers) {
-        setUsers(trainers);
+        setUsers([...trainers]);
       }
     } catch (error) {
       console.error("Failed to fetch users", error);
@@ -34,10 +34,12 @@ const ManageTrainers: React.FC = () => {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    console.log('userId: ', userId);
     const confirmDelete = await DeleteTrainer(userId);
     if (confirmDelete) {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
       Alert.alert("User deleted", `User with ID: ${userId} has been deleted.`);
+      navigation.goBack();
     } else {
       Alert.alert("Error", `User with ID: ${userId} not found.`);
     }
@@ -68,7 +70,7 @@ const ManageTrainers: React.FC = () => {
             <Text style={styles.userName}>{item.first_name} {item.last_name}</Text>
             <TouchableOpacity
               style={styles.deleteButton}
-              onPress={() => handleDeleteUser(item.id)}
+              onPress={() => handleDeleteUser(item._id)}
             >
               <Text style={styles.deleteButtonText}>Delete</Text>
             </TouchableOpacity>
