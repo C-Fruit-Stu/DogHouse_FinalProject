@@ -46,15 +46,23 @@ export default function TrainingSchedules() {
         const fetchSchedules = async () => {
             if (clientType === 2) {
                 try {
+                    console.log('currentCoustumer: ', currentCoustumer);
+                    console.log('currentCoustumer?.HisTrainer: ', currentCoustumer?.HisTrainer);
+    
                     // Fetch schedules from the context function
                     const schedules = await getAllTrainersSchedules(currentCoustumer?.HisTrainer);
+    
                     if (schedules) {
-                        const schedulesWithTrainerInfo = schedules.result.map((schedule: TrainingSchedule) => ({
-                            ...schedule,
-                        }));
+                        // Ensure schedules with valid `price` are processed
+                        const schedulesWithTrainerInfo = schedules.result
+                            .filter((schedule: TrainingSchedule) => schedule.price !== undefined && schedule.price > 0)
+                            .map((schedule: TrainingSchedule) => ({
+                                ...schedule,
+                            }));
+    
                         await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedulesWithTrainerInfo));
                         setTrainersSchedules(schedulesWithTrainerInfo);
-
+    
                         // Mark dates in the calendar
                         const newMarkedDates: Record<string, { marked: boolean; dotColor: string }> = {};
                         schedulesWithTrainerInfo.forEach((schedule: TrainingSchedule) => {
@@ -67,9 +75,10 @@ export default function TrainingSchedules() {
                 }
             }
         };
-
+    
         fetchSchedules();
-    }, [clientType, currentCoustumer, getAllTrainersSchedules, trainersSchedules, markedDates, setMarkedDates, setTrainersSchedules, setDisplayedSchedules]);
+    }, [clientType, currentCoustumer, getAllTrainersSchedules]);
+    
 
     const handleDatePress = (date: any) => {
         setSelectedDate(date.dateString);

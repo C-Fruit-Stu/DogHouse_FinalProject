@@ -252,8 +252,9 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function getAllTrainersSchedules(HisTrainer: string[]) {
             console.log('info ====>>>', HisTrainer);
+            const payload = { HisTrainer };
         try{
-            let data = await POST('trainer/getallschedules', HisTrainer);
+            let data = await POST('trainer/getallschedules', payload);
             console.log("data" + data);
             if (data) {
                 return data;

@@ -272,23 +272,26 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
         const schedules = [];
 
         for (const trainerEmail of HisTrainer) {
-            const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
-
-            if (trainerSchedules) {
-                // Append trainer email to each schedule object
-                trainerSchedules.forEach((schedule: any) => {
-                    schedule.trainerEmail = trainerEmail;
-                });
-
-                schedules.push(...trainerSchedules);
+            try {
+                const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
+                if (trainerSchedules.length > 0) {
+                    trainerSchedules.forEach((schedule: any) => {
+                        schedule.trainerEmail = trainerEmail;
+                    });
+                    schedules.push(...trainerSchedules);
+                }
+            } catch (error) {
+                console.error(`Error fetching schedules for trainer ${trainerEmail}:`, error);
             }
         }
 
         return schedules;
     } catch (error) {
+        console.error("Error in getAllScheduleInfo:", error);
         throw error;
     }
 }
+
 
 export async function getUserByEmail(email: string) {
     try {

@@ -438,13 +438,15 @@ export async function getTrainerSchedulesByEmail(trainerEmail: string) {
                 { projection: { trainingSchedule: 1, _id: 0 } } // Retrieve only the `trainingSchedule` field
             );
 
-        return trainer?.trainingSchedule || [];
+        // Return only schedules with a valid `price`
+        return (trainer?.trainingSchedule || []).filter((schedule: any) => schedule.price !== undefined && schedule.price > 0);
     } catch (error) {
         throw error;
     } finally {
         await mongo.close();
     }
 }
+
 
 
 export async function Updateuserinfo(updateuser: TrainerUser) {
