@@ -46,12 +46,8 @@ export default function TrainingSchedules() {
         const fetchSchedules = async () => {
             if (clientType === 2) {
                 try {
-                    console.log('currentCoustumer: ' , currentCoustumer);
-                    console.log('currentCoustumer?.hisTrainers: ' , currentCoustumer?.HisTrainer);
-                    const info: string[] = currentCoustumer?.hisTrainer as string[];
-                    console.log('info: ' , info);
                     // Fetch schedules from the context function
-                    const schedules = await getAllTrainersSchedules(info);
+                    const schedules = await getAllTrainersSchedules(currentCoustumer?.HisTrainer);
                     if (schedules) {
                         const schedulesWithTrainerInfo = schedules.result.map((schedule: TrainingSchedule) => ({
                             ...schedule,
@@ -73,7 +69,7 @@ export default function TrainingSchedules() {
         };
 
         fetchSchedules();
-    }, [clientType,currentCoustumer,getAllTrainersSchedules,trainersSchedules,markedDates,setMarkedDates,setTrainersSchedules,setDisplayedSchedules]);
+    }, [clientType, currentCoustumer, getAllTrainersSchedules, trainersSchedules, markedDates, setMarkedDates, setTrainersSchedules, setDisplayedSchedules]);
 
     const handleDatePress = (date: any) => {
         setSelectedDate(date.dateString);

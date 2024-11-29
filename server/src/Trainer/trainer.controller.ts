@@ -397,7 +397,9 @@ export async function AddCostumerToArr(req: Request, res: Response) {
 
 export async function getAllTrainersSchedules(req: Request, res: Response) {
     try {
+        console.log("body: ",req.body)
         const { HisTrainer } = req.body;
+        console.log(HisTrainer);
         
         
         // Validate if HisTrainer exists and is an array
