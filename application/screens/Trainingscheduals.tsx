@@ -48,8 +48,10 @@ export default function TrainingSchedules() {
                 try {
                     console.log('currentCoustumer: ' , currentCoustumer);
                     console.log('currentCoustumer?.hisTrainers: ' , currentCoustumer?.HisTrainer);
+                    const info: string[] = currentCoustumer?.hisTrainer as string[];
+                    console.log('info: ' , info);
                     // Fetch schedules from the context function
-                    const schedules = await getAllTrainersSchedules(currentCoustumer?.hisTrainer);
+                    const schedules = await getAllTrainersSchedules(info);
                     if (schedules) {
                         const schedulesWithTrainerInfo = schedules.result.map((schedule: TrainingSchedule) => ({
                             ...schedule,

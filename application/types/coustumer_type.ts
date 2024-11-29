@@ -25,10 +25,11 @@ export type CoustumerType = {
             name?: string, // שם המאמן
             date: Date, // תאריך האימון
             time: string, // יש להזין מאיזה שעה לאיזה שעה
+            price?: number
         }
     ],
 
-    HisTrainer?: Partial<TrainerType>[]
+    HisTrainer?: string[]
 }
 
 
