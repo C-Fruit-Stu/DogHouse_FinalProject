@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
+import { CoustumerType } from '../types/coustumer_type';
 
 
 type RouteParams = {
@@ -29,10 +30,10 @@ type TrainingSchedule = {
     trainerEmail?: string; // Include trainer's email in the schedule
 };
 
-export default function CustomScreen() {
+export default function TrainingSchedules() {
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
     const clientType = route.params?.clientType;
-    const{currentCoustumer} = useContext(CoustumerContext);
+    const { currentCoustumer } = useContext(CoustumerContext);
     const { getAllTrainersSchedules } = useContext(TrainerContext);
 
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -45,9 +46,10 @@ export default function CustomScreen() {
         const fetchSchedules = async () => {
             if (clientType === 2) {
                 try {
-
+                    console.log('currentCoustumer: ' , currentCoustumer);
+                    console.log('currentCoustumer?.hisTrainers: ' , currentCoustumer?.HisTrainer);
                     // Fetch schedules from the context function
-                    const schedules = await getAllTrainersSchedules(currentCoustumer.hisTrainers); // Replace with your context call
+                    const schedules = await getAllTrainersSchedules(currentCoustumer?.hisTrainer);
                     if (schedules) {
                         const schedulesWithTrainerInfo = schedules.result.map((schedule: TrainingSchedule) => ({
                             ...schedule,
@@ -57,7 +59,7 @@ export default function CustomScreen() {
 
                         // Mark dates in the calendar
                         const newMarkedDates: Record<string, { marked: boolean; dotColor: string }> = {};
-                        schedulesWithTrainerInfo.forEach((schedule:TrainingSchedule) => {
+                        schedulesWithTrainerInfo.forEach((schedule: TrainingSchedule) => {
                             newMarkedDates[schedule.date] = { marked: true, dotColor: "green" };
                         });
                         setMarkedDates(newMarkedDates);
@@ -69,7 +71,7 @@ export default function CustomScreen() {
         };
 
         fetchSchedules();
-    }, [clientType]);
+    }, [clientType,currentCoustumer,getAllTrainersSchedules,trainersSchedules,markedDates,setMarkedDates,setTrainersSchedules,setDisplayedSchedules]);
 
     const handleDatePress = (date: any) => {
         setSelectedDate(date.dateString);

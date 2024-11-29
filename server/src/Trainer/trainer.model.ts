@@ -267,11 +267,11 @@ export async function CloseTraining(date: Date, name: string, time: string, pric
     }
 }
 
-export async function getAllScheduleInfo(HisTrainers: string[]) {
+export async function getAllScheduleInfo(HisTrainer: string[]) {
     try {
         const schedules = [];
 
-        for (const trainerEmail of HisTrainers) {
+        for (const trainerEmail of HisTrainer) {
             const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
 
             if (trainerSchedules) {
