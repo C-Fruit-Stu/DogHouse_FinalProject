@@ -430,6 +430,8 @@ export async function getTrainerSchedulesByEmail(trainerEmail: string) {
     const mongo = new MongoClient(DB_INFO.connection);
     try {
         await mongo.connect();
+
+        console.log(`Fetching schedules for trainer: ${trainerEmail}`); // Debugging log
         const trainer = await mongo
             .db(DB_INFO.name)
             .collection(DB_INFO.collection)
@@ -438,8 +440,16 @@ export async function getTrainerSchedulesByEmail(trainerEmail: string) {
                 { projection: { trainingSchedule: 1, _id: 0 } } // Only fetch the `trainingSchedule` field
             );
 
-        // Filter schedules to include only those with a valid price
-        return (trainer?.trainingSchedule || []).filter((schedule: any) => schedule.price !== undefined && schedule.price > 0);
+        console.log(`Fetched trainer data for ${trainerEmail}:`, trainer); // Debugging log
+
+        // Return only schedules with a valid `price`
+        const validSchedules = (trainer?.trainingSchedule || []).filter((schedule: any) => {
+            console.log(`Checking schedule validity:`, schedule); // Debugging log
+            return schedule.price !== undefined && schedule.price > 0;
+        });
+
+        console.log(`Valid schedules for ${trainerEmail}:`, validSchedules); // Debugging log
+        return validSchedules;
     } catch (error) {
         console.error("Error in getTrainerSchedulesByEmail:", error);
         throw error;
@@ -447,6 +457,7 @@ export async function getTrainerSchedulesByEmail(trainerEmail: string) {
         await mongo.close();
     }
 }
+
 
 
 
