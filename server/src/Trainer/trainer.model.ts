@@ -273,30 +273,25 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
 
         for (const trainerEmail of HisTrainer) {
             try {
-                console.log(`Fetching schedules for trainer: ${trainerEmail}`); // Debugging log
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
-
-                if (trainerSchedules && trainerSchedules.length > 0) {
+                if (trainerSchedules.length > 0) {
                     trainerSchedules.forEach((schedule: any) => {
-                        schedule.trainerEmail = trainerEmail; // Add trainerEmail to schedule
+                        schedule.trainerEmail = trainerEmail; // Add trainer email to schedule
                     });
-                    schedules.push(...trainerSchedules); // Add to the aggregated array
-                } else {
-                    console.warn(`No schedules found for trainer: ${trainerEmail}`);
+                    schedules.push(...trainerSchedules);
                 }
             } catch (error) {
-                console.error(`Error fetching schedules for trainer ${trainerEmail}:`, error);
-                // Continue to the next trainer even if there's an error for one trainer
+                console.error(`Error fetching schedules for ${trainerEmail}:`, error);
+                continue; // Continue fetching schedules for other trainers
             }
         }
 
-        console.log("Aggregated schedules:", schedules); // Debugging log
         return schedules;
     } catch (error) {
-        console.error("Error in getAllScheduleInfo:", error);
         throw error;
     }
 }
+
 
 
 
