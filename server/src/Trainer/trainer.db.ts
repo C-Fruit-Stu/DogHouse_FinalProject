@@ -330,6 +330,22 @@ export async function addonePost(email: string, post: Post) {
     }
 }
 
+export async function updateOnePost(email: string, post: Post) {
+    let mongo = new MongoClient(DB_INFO.connection);
+
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $set: { Posts: post } }
+        );
+    } catch (error) {
+        throw error;
+    } finally {
+        mongo.close();
+    }
+}
+
 export async function checkmongopostbyid(query: {}, projection = {}) {
     let mongo = new MongoClient(DB_INFO.connection);
 

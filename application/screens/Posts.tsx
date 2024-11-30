@@ -32,7 +32,7 @@ export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({});
   
-  const { currentTrainer, AddPost, GetTrainerPosts } = useContext(TrainerContext);
+  const { currentTrainer, AddPost, GetTrainerPosts,AddLike } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
@@ -96,7 +96,7 @@ export default function Posts() {
     }
   };
 
-  const handleLike = (postId: string) => {
+  const handleLike = (postId: string,title:string) => {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
         ? {
@@ -107,6 +107,15 @@ export default function Posts() {
         : post
     );
     setPosts(updatedPosts);
+    posts.map(async (post: Post) => {
+      if (post.id === postId) {
+        console.log("title",post.likes);
+        if(await AddLike(postId,post))
+        {
+          console.log("liked");
+        }
+      }
+    })
   };
 
   const handleComment = (postId: string, newComment: Comment) => {
@@ -193,7 +202,7 @@ export default function Posts() {
             <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
             <View style={styles.postActions}>
               <Text style={styles.likesCount}>Likes: {item.likes}</Text>
-              <TouchableOpacity onPress={() => handleLike(item.id)}>
+              <TouchableOpacity onPress={() => handleLike(item.id,item.title)}>
                 <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => toggleComments(item.id)}>

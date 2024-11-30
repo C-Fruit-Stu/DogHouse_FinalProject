@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, getAllScheduleInfo, CheckInfo, addPaymentToTotalIncome } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, getAllScheduleInfo, CheckInfo, addPaymentToTotalIncome, updatePost } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -200,6 +200,26 @@ export async function addNewPost(req: Request, res: Response) {
         res.status(500).json({ error })
     }
 }
+
+export async function updateonepost(req: Request, res: Response) {
+    let { id } = req.params
+    let { email, title, description, image, likes, likedByUser, comments, isOwner } = req.body
+
+   
+
+    if (!id || id.length < 24)
+        return res.status(400).json({ msg: "invalid id" })   
+
+    if (!email || !description)
+        return res.status(400).json({ msg: "invalid info" })
+
+    try {
+        let result = await updatePost(id, email, title, description, image, likes, likedByUser, comments, isOwner)
+        res.status(200).json({ result })
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+    }
 
 export async function getAllPostsById(req: Request, res: Response) {
     let { id } = req.params
@@ -457,6 +477,8 @@ export async function addPayment(req: Request, res: Response) {
         return res.status(500).json({ error });
     }
 }
+
+
 
 
 

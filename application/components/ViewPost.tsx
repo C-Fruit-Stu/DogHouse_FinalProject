@@ -40,6 +40,7 @@ const PostView: React.FC<PostViewProps> = ({ post, clientType, isOwner, onLike, 
         }).start();
       });
     }
+    console.log('Like button clicked',post);
   };
 
   const handleEdit = () => {

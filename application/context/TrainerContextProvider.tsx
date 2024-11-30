@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { TrainerType } from "../types/trainer_type";
+import { Post, TrainerType } from "../types/trainer_type";
 import { DELETE, GET, POST, PUT } from "../api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CoustumerType } from "../types/coustumer_type";
@@ -286,6 +286,20 @@ export default function TrainerContextProvider({ children }: any) {
             return false;
         }
     }
+
+    async function AddLike (postId: string,post:Post) {
+        try {
+            const data = await POST(`trainer/addlike/${postId}`,{post});
+            if (data) {
+                console.log("data" + data.post);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
     
     
     async function DeletePost() { }
@@ -314,7 +328,8 @@ export default function TrainerContextProvider({ children }: any) {
                 LogOut,
                 openNewTraining,
                 getAllTrainersSchedules,
-                addPayment
+                addPayment,
+                AddLike
             }}>
             {children}
         </TrainerContext.Provider>

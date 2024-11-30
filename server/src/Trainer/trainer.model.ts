@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo, getTrainerSchedulesByEmail, addPaymentToClient,removeScheduleByDate } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo, getTrainerSchedulesByEmail, addPaymentToClient,removeScheduleByDate, updateOnePost } from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -184,6 +184,15 @@ export async function addAnotherPost(email: string, id: string, title: string, d
     try {
         let post: Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
         return await addonePost(email, post);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function updatePost(email: string, id: string, title: string, description: string, image: string, likes: number, likedByUser: boolean, comments: Comment[], isOwner: boolean) {
+    try {
+        let post: Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
+        return await updateOnePost(email, post);
     } catch (error) {
         throw error;
     }
