@@ -422,6 +422,7 @@ export async function getAllTrainersSchedules(req: Request, res: Response) {
 
 
 
+
 export async function UpdateInfo(req: Request, res: Response) {
     let { id } = req.params;
     let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience, totalIncome } = req.body;

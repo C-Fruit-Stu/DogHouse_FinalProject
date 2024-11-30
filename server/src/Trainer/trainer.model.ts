@@ -276,14 +276,17 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
                 console.log(`Fetching schedules for trainer: ${trainerEmail}`); // Debugging log
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
 
-                if (trainerSchedules.length > 0) {
+                if (trainerSchedules && trainerSchedules.length > 0) {
                     trainerSchedules.forEach((schedule: any) => {
                         schedule.trainerEmail = trainerEmail; // Add trainerEmail to schedule
                     });
-                    schedules.push(...trainerSchedules);
+                    schedules.push(...trainerSchedules); // Add to the aggregated array
+                } else {
+                    console.warn(`No schedules found for trainer: ${trainerEmail}`);
                 }
             } catch (error) {
                 console.error(`Error fetching schedules for trainer ${trainerEmail}:`, error);
+                // Continue to the next trainer even if there's an error for one trainer
             }
         }
 
@@ -294,6 +297,7 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
         throw error;
     }
 }
+
 
 
 
