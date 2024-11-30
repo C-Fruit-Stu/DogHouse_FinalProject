@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Animated, Easing, Alert } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFormik } from 'formik';
 import { CoustumerType } from '../types/coustumer_type';
@@ -9,10 +9,10 @@ import { TrainerContext } from '../context/TrainerContextProvider';
 import { TrainerType } from '../types/trainer_type';
 
 export default function UpdateEmail() {
-  const { currentCoustumer,updateEmail } = useContext(CoustumerContext);
-  const { currentTrainer,updateEmailTrainer } = useContext(TrainerContext);
+  const { currentCoustumer, updateEmail } = useContext(CoustumerContext);
+  const { currentTrainer, updateEmailTrainer } = useContext(TrainerContext);
   const navigation = useNavigation();
-  
+  const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: { email: '' },
@@ -26,77 +26,60 @@ export default function UpdateEmail() {
       return errors;
     },
     onSubmit: async (values) => {
-      if (currentCoustumer != undefined) {
-        let costumer : CoustumerType ={
-          first_name: currentCoustumer.first_name,
-          last_name: currentCoustumer.last_name,
-          email: values.email,
-          password: currentCoustumer.password,
-          dob: currentCoustumer.dob,
-          location: currentCoustumer.location,
-          image: currentCoustumer.image,
-          phone: currentCoustumer.phone,
-          clientType: currentCoustumer.clientType,
-          payment: currentCoustumer.payment,
-          dogBreed: currentCoustumer.dogBreed,
-          update_details: currentCoustumer.update_details,
-          stayLogIn: currentCoustumer.stayLogIn,
-        }
-        console.log(costumer);
+      setIsLoading(true); // Start loading animation
+      try {
         if (currentCoustumer) {
-          console.log('TrainerInfo:', JSON.stringify(costumer, null, 2)); 
-          if(await updateEmail(costumer)) {
-            Alert.alert("Success", "Email updated successfully");
+          const customer: CoustumerType = {
+            ...currentCoustumer,
+            email: values.email,
+          };
+          if (await updateEmail(customer)) {
+            Alert.alert('Success', 'Email updated successfully');
             navigation.navigate('BackToPre');
           }
-      } 
-      }
-      console.log(currentTrainer != undefined || currentTrainer != null);
-        if (currentTrainer) {
-          let trainerupdate : TrainerType = {
-            first_name: currentTrainer.first_name,
-            last_name: currentTrainer.last_name,
-            email: values.email,
-            password: currentTrainer.password,
-            dob: currentTrainer.dob,
-            location: currentTrainer.location,
-            experience: currentTrainer.experience,
-            image: currentTrainer.image,
-            phone: currentTrainer.phone,
-            clientType: currentTrainer.clientType,
-            stayLogIn: currentTrainer.stayLogIn,
-            payment: currentTrainer.payment,
-            id: currentTrainer._id,
-            totalIncome: currentTrainer.totalIncome
-          }
-          if (currentTrainer) {
-            if(await updateEmailTrainer(trainerupdate)) {
-              Alert.alert("Success", "Email updated successfully");
-              navigation.navigate('BackToPre');
-            } 
-          }   
         }
+        if (currentTrainer) {
+          const trainerUpdate: TrainerType = {
+            ...currentTrainer,
+            email: values.email,
+          };
+          if (await updateEmailTrainer(trainerUpdate)) {
+            Alert.alert('Success', 'Email updated successfully');
+            navigation.navigate('BackToPre');
+          }
+        }
+      } catch (error) {
+        Alert.alert('Error', 'Failed to update email');
+      } finally {
+        setIsLoading(false); // Stop loading animation
+      }
     },
   });
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Animated.View style={[styles.container, { opacity: 1 }]}>
-        <Text style={styles.header}>Update Your Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Your Email"
-          onChangeText={formik.handleChange('email')}
-          onBlur={formik.handleBlur('email')}
-          value={formik.values.email}
-        />
-        {formik.touched.email && formik.errors.email && (
-          <Text style={styles.error}>{formik.errors.email}</Text>
+      <View style={styles.container}>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#022438" />
+        ) : (
+          <>
+            <Text style={styles.header}>Update Your Email</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Your Email"
+              onChangeText={formik.handleChange('email')}
+              onBlur={formik.handleBlur('email')}
+              value={formik.values.email}
+            />
+            {formik.touched.email && formik.errors.email && (
+              <Text style={styles.error}>{formik.errors.email}</Text>
+            )}
+            <TouchableOpacity onPress={formik.handleSubmit} style={styles.button}>
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+          </>
         )}
-        <TouchableOpacity onPress={formik.handleSubmit} style={styles.button}>
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      </View>
     </SafeAreaView>
   );
 }
