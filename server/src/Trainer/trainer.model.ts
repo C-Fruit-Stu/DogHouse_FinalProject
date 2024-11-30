@@ -269,14 +269,16 @@ export async function CloseTraining(date: Date, name: string, time: string, pric
 
 export async function getAllScheduleInfo(HisTrainer: string[]) {
     try {
-        const schedules = [];
+        const schedules: any[] = [];
 
         for (const trainerEmail of HisTrainer) {
             try {
+                console.log(`Fetching schedules for trainer: ${trainerEmail}`); // Debugging log
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
+
                 if (trainerSchedules.length > 0) {
                     trainerSchedules.forEach((schedule: any) => {
-                        schedule.trainerEmail = trainerEmail; // Add trainerEmail for identification
+                        schedule.trainerEmail = trainerEmail; // Add trainerEmail to schedule
                     });
                     schedules.push(...trainerSchedules);
                 }
@@ -285,12 +287,14 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
             }
         }
 
+        console.log("Aggregated schedules:", schedules); // Debugging log
         return schedules;
     } catch (error) {
         console.error("Error in getAllScheduleInfo:", error);
         throw error;
     }
 }
+
 
 
 

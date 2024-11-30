@@ -254,15 +254,21 @@ export default function TrainerContextProvider({ children }: any) {
         const payload = { HisTrainer };
         try {
             const data = await POST('trainer/getallschedules', payload);
-            console.log("Fetched schedules data:", data);
-            if (data) {
-                return data;
+    
+            console.log("Fetched schedules from server:", data); // Debugging log
+    
+            if (data && data.result) {
+                return data.result;
+            } else {
+                console.warn("No schedules found for the given trainers.");
+                return [];
             }
-            return false;
         } catch (error) {
             console.error("Error in getAllTrainersSchedules:", error);
+            return [];
         }
     }
+    
     
     async function addPayment(email: string, date: string, price: number) {
         try {
