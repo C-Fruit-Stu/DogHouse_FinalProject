@@ -32,7 +32,7 @@ export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({});
   
-  const { currentTrainer, AddPost, GetTrainerPosts,AddLike } = useContext(TrainerContext);
+  const { currentTrainer, AddPost, GetTrainerPosts,AddLike,DeletePost } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
@@ -54,6 +54,23 @@ export default function Posts() {
           setPosts([]);
         }
       } else if (clientType === 1 && currentTrainer?.Posts) {
+        setPosts([...currentTrainer.Posts]);
+        let allposts : Post[] = []
+        if(posts != null || posts != undefined){
+          for(let i=0;i<currentTrainer.length;i++){
+            console.log(posts[i])
+            for(let j=0;j<currentTrainer.length;j++){
+              console.log(posts[i])
+              if(posts[i].likes != posts[j].likes && posts[i].id == posts[j].id){
+                console.log(posts[i])
+                if(posts[i].likes > posts[j].likes){
+                  console.log(posts[i])
+                  allposts.push(posts[i])
+                }
+              }
+            }
+          }
+        }
         setPosts(currentTrainer.Posts);
       }
     };
@@ -117,9 +134,10 @@ export default function Posts() {
             }
         }
         if(currentTrainer != undefined || currentTrainer != null){
-          if(await AddLike(currentTrainer._id,post))
+          if(await AddPost(post))
             {
-              console.log("liked");
+              if(await DeletePost(title))
+                console.log("liked");
             }
         }
       }

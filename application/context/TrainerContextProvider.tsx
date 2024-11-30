@@ -286,9 +286,12 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function AddLike (postId: string,post:Post) {
         try {
-            const data = await POST(`trainer/addlike/${postId}`,{post});
+            let posts = JSON.stringify(post);
+            console.log("post" + posts);
+            console.log("postId" + postId);
+            const data = await POST(`trainer/addlike/${postId}`,{posts});
             if (data) {
-                console.log("data" + data.post);
+                console.log("data" + data);
                 return true;
             }
             return false;
@@ -299,7 +302,20 @@ export default function TrainerContextProvider({ children }: any) {
     }
     
     
-    async function DeletePost() { }
+    async function DeletePost(title: string) {
+        try {
+            const data = await POST(`trainer/deletepost/${title}`, { title });
+            if (data) {
+                console.log("data" + data);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+
+     }
+    }
     async function EditPost() { }
 
     return (

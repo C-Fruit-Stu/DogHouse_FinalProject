@@ -183,6 +183,7 @@ export async function checkUpdate(card: string, date: string, ccv: string, id: O
 export async function addAnotherPost(email: string, id: string, title: string, description: string, image: string, likes: number, likedByUser: boolean, comments: Comment[], isOwner: boolean) {
     try {
         let post: Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
+        console.log(post)
         return await addonePost(email, post);
     } catch (error) {
         throw error;

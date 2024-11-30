@@ -189,6 +189,7 @@ export async function updatePayment(req: Request, res: Response) {
 
 
 export async function addNewPost(req: Request, res: Response) {
+    console.log(req.body)
     let { email, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body
     if (!title || !description)
         return res.status(400).json({ msg: "invalid info" })
