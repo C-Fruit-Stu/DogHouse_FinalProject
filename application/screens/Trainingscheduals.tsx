@@ -45,21 +45,27 @@ export default function TrainingSchedules() {
         if (typeof date === 'string' && date.includes('-')) {
             return date; // Already normalized (YYYY-MM-DD)
         }
-        if (typeof date === 'string') {
-            const [day, month, year] = date.split('/');
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        if (typeof date === 'string' && date.includes('/')) {
+            const parts = date.split('/');
+            if (parts.length === 3) {
+                const [day, month, year] = parts;
+                return `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            } else {
+                console.warn("Unexpected date format, unable to split into day/month/year:", date);
+            }
         }
         console.warn("Unexpected date format:", date);
         return ""; // Return an empty string for unexpected formats
     };
+    
 
 
-    // useEffect(() => {
-    //     const clearStorageOnReload = async () => {
-    //         await AsyncStorage.removeItem("TrainersSchedules");
-    //     };
-    //     clearStorageOnReload();
-    // }, []);
+
+        const clearStorageOnReload = async () => {
+            await AsyncStorage.removeItem("TrainersSchedules");
+            clearStorageOnReload();
+        };
+    
 
     useEffect(() => {
         const fetchSchedules = async () => {
@@ -156,29 +162,29 @@ export default function TrainingSchedules() {
                     onPress: async () => {
                         try {
                             // Add payment to trainer and delete the schedule from his db
-                            console.log('info from frontend: ',schedule.trainerEmail, normalizeDate(schedule.trainerEmail), schedule.price);
-                            await addPayment(schedule.trainerEmail, normalizeDate(schedule.trainerEmail), schedule.price);
+                            console.log('info from frontend: ',schedule);
+                            await addPayment(schedule.trainerEmail, schedule.date, schedule.price);
 
                             console.log("schedule ====>>>", schedule);
                             // Add schedule to customer currentCostumer and db
                             // await addSchedule(schedule);
 
                             // Update AsyncStorage (filter only the accepted schedule)
-                            const updatedSchedules = trainersSchedules.filter(
-                                (item) =>
-                                    item.date !== schedule.date ||
-                                    item.trainerEmail !== schedule.trainerEmail
-                            );
-                            await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(updatedSchedules));
-                            setTrainersSchedules(updatedSchedules);
+                            // const updatedSchedules = trainersSchedules.filter(
+                            //     (item) =>
+                            //         item.date !== schedule.date ||
+                            //         item.trainerEmail !== schedule.trainerEmail
+                            // );
+                            // await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(updatedSchedules));
+                            // setTrainersSchedules(updatedSchedules);
 
-                            // Mark selected date blue
-                            setMarkedDates((prev) => ({
-                                ...prev,
-                                [normalizeDate(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
-                            }));
-
-                            console.log("Updated TrainersSchedules:", updatedSchedules);
+                            // // Mark selected date blue
+                            // setMarkedDates((prev) => ({
+                            //     ...prev,
+                            //     [normalizeDate(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
+                            // }));
+                            // console.log("Updated TrainersSchedules:", updatedSchedules);
+                            // clearStorageOnReload();
                         } catch (error) {
                             console.error("Error processing action:", error);
                             Alert.alert("Error", "Something went wrong while processing the action.");

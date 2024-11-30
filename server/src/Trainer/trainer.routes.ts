@@ -41,6 +41,6 @@ TrainerRouter
 
     // שולף אימונים
     .post('/getallschedules',getAllTrainersSchedules)
-    .post('./addpayment',addPayment)
+    .post('/addpayment',addPayment)
 
 export default TrainerRouter;
