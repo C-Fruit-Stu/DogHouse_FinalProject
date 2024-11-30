@@ -400,20 +400,27 @@ export async function getAllTrainersSchedules(req: Request, res: Response) {
         const { HisTrainer } = req.body;
 
         if (!Array.isArray(HisTrainer) || HisTrainer.length === 0) {
+            console.error("Invalid HisTrainer array:", HisTrainer);
             return res.status(400).json({ msg: "Invalid or missing HisTrainer array" });
         }
 
+        console.log("Fetching schedules for trainers:", HisTrainer); // Debugging log
+
         const result = await getAllScheduleInfo(HisTrainer);
 
-        if (result.length === 0) {
+        if (!result || result.length === 0) {
+            console.warn("No schedules found for given trainers.");
             return res.status(404).json({ msg: "No schedules found" });
         }
 
-        res.status(200).json({ result });
+        console.log("Aggregated schedules sent to client:", result); // Debugging log
+        return res.status(200).json({ result });
     } catch (error) {
-        res.status(500).json({ error });
+        console.error("Error in getAllTrainersSchedules controller:", error);
+        return res.status(500).json({ error });
     }
 }
+
 
 
 

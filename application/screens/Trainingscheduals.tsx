@@ -61,7 +61,6 @@ export default function TrainingSchedules() {
                 const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
     
                 if (storedSchedules) {
-                    // Load schedules from AsyncStorage
                     console.log("Loaded TrainersSchedules from AsyncStorage:", JSON.parse(storedSchedules));
                     schedules = JSON.parse(storedSchedules).map((schedule: any) => ({
                         ...schedule,
@@ -82,16 +81,18 @@ export default function TrainingSchedules() {
                     setMarkedDates(markedDates);
                 }
     
+                // If no data in AsyncStorage or data is incomplete, fetch from server
                 if (clientType === 2 && (!storedSchedules || schedules.length === 0)) {
-                    // Fetch schedules from the server
+                    console.log("Fetching schedules from server...");
                     const response = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
+    
                     if (response && response.length > 0) {
                         schedules = response.map((schedule: any) => ({
                             ...schedule,
-                            date: normalizeDate(schedule.date), // Normalize date
+                            date: normalizeDate(schedule.date),
                         }));
     
-                        // Save schedules to AsyncStorage
+                        // Save fetched schedules to AsyncStorage
                         await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedules));
                         console.log("New TrainersSchedules saved to AsyncStorage:", schedules);
     
@@ -107,10 +108,11 @@ export default function TrainingSchedules() {
                             };
                         });
                         setMarkedDates(markedDates);
+                    } else {
+                        console.warn("No schedules found for customer.");
                     }
                 }
     
-                // Add current customer's accepted schedules to the calendar
                 if (currentCoustumer?.trainingSchedule[0].name !== "") {
                     const customerDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
                     currentCoustumer.trainingSchedule.forEach((schedule: any) => {
