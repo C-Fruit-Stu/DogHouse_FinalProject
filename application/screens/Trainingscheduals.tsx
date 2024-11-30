@@ -115,7 +115,7 @@ export default function TrainingSchedules() {
                     onPress: async () => {
                         try {
                             // Add payment to trainer
-                            await addPayment(schedule.trainerEmail, schedule.price);
+                            await addPayment(schedule.trainerEmail,schedule.date, schedule.price);
 
                             // Add schedule to customer context
                             await addSchedule(schedule);

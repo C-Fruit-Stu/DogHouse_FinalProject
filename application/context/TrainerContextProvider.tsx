@@ -264,9 +264,9 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function addPayment(email: string, price: number) {
+    async function addPayment(email: string, date: string, price: number) {
         try {
-            const payload = { email, price };
+            const payload = { email, date, price };
             let data = await POST('trainer/addpayment', payload);
             console.log("data" + data);
             if (data) {
