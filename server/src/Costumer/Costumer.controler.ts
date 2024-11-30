@@ -173,28 +173,22 @@ export async function addTrainer(req: Request, res: Response) {
 }
 
 export async function addSchedule(req: Request, res: Response) {
-    let { schedule } = req.body;
-    console.log('IncomingControler schedule:', schedule); 
-    const scheduleInfo: trainingSchedule = {
-        email: schedule.email,
-        name: schedule.name,
-        date: schedule.date,
-        time: schedule.time,
-        price: schedule.price
-    }
-    console.log('Incoming schedule:', schedule);
+    const schedule = req.body;
 
-    if (!schedule) {
-        return res.status(400).json({ msg: "invalid info" });
+    if (!schedule || !schedule.email || !schedule.date || !schedule.name) {
+        return res.status(400).json({ msg: "Invalid schedule information" });
     }
+
     try {
-        let result = await addScheduleToArray(scheduleInfo);
-        if (!result) {
-            res.status(400).json({ msg: "there is no trainer" });
+        const result = await addScheduleToArray(schedule);
+        if (result.modifiedCount > 0) {
+            return res.status(200).json({ msg: "Schedule added successfully" });
         } else {
-            res.status(200).json({ result });
+            return res.status(400).json({ msg: "Failed to add schedule" });
         }
     } catch (error) {
-        res.status(500).json({ error });
+        console.error("Error in addSchedule:", error);
+        return res.status(500).json({ error });
     }
 }
+

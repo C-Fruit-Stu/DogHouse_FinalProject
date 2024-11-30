@@ -266,17 +266,21 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function addPayment(email: string, date: string, price: number) {
         try {
-            const payload = { email, date, price }; 
-            let data = await POST('trainer/addpayment', payload);
-            console.log("data:", data);
+            const payload = { email, date, price };
+            console.log("Payload sent to server:", payload);
+            let data = await POST("trainer/addpayment", payload);
+            console.log("Response from server:", data);
+    
             if (data) {
-                return true;
+                return true; // Payment and schedule removal succeeded
             }
             return false;
         } catch (error) {
-            console.log(error);
+            console.error("Error in addPayment:", error);
+            return false;
         }
     }
+    
     
     async function DeletePost() { }
     async function EditPost() { }

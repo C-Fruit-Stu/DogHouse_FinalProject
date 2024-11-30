@@ -147,17 +147,21 @@ export async function addTrainerEmail(TrainerEmail: string, CostumerEmail: strin
     }
 }
 
-export function addScheduleToArrayDB(scheduleInfo: trainingSchedule) {
-    let mongo = new MongoClient(DB_INFO.connection);
+export async function addScheduleToArrayDB(schedule: trainingSchedule) {
+    const mongo = new MongoClient(DB_INFO.connection);
     try {
-        return mongo.db(DB_INFO.name).collection(DB_INFO.Collection).updateOne(
-            { email: scheduleInfo.email },
-            { $addToSet: { schedule: scheduleInfo } }
-        );
+        await mongo.connect();
+        return await mongo
+            .db(DB_INFO.name)
+            .collection(DB_INFO.Collection)
+            .updateOne(
+                { email: schedule.email },
+                { $addToSet: { trainingSchedule: schedule } } // Append to trainingSchedule array
+            );
     } catch (error) {
         throw error;
-    }
-    finally {
+    } finally {
         mongo.close();
     }
 }
+

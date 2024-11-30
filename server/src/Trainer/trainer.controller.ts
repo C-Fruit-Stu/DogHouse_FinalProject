@@ -448,11 +448,16 @@ export async function addPayment(req: Request, res: Response) {
     }
     try {
         const result = await addPaymentToTotalIncome(email, price, date);
-        return res.status(200).json({ msg: "Payment added and schedule removed", result });
+        if (result.modifiedCount > 0) {
+            return res.status(200).json({ msg: "Payment added and schedule removed", result });
+        } else {
+            return res.status(400).json({ msg: "No schedule found to remove or invalid trainer email" });
+        }
     } catch (error) {
         console.error("Error in addPayment:", error);
         return res.status(500).json({ error });
     }
 }
+
 
 

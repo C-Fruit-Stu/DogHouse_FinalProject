@@ -318,16 +318,15 @@ export async function CheckInfo(id: string, first_name: string, last_name: strin
 
 export async function addPaymentToTotalIncome(email: string, price: number, date: string) {
     try {
-        // Add payment to the trainer's totalIncome in db
+        // Increment total income
         await addPaymentToClient(email, price);
 
-        // Remove schedule from db
-        const scheduleRemoval = await removeScheduleByDate(email, date);
-
-        return scheduleRemoval;
+        // Remove the schedule
+        return await removeScheduleByDate(email, date);
     } catch (error) {
         throw error;
     }
 }
+
 
 

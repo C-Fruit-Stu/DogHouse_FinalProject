@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { CoustumerType } from "../types/coustumer_type";
+import { CoustumerType,trainingSchedule } from "../types/coustumer_type";
 import { DELETE, GET, POST, PUT } from "../api";
 export const CoustumerContext = createContext<any>({});
 
@@ -156,25 +156,25 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
-    async function addSchedule(schedule: any) {
-        if (schedule.email === "") {
-            return false;
-        }
+    async function addSchedule(schedule: trainingSchedule) {
         try {
-            console.log('schedule ====>>>', schedule);
-            let data = await POST('costumer/addSchedule', schedule);
-            console.log('Response from server:', data.costumer);
-            if (data) {
-                console.log('data.costumer ====>>>', data.costumer);
+            console.log("Adding schedule to customer:", schedule);
+            let data = await POST("costumer/addSchedule", schedule);
+            console.log("Response from server:", data);
+    
+            if (data?.costumer) {
+                console.log("Updated customer data:", data.costumer);
                 setCurrentCoustumer(data.costumer);
                 return true;
             }
             return false;
         } catch (error) {
-            console.log('Error in addTrainer:', error);
+            console.error("Error in addSchedule:", error);
             return false;
         }
     }
+    
+
     return (
         <CoustumerContext.Provider
             value={{
