@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Animated,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { TrainerContext } from '../context/TrainerContextProvider';
@@ -28,54 +29,44 @@ export default function Posts() {
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [posts, setPosts] = useState<Post[]>([]); // Default to an empty array
+  const [posts, setPosts] = useState<Post[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({});
-
+  
   const { currentTrainer, AddPost, GetTrainerPosts } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
-  const trainerEmail = route.params?.trainerEmail;
 
   useEffect(() => {
     const loadPosts = async () => {
       if (clientType === 2) {
         try {
           if (currentCoustumer?.HisTrainer?.length) {
-            // Fetch posts for each trainer in HisTrainers
             const fetchedPostsPromises = currentCoustumer.HisTrainer.map((email: string) =>
-              GetTrainerPosts(email).catch((error: Error) => {
-                console.error(`Error fetching posts for ${email}:`, error);
-                return []; // Return empty array if fetching fails for a trainer
-              })
+              GetTrainerPosts(email).catch(() => [])
             );
-  
+
             const allFetchedPosts = await Promise.all(fetchedPostsPromises);
-            const flattenedPosts = allFetchedPosts.flat(); // Combine all posts into a single array
-            const validPosts = flattenedPosts.filter((post: Post) => post.description !== ''); // Filter out invalid posts
-            setPosts(validPosts);
-          } else {
-            console.log("No trainers found in HisTrainer.");
-            setPosts([]); // No trainers to fetch posts for
+            const flattenedPosts = allFetchedPosts.flat();
+            setPosts(flattenedPosts.filter((post: Post) => post.description !== ''));
           }
         } catch (error) {
-          console.error('Error fetching trainer posts:', error);
           setPosts([]);
         }
       } else if (clientType === 1 && currentTrainer?.Posts) {
         setPosts(currentTrainer.Posts);
       }
     };
-  
+
     loadPosts();
-  }, [clientType, trainerEmail, currentTrainer, currentCoustumer]);
+  }, [clientType, currentTrainer, currentCoustumer]);
 
   const toggleModal = () => setModalVisible(!modalVisible);
-
+  
   const handleSubmit = () => {
     if (clientType === 1 && AddPost) {
       const newPost: Post = {
-        id: Math.random().toString(), // Ensure unique ID for the new post
+        id: Math.random().toString(),
         title: input1,
         description: input2,
         image: imageUri || undefined,
@@ -109,10 +100,10 @@ export default function Posts() {
     const updatedPosts = posts.map((post: Post) =>
       post.id === postId
         ? {
-          ...post,
-          likedByUser: !post.likedByUser,
-          likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
-        }
+            ...post,
+            likedByUser: !post.likedByUser,
+            likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
+          }
         : post
     );
     setPosts(updatedPosts);
@@ -140,12 +131,33 @@ export default function Posts() {
     setPosts(updatedPosts);
   };
 
+  const modalOpacity = new Animated.Value(0);
+  useEffect(() => {
+    if (modalVisible) {
+      Animated.timing(modalOpacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(modalOpacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [modalVisible]);
+
   return (
     <View style={styles.container}>
-      {clientType === 1 && <Button title="Add Post" onPress={toggleModal} color="#1DBD7B" />}
+      {clientType === 1 && (
+        <TouchableOpacity style={styles.addPostButton} onPress={toggleModal}>
+          <Text style={styles.addPostText}>Add Post</Text>
+        </TouchableOpacity>
+      )}
 
-      <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
+      <Modal visible={modalVisible} transparent={true} animationType="fade">
+        <Animated.View style={[styles.modalContainer, { opacity: modalOpacity }]}>
           <View style={styles.modalContent}>
             <TextInput
               placeholder="Title"
@@ -159,17 +171,23 @@ export default function Posts() {
               onChangeText={setInput2}
               style={styles.input}
             />
-            <Button title="Pick an Image" onPress={pickImage} />
+            <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
+              <Text style={styles.imageButtonText}>Pick an Image</Text>
+            </TouchableOpacity>
             {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
-            <Button title="Submit" onPress={handleSubmit} />
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+              <Text style={styles.closeText}>Close</Text>
+            </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
       </Modal>
 
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.id} // Ensure unique key for each post
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
             <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
@@ -189,8 +207,9 @@ export default function Posts() {
                       {clientType === 1 && (
                         <TouchableOpacity
                           onPress={() => handleDeleteComment(item.id, comment.id)}
+                          style={styles.deleteCommentButton}
                         >
-                          <Text style={styles.deleteComment}>Delete</Text>
+                          <Text style={styles.deleteCommentText}>Delete</Text>
                         </TouchableOpacity>
                       )}
                     </View>
@@ -199,7 +218,7 @@ export default function Posts() {
                     placeholder="Add a comment"
                     onSubmitEditing={(event) =>
                       handleComment(item.id, {
-                        id: Math.random().toString(), // Ensure unique ID for new comment
+                        id: Math.random().toString(),
                         text: event.nativeEvent.text,
                         userId: 'currentUserId',
                       })
@@ -211,26 +230,78 @@ export default function Posts() {
             </View>
           </View>
         )}
-        ListEmptyComponent={<Text>No posts available for this trainer</Text>} // Display if no posts
+        ListEmptyComponent={<Text style={styles.noPostsText}>No posts available for this trainer</Text>}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, paddingTop:50 },
-  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
-  modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10 },
-  imagePreview: { width: 100, height: 100, marginVertical: 10 },
-  postContainer: { marginBottom: 20, backgroundColor: '#fff', padding: 10, borderRadius: 10, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 5 },
-  postActions: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
-  likesCount: { fontSize: 16 },
-  likeButton: { color: 'blue', marginBottom: 10 },
-  commentsCount: { fontSize: 16 },
-  commentsSection: { maxHeight: 100, marginTop: 10 },
-  commentContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
-  commentText: { fontSize: 14 },
-  deleteComment: { color: 'red' },
-  commentInput: { borderWidth: 1, borderColor: '#ccc', padding: 5, marginTop: 10 },
+  container: { flex: 1, padding: 20, backgroundColor: '#f0f0f5' },
+  addPostButton: {
+    backgroundColor: '#1DBD7B',
+    padding: 15,
+    borderRadius: 30,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  addPostText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 25,
+    borderRadius: 10,
+    width: '80%',
+    elevation: 5,
+  },
+  input: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    marginBottom: 15,
+    paddingLeft: 10,
+    borderRadius: 5,
+  },
+  imageButton: {
+    backgroundColor: '#1DBD7B',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  imageButtonText: { color: '#fff' },
+  imagePreview: { width: '100%', height: 200, marginBottom: 15 },
+  submitButton: {
+    backgroundColor: '#1DBD7B',
+    padding: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  submitText: { color: '#fff', fontWeight: 'bold' },
+  closeButton: { alignItems: 'center' },
+  closeText: { color: '#999', fontSize: 16 },
+  postContainer: { backgroundColor: '#fff', marginBottom: 20, borderRadius: 10, padding: 15 },
+  postActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  likesCount: { fontSize: 14, color: '#777' },
+  likeButton: { color: '#1DBD7B', fontSize: 14, fontWeight: 'bold' },
+  commentsCount: { fontSize: 14, color: '#777' },
+  commentsSection: { marginTop: 15 },
+  commentContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  commentText: { fontSize: 14, color: '#555' },
+  deleteCommentButton: { backgroundColor: '#ff4d4d', padding: 5, borderRadius: 5 },
+  deleteCommentText: { color: '#fff', fontSize: 12 },
+  commentInput: {
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 10,
+    height: 40,
+  },
+  noPostsText: { fontSize: 16, color: '#777', textAlign: 'center' },
 });
