@@ -301,16 +301,17 @@ export async function getUserByEmail(email: string) {
     }
 }
 
-// export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string) {
-//     try {
-//         let updateuser : TrainerUser = {
-//             _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
-//             experience
-//         };
-//         console.log(updateuser)
-//         return await Updateuserinfo(updateuser)
-//     } catch (error) {
-//         throw error;
-//     }
-// }
+export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string, totalIncome : number) {
+    try {
+        let updateuser : TrainerUser = {
+            _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
+            experience,
+            totalIncome
+        };
+        console.log(updateuser)
+        return await Updateuserinfo(updateuser)
+    } catch (error) {
+        throw error;
+    }
+}
 

@@ -66,7 +66,8 @@ export default function UpdateEmail() {
             clientType: currentTrainer.clientType,
             stayLogIn: currentTrainer.stayLogIn,
             payment: currentTrainer.payment,
-            id: currentTrainer._id
+            id: currentTrainer._id,
+            totalIncome: currentTrainer.totalIncome
           }
           if (currentTrainer) {
             if(await updateEmailTrainer(trainerupdate)) {

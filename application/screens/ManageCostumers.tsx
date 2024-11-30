@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#007AFF',
+    color: '#02713A',
   },
 });
 

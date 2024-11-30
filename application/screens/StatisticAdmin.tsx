@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { TrainerContext } from '../context/TrainerContextProvider'; // Adjust path as needed
 import { TrainerType } from '../types/trainer_type';
@@ -11,38 +11,42 @@ const StatisticAdmin: React.FC = () => {
   const [costumers, setAllCostumers] = useState<CoustumerType[]>([]);
   const navigation = useNavigation();
   const { getAllUsers } = useContext(TrainerContext);
-  const { getAllCostumers, allCostumers } = useContext(CoustumerContext);
-  const [totalearning,settotalearning] = useState(0);
-  const [ totalsessions, settotalsessions] = useState(0);
-
-
-
+  const { getAllCostumers } = useContext(CoustumerContext);
+  const [totalearning, settotalearning] = useState(0);
+  const [totalsessions, settotalsessions] = useState(0);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    fetchTrainers();
-    fetchCostumers();
-    console.log('users: ', trainers);
-    console.log('costumers: ', costumers);
-    console.log('totalearning: ', totalearning);
+    const fetchData = async () => {
+      try {
+        await fetchTrainers();
+        await fetchCostumers();
+      } catch (error) {
+        console.error('Error loading data', error);
+      } finally {
+        setIsLoading(false); // Stop loading spinner
+      }
+    };
+
+    fetchData();
   }, []);
-  const fetchTrainers = async () => { // Show loading spinner
+
+  const fetchTrainers = async () => {
     try {
       const trainers = await getAllUsers();
       if (trainers) {
         setalltrainers([...trainers]);
-        let sum = 0
+        let sum = 0;
         for (let i = 0; i < trainers.length; i++) {
-          if(trainers[i].trainingSchedule){
+          if (trainers[i].trainingSchedule) {
             sum += trainers[i].trainingSchedule.length;
           }
         }
         settotalsessions(sum);
-        console.log('totalearning: ', totalearning);
-        console.log('totalsessions: ', totalsessions);
       }
     } catch (error) {
-      console.error("Failed to fetch users", error);
-    } 
+      console.error('Failed to fetch users', error);
+    }
   };
 
   const fetchCostumers = async () => {
@@ -52,31 +56,41 @@ const StatisticAdmin: React.FC = () => {
         setAllCostumers(costumers);
       }
     } catch (error) {
-      console.error("Failed to fetch costumers", error);
-    } 
+      console.error('Failed to fetch costumers', error);
+    }
   };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>⬅ Back</Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#02713A" />
+          <Text style={styles.loaderText}>Loading data...</Text>
+        </View>
+      ) : (
+        <>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Text style={styles.backButtonText}>⬅ Back</Text>
+          </TouchableOpacity>
 
-      <Text style={styles.title}>Statistics</Text>
-      <ScrollView>
-        <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Total Users: {trainers.length + costumers.length}</Text>
-        </View>
-        <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Active Trainers: {trainers.length || 0}</Text>
-        </View>
-        <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Total Sessions: {totalsessions || 0}</Text>
-        </View>
-        <View style={styles.statContainer}>
-          <Text style={styles.statTitle}>Total Earnings: ${trainers.length || 0}</Text>
-        </View>
-        {/* Add more statistics as needed */}
-      </ScrollView>
+          <Text style={styles.title}>Statistics</Text>
+          <ScrollView>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>Total Users: {trainers.length + costumers.length}</Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>Active Trainers: {trainers.length || 0}</Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>Total Sessions: {totalsessions || 0}</Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>Total Earnings: ${totalearning || 0}</Text>
+            </View>
+            {/* Add more statistics as needed */}
+          </ScrollView>
+        </>
+      )}
     </View>
   );
 };
@@ -120,6 +134,16 @@ const styles = StyleSheet.create({
   statTitle: {
     fontSize: 18,
     color: '#333',
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loaderText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#02713A',
   },
 });
 

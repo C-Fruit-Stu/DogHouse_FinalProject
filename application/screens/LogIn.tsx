@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import React, { useState, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -73,7 +73,7 @@ export default function LogIn() {
         const isCoustumerLoggedIn = await LogInCoustumer({ ...loggingUser });
         console.log("isCoustumerLoggedIn: ", isCoustumerLoggedIn)
         if (!isCoustumerLoggedIn) {
-          alert('Wrong email or password');
+          Alert.alert("Error", "Wrong Username or Password");
           resetForm();
           setLoading(false); // Stop loading if login fails
           setFormKey(formKey + 1); // Increment the key to force re-render

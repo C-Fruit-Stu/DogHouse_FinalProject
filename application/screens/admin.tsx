@@ -29,13 +29,6 @@ const Admin = () => {
         <Icon name="stats-chart-outline" size={30} color="rgba(2,71,56,1)" />
         <Text style={styles.cardText}>View Statistics</Text>
     </TouchableOpacity>
-
-    <TouchableOpacity
-        style={styles.card}
-        onPress={() => navigation.navigate('AdminSettings')}>
-        <Icon name="settings-outline" size={30} color="rgba(2,71,56,1)" />
-        <Text style={styles.cardText}>Settings</Text>
-    </TouchableOpacity>
     <TouchableOpacity
         style={styles.card}
         onPress={() => navigation.navigate('LogIn')}>
