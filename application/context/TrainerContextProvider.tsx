@@ -266,11 +266,10 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function addPayment(email: string, date: string, price: number) {
         try {
-            const payload = { email, date, price };
+            const payload = { email, date, price }; 
             let data = await POST('trainer/addpayment', payload);
-            console.log("data" + data);
+            console.log("data:", data);
             if (data) {
-                setCurrentTrainer(data.trainer);
                 return true;
             }
             return false;
@@ -278,6 +277,7 @@ export default function TrainerContextProvider({ children }: any) {
             console.log(error);
         }
     }
+    
     async function DeletePost() { }
     async function EditPost() { }
 

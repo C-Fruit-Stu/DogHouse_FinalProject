@@ -22,6 +22,7 @@ export type CoustumerType = {
     stayLogIn?: boolean;
     trainingSchedule?:[
         {
+            email?:string,
             name?: string, // שם המאמן
             date: Date, // תאריך האימון
             time: string, // יש להזין מאיזה שעה לאיזה שעה

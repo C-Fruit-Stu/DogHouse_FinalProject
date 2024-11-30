@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray,getAllScheduleInfo, CheckInfo,addPaymentToTotalIncome } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, getAllScheduleInfo, CheckInfo, addPaymentToTotalIncome } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -397,11 +397,11 @@ export async function AddCostumerToArr(req: Request, res: Response) {
 
 export async function getAllTrainersSchedules(req: Request, res: Response) {
     try {
-        console.log("body: ",req.body)
+        console.log("body: ", req.body)
         const { HisTrainer } = req.body;
         console.log(HisTrainer);
-        
-        
+
+
         // Validate if HisTrainer exists and is an array
         if (!Array.isArray(HisTrainer)) {
             console.error("HisTrainer is not defined or not an array:", HisTrainer);
@@ -425,7 +425,7 @@ export async function getAllTrainersSchedules(req: Request, res: Response) {
 
 export async function UpdateInfo(req: Request, res: Response) {
     let { id } = req.params;
-    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience,totalIncome } = req.body;
+    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience, totalIncome } = req.body;
     if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
@@ -441,14 +441,18 @@ export async function UpdateInfo(req: Request, res: Response) {
 }
 
 export async function addPayment(req: Request, res: Response) {
-    let { email, price } = req.body
-    if (!email || !price)
-        return res.status(400).json({ msg: "invalid info" })
+    const { email, date, price } = req.body;
 
+    if (!email || !price || !date) {
+        return res.status(400).json({ msg: "Invalid information provided" });
+    }
     try {
-        let result = await addPaymentToTotalIncome(email, price)
-        res.status(200).json({ result })
+        const result = await addPaymentToTotalIncome(email, price, date);
+        return res.status(200).json({ msg: "Payment added and schedule removed", result });
     } catch (error) {
-        res.status(500).json({ error }) 
+        console.error("Error in addPayment:", error);
+        return res.status(500).json({ error });
     }
 }
+
+

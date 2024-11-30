@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo,getTrainerSchedulesByEmail,addPaymentToClient } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo, getTrainerSchedulesByEmail, addPaymentToClient,removeScheduleByDate } from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -301,9 +301,9 @@ export async function getUserByEmail(email: string) {
     }
 }
 
-export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string, totalIncome : number) {
+export async function CheckInfo(id: string, first_name: string, last_name: string, email: string, phone: string, dob: string, image: string, update_details: string, clientType: string, location: string, password: string, payment: credit, experience: string, totalIncome: number) {
     try {
-        let updateuser : TrainerUser = {
+        let updateuser: TrainerUser = {
             _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
             experience,
             totalIncome
@@ -315,10 +315,19 @@ export async function CheckInfo(id :string, first_name : string, last_name : str
     }
 }
 
-export async function addPaymentToTotalIncome(email: string, price: number) {
+
+export async function addPaymentToTotalIncome(email: string, price: number, date: string) {
     try {
-        return await addPaymentToClient(email, price);
+        // Add payment to the trainer's totalIncome in db
+        await addPaymentToClient(email, price);
+
+        // Remove schedule from db
+        const scheduleRemoval = await removeScheduleByDate(email, date);
+
+        return scheduleRemoval;
     } catch (error) {
         throw error;
     }
 }
+
+

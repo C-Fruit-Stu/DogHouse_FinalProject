@@ -27,7 +27,7 @@ export async function findUsers(query = {}, projection = {}) {
 }
 
 
-export async function userinID(query : {}) {
+export async function userinID(query: {}) {
     let mongo = new MongoClient(DB_INFO.connection)
     try {
         await mongo.connect();
@@ -38,7 +38,7 @@ export async function userinID(query : {}) {
     } catch (error) {
         throw error
     }
-    finally{
+    finally {
         mongo.close();
     }
 }
@@ -470,10 +470,11 @@ export async function addPaymentToClient(email: string, price: number) {
     let mongo = new MongoClient(DB_INFO.connection);
     try {
         await mongo.connect();
-        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { email },
-            { $inc: { totalIncome: price } }
-        );
+        return await mongo
+            .db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+                { email },
+                { $inc: { totalIncome: price } }
+            );
     } catch (error) {
         throw error;
     } finally {
@@ -481,4 +482,20 @@ export async function addPaymentToClient(email: string, price: number) {
     }
 }
 
+
+export async function removeScheduleByDate(email: string, date: string) {
+    let mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $pull: { trainingSchedule: { date } } as any }
+        );
+    } catch (error) {
+        console.error("Error in removeScheduleByDate:", error);
+        throw error;
+    } finally {
+        mongo.close();
+    }
+}
 

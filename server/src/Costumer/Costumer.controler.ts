@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Costumer } from "./Costumer.type";
+import { Costumer,trainingSchedule } from "./Costumer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
-import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer,addEmailToArray } from "./Costumer.model";
+import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer, addEmailToArray,addScheduleToArray } from "./Costumer.model";
 import { ObjectId } from "mongodb";
 
 export async function GetAllCostumrs(req: Request, res: Response) {
@@ -9,7 +9,7 @@ export async function GetAllCostumrs(req: Request, res: Response) {
         let costumers = await getallcostumers1();
         if (costumers?.length == 0)
             res.status(200).json({ message: 'no costumers inside', costumers })
-        else{
+        else {
             res.status(200).json({ costumers })
         }
     } catch (error) {
@@ -46,14 +46,14 @@ export async function LoginCostumer(req: Request, res: Response) {
             res.status(200).json({ user });
         else
             res.status(400).json({ message: 'invalid password' });
- 
+
     } catch (error) {
         res.status(500).json({ error });
     }
 }
 
 export async function RegisterCostumer(req: Request, res: Response) {
-    let { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment,trainingSchedule,HisTrainer } = req.body;
+    let { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment, trainingSchedule, HisTrainer } = req.body;
 
     if (!first_name || !last_name || !password || !email) {
         return res.status(400).json({ message: 'missing info' });
@@ -61,8 +61,8 @@ export async function RegisterCostumer(req: Request, res: Response) {
 
     try {
         password = encryptPassword(password);
-        console.log("This is Server / Controler  "+password);
-        let customer: Costumer = { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment,trainingSchedule,HisTrainer };
+        console.log("This is Server / Controler  " + password);
+        let customer: Costumer = { first_name, last_name, email, password, dob, location, image, phone, update_details, clientType, payment, trainingSchedule, HisTrainer };
 
         let result = await regCostumer(customer);
 
@@ -153,7 +153,7 @@ export async function logicDeleteUser(req: Request, res: Response) {
 
 
 export async function addTrainer(req: Request, res: Response) {
-    let { TrainerEmail,CostumerEmail } = req.body;    
+    let { TrainerEmail, CostumerEmail } = req.body;
     console.log('Incoming email:', TrainerEmail); // Log the incoming email to check formatting
 
     if (!TrainerEmail) {
@@ -161,7 +161,34 @@ export async function addTrainer(req: Request, res: Response) {
     }
 
     try {
-        let result = await addEmailToArray(TrainerEmail,CostumerEmail);
+        let result = await addEmailToArray(TrainerEmail, CostumerEmail);
+        if (!result) {
+            res.status(400).json({ msg: "there is no trainer" });
+        } else {
+            res.status(200).json({ result });
+        }
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+}
+
+export async function addSchedule(req: Request, res: Response) {
+    let { schedule } = req.body;
+    console.log('IncomingControler schedule:', schedule); 
+    const scheduleInfo: trainingSchedule = {
+        email: schedule.email,
+        name: schedule.name,
+        date: schedule.date,
+        time: schedule.time,
+        price: schedule.price
+    }
+    console.log('Incoming schedule:', schedule);
+
+    if (!schedule) {
+        return res.status(400).json({ msg: "invalid info" });
+    }
+    try {
+        let result = await addScheduleToArray(scheduleInfo);
         if (!result) {
             res.status(400).json({ msg: "there is no trainer" });
         } else {

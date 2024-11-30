@@ -114,10 +114,11 @@ export default function TrainingSchedules() {
                     text: "Confirm",
                     onPress: async () => {
                         try {
-                            // Add payment to trainer
+                            // Add payment to trainer and delete the schedule from his db
                             await addPayment(schedule.trainerEmail,schedule.date, schedule.price);
 
-                            // Add schedule to customer context
+                            console.log("schedule ====>>>", schedule);
+                            // Add schedule to customer currentCostumer and db
                             await addSchedule(schedule);
 
                             // Update AsyncStorage
