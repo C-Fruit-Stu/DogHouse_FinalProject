@@ -341,7 +341,7 @@ export async function addPaymentToTotalIncome(email: string, price: number, date
         await addPaymentToClient(email, price);
 
         // Remove the schedule
-        return await removeScheduleByDate(email, date);
+        // return await removeScheduleByDate(email, date);
     } catch (error) {
         throw error;
     }

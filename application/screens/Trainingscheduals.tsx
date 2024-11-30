@@ -52,52 +52,29 @@ export default function TrainingSchedules() {
         console.warn("Unexpected date format:", date);
         return ""; // Return an empty string for unexpected formats
     };
-    
 
-    useEffect(() => {
-        const clearStorageOnReload = async () => {
-            await AsyncStorage.removeItem("TrainersSchedules");
-        };
-        clearStorageOnReload();
-    }, []);
-    
+
+    // useEffect(() => {
+    //     const clearStorageOnReload = async () => {
+    //         await AsyncStorage.removeItem("TrainersSchedules");
+    //     };
+    //     clearStorageOnReload();
+    // }, []);
+
     useEffect(() => {
         const fetchSchedules = async () => {
             try {
-                let schedules: TrainingSchedule[] = [];
-                const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
-    
-                if (storedSchedules) {
-                    schedules = JSON.parse(storedSchedules).map((schedule: any) => ({
-                        ...schedule,
-                        date: normalizeDate(schedule.date), // Normalize date
-                    }));
-    
-                    setTrainersSchedules(schedules);
-    
-                    // Mark dates in the calendar
-                    const markedDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
-                    schedules.forEach((schedule: any) => {
-                        markedDates[schedule.date] = {
-                            marked: true,
-                            dotColor: "green",
-                            selectedColor: "green",
-                        };
-                    });
-                    setMarkedDates(markedDates);
-                }
-    
                 if (clientType === 2) {
-                    const response = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
+                    let schedules: TrainingSchedule[] = [];
+                    const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
     
-                    if (response && response.length > 0) {
-                        schedules = response.map((schedule: any) => ({
+                    if (storedSchedules) {
+                        // Load and normalize schedules from AsyncStorage
+                        console.log("Loaded TrainersSchedules from AsyncStorage:", storedSchedules);
+                        schedules = JSON.parse(storedSchedules).map((schedule: any) => ({
                             ...schedule,
-                            date: normalizeDate(schedule.date),
+                            date: normalizeDate(schedule.date), // Normalize date
                         }));
-    
-                        // Save fetched schedules to AsyncStorage
-                        await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedules));
     
                         setTrainersSchedules(schedules);
     
@@ -112,10 +89,39 @@ export default function TrainingSchedules() {
                         });
                         setMarkedDates(markedDates);
                     } else {
-                        console.warn("No schedules found for customer.");
+                        // Fetch schedules from the server if not in AsyncStorage
+                        console.log("Fetching schedules from server...");
+                        const response = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
+    
+                        if (response && response.length > 0) {
+                            schedules = response.map((schedule: any) => ({
+                                ...schedule,
+                                date: normalizeDate(schedule.date),
+                            }));
+    
+                            // Save fetched schedules to AsyncStorage
+                            await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedules));
+                            console.log("New TrainersSchedules saved to AsyncStorage:", schedules);
+    
+                            setTrainersSchedules(schedules);
+    
+                            // Mark dates in the calendar
+                            const markedDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
+                            schedules.forEach((schedule: any) => {
+                                markedDates[schedule.date] = {
+                                    marked: true,
+                                    dotColor: "green",
+                                    selectedColor: "green",
+                                };
+                            });
+                            setMarkedDates(markedDates);
+                        } else {
+                            console.warn("No schedules found for customer.");
+                        }
                     }
                 }
     
+                // Mark customer-specific schedules (if any)
                 if (currentCoustumer?.trainingSchedule[0].name !== "") {
                     const customerDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
                     currentCoustumer.trainingSchedule.forEach((schedule: any) => {
@@ -135,8 +141,9 @@ export default function TrainingSchedules() {
         fetchSchedules();
     }, [clientType, currentCoustumer, getAllTrainersSchedules]);
     
-    
-    
+
+
+
 
     const handleAction = async (schedule: TrainingSchedule) => {
         Alert.alert(
@@ -149,11 +156,12 @@ export default function TrainingSchedules() {
                     onPress: async () => {
                         try {
                             // Add payment to trainer and delete the schedule from his db
-                            await addPayment(schedule.trainerEmail, normalizeDate(schedule.date), schedule.price);
+                            console.log('info from frontend: ',schedule.trainerEmail, normalizeDate(schedule.trainerEmail), schedule.price);
+                            await addPayment(schedule.trainerEmail, normalizeDate(schedule.trainerEmail), schedule.price);
 
                             console.log("schedule ====>>>", schedule);
                             // Add schedule to customer currentCostumer and db
-                            await addSchedule(schedule);
+                            // await addSchedule(schedule);
 
                             // Update AsyncStorage (filter only the accepted schedule)
                             const updatedSchedules = trainersSchedules.filter(
