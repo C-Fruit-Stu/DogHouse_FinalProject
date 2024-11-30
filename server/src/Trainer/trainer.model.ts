@@ -189,10 +189,12 @@ export async function addAnotherPost(email: string, id: string, title: string, d
     }
 }
 
-export async function updatePost(email: string, id: string, title: string, description: string, image: string, likes: number, likedByUser: boolean, comments: Comment[], isOwner: boolean) {
+export async function updatePost( id: string, title: string, description: string, image: string, likes: number, likedByUser: boolean, comments: Comment[], isOwner: boolean) {
     try {
         let post: Post = { id, title, description, image, likes, likedByUser, comments, isOwner }
-        return await updateOnePost(email, post);
+        console.log(post)
+        console.log(id)
+        return await updateOnePost(post,id);
     } catch (error) {
         throw error;
     }

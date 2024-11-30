@@ -107,12 +107,20 @@ export default function Posts() {
         : post
     );
     setPosts(updatedPosts);
-    posts.map(async (post: Post) => {
+    console.log(updatedPosts[1].likes);
+    updatedPosts.map(async (post: Post) => {
       if (post.id === postId) {
-        console.log("title",post.likes);
-        if(await AddLike(postId,post))
-        {
-          console.log("liked");
+        if(currentCoustumer != undefined || currentCoustumer != null){
+          if(await AddLike(currentCoustumer.id,post))
+            {
+              console.log("liked");
+            }
+        }
+        if(currentTrainer != undefined || currentTrainer != null){
+          if(await AddLike(currentTrainer._id,post))
+            {
+              console.log("liked");
+            }
         }
       }
     })

@@ -203,18 +203,18 @@ export async function addNewPost(req: Request, res: Response) {
 
 export async function updateonepost(req: Request, res: Response) {
     let { id } = req.params
-    let { email, title, description, image, likes, likedByUser, comments, isOwner } = req.body
+    let { title, description, image, likes, likedByUser, comments, isOwner } = req.body
 
-   
+    console.log(likes)
 
     if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })   
 
-    if (!email || !description)
+    if (!title || !description)
         return res.status(400).json({ msg: "invalid info" })
 
     try {
-        let result = await updatePost(id, email, title, description, image, likes, likedByUser, comments, isOwner)
+        let result = await updatePost(id, title, description, image, likes, likedByUser, comments, isOwner)
         res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ error })
