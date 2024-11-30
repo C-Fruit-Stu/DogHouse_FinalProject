@@ -273,17 +273,13 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
 
         for (const trainerEmail of HisTrainer) {
             try {
-                console.log(`Processing trainer: ${trainerEmail}`); // Debugging log
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
 
                 if (trainerSchedules && trainerSchedules.length > 0) {
-                    console.log(`Schedules for ${trainerEmail}:`, trainerSchedules); // Debugging log
                     trainerSchedules.forEach((schedule: any) => {
                         schedule.trainerEmail = trainerEmail; // Add trainer email to schedule
                     });
                     schedules.push(...trainerSchedules);
-                } else {
-                    console.log(`No schedules found for ${trainerEmail}`); // Debugging log
                 }
             } catch (error) {
                 console.error(`Error fetching schedules for ${trainerEmail}:`, error);

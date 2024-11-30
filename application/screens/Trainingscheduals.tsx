@@ -55,13 +55,19 @@ export default function TrainingSchedules() {
     
 
     useEffect(() => {
+        const clearStorageOnReload = async () => {
+            await AsyncStorage.removeItem("TrainersSchedules");
+        };
+        clearStorageOnReload();
+    }, []);
+    
+    useEffect(() => {
         const fetchSchedules = async () => {
             try {
                 let schedules: TrainingSchedule[] = [];
                 const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
     
                 if (storedSchedules) {
-                    console.log("Loaded TrainersSchedules from AsyncStorage:", JSON.parse(storedSchedules));
                     schedules = JSON.parse(storedSchedules).map((schedule: any) => ({
                         ...schedule,
                         date: normalizeDate(schedule.date), // Normalize date
@@ -81,9 +87,7 @@ export default function TrainingSchedules() {
                     setMarkedDates(markedDates);
                 }
     
-                // If no data in AsyncStorage or data is incomplete, fetch from server
-                if (clientType === 2 && (!storedSchedules || schedules.length === 0)) {
-                    console.log("Fetching schedules from server...");
+                if (clientType === 2) {
                     const response = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
     
                     if (response && response.length > 0) {
@@ -94,7 +98,6 @@ export default function TrainingSchedules() {
     
                         // Save fetched schedules to AsyncStorage
                         await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedules));
-                        console.log("New TrainersSchedules saved to AsyncStorage:", schedules);
     
                         setTrainersSchedules(schedules);
     
