@@ -282,27 +282,29 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
 
         for (const trainerEmail of HisTrainer) {
             try {
-                console.log(`Fetching schedules for trainer: ${trainerEmail}`); // Debugging log
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
 
-                if (trainerSchedules.length > 0) {
+                if (trainerSchedules && trainerSchedules.length > 0) {
                     trainerSchedules.forEach((schedule: any) => {
-                        schedule.trainerEmail = trainerEmail; // Add trainerEmail to schedule
+                        schedule.trainerEmail = trainerEmail; // Add trainer email to schedule
                     });
                     schedules.push(...trainerSchedules);
                 }
             } catch (error) {
-                console.error(`Error fetching schedules for trainer ${trainerEmail}:`, error);
+                console.error(`Error fetching schedules for ${trainerEmail}:`, error);
             }
         }
 
-        console.log("Aggregated schedules:", schedules); // Debugging log
+        console.log("Final aggregated schedules:", schedules); // Debugging log
         return schedules;
     } catch (error) {
         console.error("Error in getAllScheduleInfo:", error);
         throw error;
     }
 }
+
+
+
 
 
 

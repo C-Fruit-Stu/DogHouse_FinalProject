@@ -253,10 +253,7 @@ export default function TrainerContextProvider({ children }: any) {
     async function getAllTrainersSchedules(HisTrainer: string[]) {
         const payload = { HisTrainer };
         try {
-            const data = await POST('trainer/getallschedules', payload);
-    
-            console.log("Fetched schedules from server:", data); // Debugging log
-    
+            const data = await POST('trainer/getallschedules', payload);    
             if (data && data.result) {
                 return data.result;
             } else {
