@@ -156,6 +156,25 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
+    async function addSchedule(schedule: any) {
+        if(schedule.email ===""){
+            return false;
+        }
+        try {
+            console.log('schedule ====>>>', schedule);
+            let data = await POST('costumer/addSchedule', schedule); 
+            console.log('Response from server:', data.costumer);
+            if (data) {
+                console.log('data.costumer ====>>>', data.costumer);
+                setCurrentCoustumer(data.costumer);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Error in addTrainer:', error);
+            return false;
+        }
+    }
     return (
         <CoustumerContext.Provider
             value={{

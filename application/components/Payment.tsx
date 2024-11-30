@@ -154,7 +154,8 @@ export default function Payment() {
             {
               name: '',
               date: new Date(),
-              time: ''
+              time: '',
+              price: 0
             }
           ],
           HisTrainer: []

@@ -251,9 +251,8 @@ export default function TrainerContextProvider({ children }: any) {
     }
 
     async function getAllTrainersSchedules(HisTrainer: string[]) {
-            console.log('info ====>>>', HisTrainer);
-            const payload = { HisTrainer };
-        try{
+        const payload = { HisTrainer };
+        try {
             let data = await POST('trainer/getallschedules', payload);
             console.log("data" + data);
             if (data) {
@@ -265,6 +264,20 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
+    async function addPayment(email: string, price: number) {
+        try {
+            const payload = { email, price };
+            let data = await POST('trainer/addpayment', payload);
+            console.log("data" + data);
+            if (data) {
+                setCurrentTrainer(data.trainer);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+        }
+    }
     async function DeletePost() { }
     async function EditPost() { }
 
@@ -290,7 +303,8 @@ export default function TrainerContextProvider({ children }: any) {
                 UpdatePassword,
                 LogOut,
                 openNewTraining,
-                getAllTrainersSchedules
+                getAllTrainersSchedules,
+                addPayment
             }}>
             {children}
         </TrainerContext.Provider>
