@@ -466,4 +466,19 @@ export async function Updateuserinfo(updateuser: TrainerUser) {
     }
 }
 
+export async function addPaymentToClient(email: string, price: number) {
+    let mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $inc: { totalIncome: price } }
+        );
+    } catch (error) {
+        throw error;
+    } finally {
+        mongo.close();
+    }
+}
+
 
