@@ -435,17 +435,19 @@ export async function getTrainerSchedulesByEmail(trainerEmail: string) {
             .collection(DB_INFO.collection)
             .findOne(
                 { email: trainerEmail },
-                { projection: { trainingSchedule: 1, _id: 0 } } // Retrieve only the `trainingSchedule` field
+                { projection: { trainingSchedule: 1, _id: 0 } } // Only fetch the `trainingSchedule` field
             );
 
-        // Return only schedules with a valid `price`
+        // Filter schedules to include only those with a valid price
         return (trainer?.trainingSchedule || []).filter((schedule: any) => schedule.price !== undefined && schedule.price > 0);
     } catch (error) {
+        console.error("Error in getTrainerSchedulesByEmail:", error);
         throw error;
     } finally {
         await mongo.close();
     }
 }
+
 
 
 

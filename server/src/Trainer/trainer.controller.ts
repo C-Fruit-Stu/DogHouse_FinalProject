@@ -397,31 +397,28 @@ export async function AddCostumerToArr(req: Request, res: Response) {
 
 export async function getAllTrainersSchedules(req: Request, res: Response) {
     try {
-        console.log("body: ", req.body)
         const { HisTrainer } = req.body;
-        console.log(HisTrainer);
 
-
-        // Validate if HisTrainer exists and is an array
         if (!Array.isArray(HisTrainer)) {
-            console.error("HisTrainer is not defined or not an array:", HisTrainer);
+            console.error("HisTrainer is invalid:", HisTrainer);
             return res.status(400).json({ msg: "Invalid or missing HisTrainer array" });
         }
 
         if (HisTrainer.length === 0) {
-            console.error("HisTrainer is an empty array");
-            return res.status(400).json({ msg: "Empty array" });
+            console.error("HisTrainer array is empty");
+            return res.status(400).json({ msg: "Empty HisTrainer array" });
         }
+
         console.log("HisTrainer received:", HisTrainer);
 
         const result = await getAllScheduleInfo(HisTrainer);
         return res.status(200).json({ result });
-
     } catch (error) {
         console.error("Error in getAllTrainersSchedules controller:", error);
         return res.status(500).json({ error });
     }
 }
+
 
 export async function UpdateInfo(req: Request, res: Response) {
     let { id } = req.params;

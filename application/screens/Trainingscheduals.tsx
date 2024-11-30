@@ -40,21 +40,34 @@ export default function TrainingSchedules() {
     const [trainersSchedules, setTrainersSchedules] = useState<TrainingSchedule[]>([]);
     const [displayedSchedules, setDisplayedSchedules] = useState<TrainingSchedule[]>([]);
 
+    // Normalize date format
+    const normalizeDate = (date: string) => {
+        if (date.includes('-')) return date; // Already normalized
+        const [day, month, year] = date.split('/');
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    };
+
     useEffect(() => {
         const fetchSchedules = async () => {
             try {
                 const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
-                let schedules = [];
+                let schedules: TrainingSchedule[] = [];
 
                 if (storedSchedules) {
                     console.log("Loaded TrainersSchedules from AsyncStorage:", JSON.parse(storedSchedules));
                     schedules = JSON.parse(storedSchedules);
 
+                    // Normalize dates
+                    schedules = schedules.map((schedule) => ({
+                        ...schedule,
+                        date: normalizeDate(schedule.date),
+                    }));
+
                     setTrainersSchedules(schedules);
 
                     // Mark dates in the calendar
                     const newMarkedDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
-                    schedules.forEach((schedule: TrainingSchedule) => {
+                    schedules.forEach((schedule) => {
                         newMarkedDates[schedule.date] = {
                             marked: true,
                             dotColor: "green",
@@ -67,6 +80,12 @@ export default function TrainingSchedules() {
                     const response = await getAllTrainersSchedules(currentCoustumer?.HisTrainer);
                     schedules = response?.result || [];
 
+                    // Normalize dates
+                    schedules = schedules.map((schedule) => ({
+                        ...schedule,
+                        date: normalizeDate(schedule.date),
+                    }));
+
                     await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedules));
                     console.log("New TrainersSchedules saved to AsyncStorage:", schedules);
 
@@ -74,7 +93,7 @@ export default function TrainingSchedules() {
 
                     // Mark dates in the calendar
                     const newMarkedDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
-                    schedules.forEach((schedule: TrainingSchedule) => {
+                    schedules.forEach((schedule) => {
                         newMarkedDates[schedule.date] = {
                             marked: true,
                             dotColor: "green",
@@ -87,8 +106,8 @@ export default function TrainingSchedules() {
                 // Include currentCoustumer's accepted schedules
                 if (currentCoustumer?.trainingSchedule[0].name !== "") {
                     const customerDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
-                    currentCoustumer.trainingSchedule.forEach((schedule: TrainingSchedule) => {
-                        customerDates[schedule.date] = {
+                    currentCoustumer.trainingSchedule.forEach((schedule: any) => {
+                        customerDates[normalizeDate(schedule.date)] = {
                             marked: true,
                             dotColor: "blue",
                             selectedColor: "blue",
@@ -115,21 +134,25 @@ export default function TrainingSchedules() {
                     onPress: async () => {
                         try {
                             // Add payment to trainer and delete the schedule from his db
-                            await addPayment(schedule.trainerEmail,schedule.date, schedule.price);
+                            await addPayment(schedule.trainerEmail, normalizeDate(schedule.date), schedule.price);
 
                             console.log("schedule ====>>>", schedule);
                             // Add schedule to customer currentCostumer and db
                             await addSchedule(schedule);
 
-                            // Update AsyncStorage
-                            const updatedSchedules = trainersSchedules.filter((item) => item !== schedule);
+                            // Update AsyncStorage (filter only the accepted schedule)
+                            const updatedSchedules = trainersSchedules.filter(
+                                (item) =>
+                                    item.date !== schedule.date ||
+                                    item.trainerEmail !== schedule.trainerEmail
+                            );
                             await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(updatedSchedules));
                             setTrainersSchedules(updatedSchedules);
 
                             // Mark selected date blue
                             setMarkedDates((prev) => ({
                                 ...prev,
-                                [schedule.date]: { marked: true, dotColor: "blue", selectedColor: "blue" },
+                                [normalizeDate(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
                             }));
 
                             console.log("Updated TrainersSchedules:", updatedSchedules);
@@ -144,8 +167,9 @@ export default function TrainingSchedules() {
     };
 
     const handleDatePress = (date: any) => {
-        setSelectedDate(date.dateString);
-        const filteredSchedules = trainersSchedules.filter((schedule) => schedule.date === date.dateString);
+        const normalizedDate = normalizeDate(date.dateString);
+        setSelectedDate(normalizedDate);
+        const filteredSchedules = trainersSchedules.filter((schedule) => schedule.date === normalizedDate);
         setDisplayedSchedules(filteredSchedules);
         setModalVisible(true);
     };

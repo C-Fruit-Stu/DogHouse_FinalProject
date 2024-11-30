@@ -276,7 +276,7 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
                 if (trainerSchedules.length > 0) {
                     trainerSchedules.forEach((schedule: any) => {
-                        schedule.trainerEmail = trainerEmail;
+                        schedule.trainerEmail = trainerEmail; // Add trainerEmail for identification
                     });
                     schedules.push(...trainerSchedules);
                 }
@@ -291,6 +291,7 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
         throw error;
     }
 }
+
 
 
 export async function getUserByEmail(email: string) {

@@ -253,17 +253,17 @@ export default function TrainerContextProvider({ children }: any) {
     async function getAllTrainersSchedules(HisTrainer: string[]) {
         const payload = { HisTrainer };
         try {
-            let data = await POST('trainer/getallschedules', payload);
-            console.log("data" + data);
+            const data = await POST('trainer/getallschedules', payload);
+            console.log("Fetched schedules data:", data);
             if (data) {
                 return data;
             }
             return false;
         } catch (error) {
-            console.log(error);
+            console.error("Error in getAllTrainersSchedules:", error);
         }
     }
-
+    
     async function addPayment(email: string, date: string, price: number) {
         try {
             const payload = { email, date, price };
