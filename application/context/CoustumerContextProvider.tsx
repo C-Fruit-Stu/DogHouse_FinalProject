@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { CoustumerType } from "../types/coustumer_type";
+import { CoustumerType,trainingSchedule } from "../types/coustumer_type";
 import { DELETE, GET, POST, PUT } from "../api";
 export const CoustumerContext = createContext<any>({});
 
@@ -54,11 +54,11 @@ export default function CoustumerContextProvider({ children }: any) {
 
     async function addTrainer(trainerEmail: any) {
         try {
-            const payload = {TrainerEmail: trainerEmail, CostumerEmail: currentCoustumer?.email};
+            const payload = { TrainerEmail: trainerEmail, CostumerEmail: currentCoustumer?.email };
             console.log('trainerEmail ====>>>', trainerEmail);
             console.log('costumerEmail ====>>>', currentCoustumer?.email);
 
-            let data = await POST('costumer/addTrainer', payload); 
+            let data = await POST('costumer/addTrainer', payload);
             console.log('Response from server:', data);
             if (data && data.trainer) {
                 return true;
@@ -70,14 +70,14 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
-    async function UpdatePayment( card: any, date: any, ccv: any) {
+    async function UpdatePayment(card: any, date: any, ccv: any) {
         try {
             console.log('card ====>>>', card);
             console.log('date ====>>>', date);
             console.log('ccv ====>>>', ccv);
             console.log('currentCoustumer id ====>>>', currentCoustumer?.payment.id);
-            const payload = {card: card, date: date, ccv: ccv};
-            let data = await POST('costumer/updatePayment/' + currentCoustumer?.payment.id, payload); 
+            const payload = { card: card, date: date, ccv: ccv };
+            let data = await POST('costumer/updatePayment/' + currentCoustumer?.payment.id, payload);
             console.log('Response from server:', data.costumer);
             if (data) {
                 console.log('data.costumer ====>>>', data.costumer);
@@ -90,10 +90,10 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
-    async function updateEmail(costumer:CoustumerType) {
+    async function updateEmail(costumer: CoustumerType) {
         try {
             console.log('costumer ====>>>', costumer.email);
-            let data = await PUT('costumer/updateinfo/'+ currentCoustumer?.payment.id, costumer); 
+            let data = await PUT('costumer/updateinfo/' + currentCoustumer?.payment.id, costumer);
             console.log('Response from server:', data.costumer);
             if (data) {
                 console.log('data.costumer ====>>>', data.costumer);
@@ -107,23 +107,23 @@ export default function CoustumerContextProvider({ children }: any) {
     }
 
     async function updatepasswordCostumer(id: string, password: string) {
-        try{
+        try {
             console.log('currentCoustumer id ====>>>', id);
             console.log('password ====>>>', password);
-            let data = await POST(`costumer/updatepassword/` + id, {password});
-            if(data){
+            let data = await POST(`costumer/updatepassword/` + id, { password });
+            if (data) {
                 return true
             }
             console.log("data" + data);
             return false;
         }
-        catch(error){
+        catch (error) {
             console.log(error);
             return false;
         }
     }
 
-    function LogOutCostumer(){
+    function LogOutCostumer() {
         setCurrentCoustumer(null);
     }
 
@@ -144,7 +144,7 @@ export default function CoustumerContextProvider({ children }: any) {
     async function DeleteCostumer(id: string) {
         try {
             console.log('id ====>>>', id)
-            let data = await POST('costumer/physic/delete/' + id,{})
+            let data = await POST('costumer/physic/delete/' + id, {})
             console.log("data   " + data);
             if (data) {
                 console.log("data   " + data);
@@ -155,6 +155,25 @@ export default function CoustumerContextProvider({ children }: any) {
             throw error
         }
     }
+
+    async function addSchedule(schedule: trainingSchedule) {
+        try {
+            console.log("Adding schedule to customer:", schedule);
+            let data = await POST("costumer/addSchedule", schedule);
+            console.log("Response from server:", data);
+    
+            if (data?.costumer) {
+                console.log("Updated customer data:", data.costumer);
+                setCurrentCoustumer(data.costumer);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Error in addSchedule:", error);
+            return false;
+        }
+    }
+    
 
     return (
         <CoustumerContext.Provider
@@ -170,7 +189,8 @@ export default function CoustumerContextProvider({ children }: any) {
                 updatepasswordCostumer,
                 LogOutCostumer,
                 DeleteCostumer,
-                getAllCostumers
+                getAllCostumers,
+                addSchedule
             }}>
             {children}
         </CoustumerContext.Provider>

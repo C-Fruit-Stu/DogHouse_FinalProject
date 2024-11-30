@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-import { Costumer, credit } from "./Costumer.type";
+import { Costumer, credit, trainingSchedule } from "./Costumer.type";
 
 const DB_INFO = {
     connection: process.env.CONNECTION_STRING as string,
@@ -146,3 +146,22 @@ export async function addTrainerEmail(TrainerEmail: string, CostumerEmail: strin
         await mongo.close();
     }
 }
+
+export async function addScheduleToArrayDB(schedule: trainingSchedule) {
+    const mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        return await mongo
+            .db(DB_INFO.name)
+            .collection(DB_INFO.Collection)
+            .updateOne(
+                { email: schedule.email },
+                { $addToSet: { trainingSchedule: schedule } } // Append to trainingSchedule array
+            );
+    } catch (error) {
+        throw error;
+    } finally {
+        mongo.close();
+    }
+}
+

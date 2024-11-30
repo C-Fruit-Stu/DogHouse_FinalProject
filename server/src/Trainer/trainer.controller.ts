@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray,getAllScheduleInfo, CheckInfo } from "./trainer.model";
+import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, getAllScheduleInfo, CheckInfo, addPaymentToTotalIncome } from "./trainer.model";
 
 import { TrainerUser } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
@@ -397,35 +397,32 @@ export async function AddCostumerToArr(req: Request, res: Response) {
 
 export async function getAllTrainersSchedules(req: Request, res: Response) {
     try {
-        console.log("body: ",req.body)
         const { HisTrainer } = req.body;
-        console.log(HisTrainer);
-        
-        
-        // Validate if HisTrainer exists and is an array
+
         if (!Array.isArray(HisTrainer)) {
-            console.error("HisTrainer is not defined or not an array:", HisTrainer);
+            console.error("HisTrainer is invalid:", HisTrainer);
             return res.status(400).json({ msg: "Invalid or missing HisTrainer array" });
         }
 
         if (HisTrainer.length === 0) {
-            console.error("HisTrainer is an empty array");
-            return res.status(400).json({ msg: "Empty array" });
+            console.error("HisTrainer array is empty");
+            return res.status(400).json({ msg: "Empty HisTrainer array" });
         }
+
         console.log("HisTrainer received:", HisTrainer);
 
         const result = await getAllScheduleInfo(HisTrainer);
         return res.status(200).json({ result });
-
     } catch (error) {
         console.error("Error in getAllTrainersSchedules controller:", error);
         return res.status(500).json({ error });
     }
 }
 
+
 export async function UpdateInfo(req: Request, res: Response) {
     let { id } = req.params;
-    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience,totalIncome } = req.body;
+    let { first_name, last_name, location, password, email, phone, dob, image, update_details, clientType, payment, experience, totalIncome } = req.body;
     if (!id || id.length < 24)
         return res.status(400).json({ msg: "invalid id" })
 
@@ -439,4 +436,25 @@ export async function UpdateInfo(req: Request, res: Response) {
         res.status(500).json({ error })
     }
 }
+
+export async function addPayment(req: Request, res: Response) {
+    const { email, date, price } = req.body;
+
+    if (!email || !price || !date) {
+        return res.status(400).json({ msg: "Invalid information provided" });
+    }
+    try {
+        const result = await addPaymentToTotalIncome(email, price, date);
+        if (result.modifiedCount > 0) {
+            return res.status(200).json({ msg: "Payment added and schedule removed", result });
+        } else {
+            return res.status(400).json({ msg: "No schedule found to remove or invalid trainer email" });
+        }
+    } catch (error) {
+        console.error("Error in addPayment:", error);
+        return res.status(500).json({ error });
+    }
+}
+
+
 

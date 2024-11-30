@@ -27,7 +27,7 @@ export async function findUsers(query = {}, projection = {}) {
 }
 
 
-export async function userinID(query : {}) {
+export async function userinID(query: {}) {
     let mongo = new MongoClient(DB_INFO.connection)
     try {
         await mongo.connect();
@@ -38,7 +38,7 @@ export async function userinID(query : {}) {
     } catch (error) {
         throw error
     }
-    finally{
+    finally {
         mongo.close();
     }
 }
@@ -435,17 +435,19 @@ export async function getTrainerSchedulesByEmail(trainerEmail: string) {
             .collection(DB_INFO.collection)
             .findOne(
                 { email: trainerEmail },
-                { projection: { trainingSchedule: 1, _id: 0 } } // Retrieve only the `trainingSchedule` field
+                { projection: { trainingSchedule: 1, _id: 0 } } // Only fetch the `trainingSchedule` field
             );
 
-        // Return only schedules with a valid `price`
+        // Filter schedules to include only those with a valid price
         return (trainer?.trainingSchedule || []).filter((schedule: any) => schedule.price !== undefined && schedule.price > 0);
     } catch (error) {
+        console.error("Error in getTrainerSchedulesByEmail:", error);
         throw error;
     } finally {
         await mongo.close();
     }
 }
+
 
 
 
@@ -466,4 +468,42 @@ export async function Updateuserinfo(updateuser: TrainerUser) {
     }
 }
 
+// Increment totalIncome
+export async function addPaymentToClient(email: string, price: number) {
+    const mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        return await mongo
+            .db(DB_INFO.name)
+            .collection(DB_INFO.collection)
+            .updateOne(
+                { email },
+                { $inc: { totalIncome: price } }
+            );
+    } catch (error) {
+        throw error;
+    } finally {
+        mongo.close();
+    }
+}
+
+// Remove the specific schedule
+export async function removeScheduleByDate(email: string, date: string) {
+    const mongo = new MongoClient(DB_INFO.connection);
+    try {
+        await mongo.connect();
+        return await mongo
+            .db(DB_INFO.name)
+            .collection(DB_INFO.collection)
+            .updateOne(
+                { email },
+                { $pull: { trainingSchedule: { date: new Date(date) } } as any } // Match Date object
+            );
+    } catch (error) {
+        console.error("Error in removeScheduleByDate:", error);
+        throw error;
+    } finally {
+        mongo.close();
+    }
+}
 

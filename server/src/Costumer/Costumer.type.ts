@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { TrainerUser } from "../Trainer/trainer.type";
 export type Costumer = {
     id?: ObjectId,
-    dogBreed? : string,
+    dogBreed?: string,
     first_name: string,
     last_name: string,
     email: string,
@@ -12,11 +12,12 @@ export type Costumer = {
     image: string,
     phone: string,
     update_details: string,
-    clientType:string // 1 for trainer 2 for costumer
-    payment: credit
-    stayLogIn?: boolean;
-    trainingSchedule?:[
+    clientType: string, // 1 for trainer 2 for costumer
+    payment: credit,
+    stayLogIn?: boolean,
+    trainingSchedule?: [
         {
+            email?: string,
             name?: string, // שם המאמן
             date: Date, // תאריך האימון
             time: string, // יש להזין מאיזה שעה לאיזה שעה
@@ -25,6 +26,13 @@ export type Costumer = {
     ],
     HisTrainer?: string[]
 
+}
+export type trainingSchedule = {
+    email?: string,
+    name?: string, // שם המאמן
+    date: Date, // תאריך האימון
+    time: string, // יש להזין מאיזה שעה לאיזה שעה
+    price?: number
 }
 
 export type credit = {

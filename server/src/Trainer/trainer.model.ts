@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo,getTrainerSchedulesByEmail } from "./trainer.db";
+import { checkIfDocumentExists, FindUserByEmail, findUsers, insertUser, updateDoc, deleteUser, decativateUser, NewPassfunc, UpdateCard, addonePost, checkmongopostbyid, FindAllPosts, decativatePost, newTrainingFunc, deleteTrainingFunc, openTraining, closeTraining, findAllTrainers, userinID, addCostumerEmail, Updateuserinfo, getTrainerSchedulesByEmail, addPaymentToClient,removeScheduleByDate } from "./trainer.db";
 
 import { credit, Post, TrainerUser, Comment, trainingSchedule, opendates } from "./trainer.type";
 import { get } from "http";
@@ -276,7 +276,7 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
                 const trainerSchedules = await getTrainerSchedulesByEmail(trainerEmail);
                 if (trainerSchedules.length > 0) {
                     trainerSchedules.forEach((schedule: any) => {
-                        schedule.trainerEmail = trainerEmail;
+                        schedule.trainerEmail = trainerEmail; // Add trainerEmail for identification
                     });
                     schedules.push(...trainerSchedules);
                 }
@@ -293,6 +293,7 @@ export async function getAllScheduleInfo(HisTrainer: string[]) {
 }
 
 
+
 export async function getUserByEmail(email: string) {
     try {
         return await FindUserByEmail(email);
@@ -301,9 +302,9 @@ export async function getUserByEmail(email: string) {
     }
 }
 
-export async function CheckInfo(id :string, first_name : string, last_name : string, email : string, phone : string, dob : string, image : string, update_details  : string, clientType : string, location : string, password : string, payment : credit, experience : string, totalIncome : number) {
+export async function CheckInfo(id: string, first_name: string, last_name: string, email: string, phone: string, dob: string, image: string, update_details: string, clientType: string, location: string, password: string, payment: credit, experience: string, totalIncome: number) {
     try {
-        let updateuser : TrainerUser = {
+        let updateuser: TrainerUser = {
             _id: new ObjectId(id), first_name, last_name, email, phone, dob, image, clientType, location, password, payment,
             experience,
             totalIncome
@@ -314,4 +315,19 @@ export async function CheckInfo(id :string, first_name : string, last_name : str
         throw error;
     }
 }
+
+
+export async function addPaymentToTotalIncome(email: string, price: number, date: string) {
+    try {
+        // Increment total income
+        await addPaymentToClient(email, price);
+
+        // Remove the schedule
+        return await removeScheduleByDate(email, date);
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 
