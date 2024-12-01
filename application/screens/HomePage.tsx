@@ -94,6 +94,9 @@ export default function HomePage() {
           <Text style={styles.text}>Find Your Next Trainer</Text>
         </Animated.View>
           <Text style={styles.sectionTitle}>Your Schedules</Text>
+          {
+            (currentCoustumer.trainingSchedule.length === 1) ?
+            <Text style={styles.sectionTitle}>No Schedules</Text> :
         <FlatList
           data={currentCoustumer.trainingSchedule}
           renderItem={rendercostumeritem}
@@ -101,6 +104,7 @@ export default function HomePage() {
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
+      }
         </TouchableOpacity>
       </SafeAreaView>
     );
