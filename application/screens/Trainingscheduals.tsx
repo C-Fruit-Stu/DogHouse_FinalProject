@@ -9,12 +9,15 @@ import {
     Button,
     Alert,
     Dimensions,
+    Animated
 } from "react-native";
+import * as Animatable from 'react-native-animatable';
 import { Calendar } from "react-native-calendars";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { TrainerContext } from "../context/TrainerContextProvider";
 import { CoustumerContext } from "../context/CoustumerContextProvider";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type RouteParams = {
     clientType?: number;
@@ -189,15 +192,88 @@ export default function TrainingSchedules() {
         setModalVisible(false);
         setSelectedDate(null);
     };
+    const scaleAnimation = new Animated.Value(1);
 
+    Animated.loop(
+        Animated.sequence([
+            Animated.timing(scaleAnimation, {
+                toValue: 1.1,
+                duration: 1000,
+                useNativeDriver: true,
+            }),
+            Animated.timing(scaleAnimation, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+            }),
+        ])
+    ).start();
+
+
+
+    const renderScheduleItem = ({ item }: any) => (
+        <Animatable.View
+            animation="fadeInUp"
+            duration={800}
+            style={styles.scheduleCard}
+        >
+            <Text style={styles.scheduleName}>{item.name}</Text>
+            <Text style={styles.scheduleDate}>{item.date}</Text>
+            <Text style={styles.scheduleTime}>{item.time}</Text>
+        </Animatable.View>
+    );
     if (clientType === 1) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.headerText}>Trainer's Schedule</Text>
-                {renderTrainerSchedule()}
-            </View>
+            <SafeAreaView style={styles.container}>
+                <Text style={styles.sectionTitle}>Your Schedules</Text>
+                <FlatList
+                    data={currentTrainer.trainingSchedule}
+                    renderItem={({ item }) => (
+                        <Animatable.View
+                            animation="fadeInUp"
+                            duration={800}
+                            style={styles.scheduleCard}
+                        >
+                            <Text style={styles.scheduleName}>{item.name}</Text>
+                            <Text style={styles.scheduleDate}>{item.date}</Text>
+                            <Text style={styles.scheduleTime}>{item.time}</Text>
+                            <Button
+                                title="Delete"
+                                color="red"
+                                onPress={() => {
+                                    Alert.alert(
+                                        "Confirm Delete",
+                                        `Are you sure you want to delete this schedule?`,
+                                        [
+                                            { text: "Cancel", style: "cancel" },
+                                            {
+                                                text: "Delete",
+                                                style: "destructive",
+                                                onPress: () => {
+                                                    const updatedSchedules =
+                                                        currentTrainer.trainingSchedule.filter(
+                                                            (schedule: TrainingSchedule) =>
+                                                                schedule.date !== item.date ||
+                                                                schedule.time !== item.time
+                                                        );
+                                                    // Update the schedules
+                                                    setTrainersSchedules(updatedSchedules);
+                                                },
+                                            },
+                                        ]
+                                    );
+                                }}
+                            />
+                        </Animatable.View>
+                    )}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.listContainer}
+                    showsVerticalScrollIndicator={false}
+                />
+            </SafeAreaView>
         );
     }
+    
     else {
         return (
             <View style={styles.container}>
@@ -294,5 +370,58 @@ const styles = StyleSheet.create({
     },
     listItem: {
         fontSize: 16,
+    },
+    headerDiv: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginVertical: 20,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginVertical: 20,
+        color: '#075E5B',
+    },
+    listContainer: {
+        paddingHorizontal: 15,
+        paddingBottom: 20,
+    },
+    scheduleCard: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 2,
+    },
+    scheduleName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        color: '#333',
+    },
+    scheduleDate: {
+        fontSize: 14,
+        color: '#666',
+        marginBottom: 2,
+    },
+    scheduleTime: {
+        fontSize: 14,
+        color: '#666',
+    },
+    titleName: {
+        fontSize: 20,
+        fontWeight: "500",
+        color: "#333",
+        textAlign: "center",
+        marginTop: 30,
+        letterSpacing: 1.2,
+        fontFamily: "Poppins",
+        textTransform: "capitalize",
+        opacity: 0.9,
     },
 });

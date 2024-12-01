@@ -38,12 +38,12 @@ export default function SignUpTrainer() {
     { label: '10 - 12 years', value: '6' },
     { label: '12 + years', value: '7' }
   ];
-  
-    const togglePasswordVisibility = () => {
-      setVisiblePassword(!visiblePassword);
-    };
-    
-    const [galleryImg, setGalleryImg] = useState<string[]>([]);
+
+  const togglePasswordVisibility = () => {
+    setVisiblePassword(!visiblePassword);
+  };
+
+  const [galleryImg, setGalleryImg] = useState<string[]>([]);
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -58,7 +58,7 @@ export default function SignUpTrainer() {
       return result.assets[0].uri;
     }
   };
-  
+
   const formik = useFormik({
     initialValues: {
       first_name: '',
@@ -152,7 +152,7 @@ export default function SignUpTrainer() {
       resetForm();
       if (NewUser.email !== '') {
         setCurrentTrainer(NewUser);
-        navigation.navigate("Payment", {clientType} );
+        navigation.navigate("Payment", { clientType });
       }
     }
   });
