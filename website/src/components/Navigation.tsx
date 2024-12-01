@@ -6,17 +6,6 @@ import { useContext, useEffect } from 'react';
 import { TrainerContext } from '../context/TrainerContextProvidor';
 
 const Navigation = () => {
-  const { currentTrainer } = useContext(TrainerContext);
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            const trainer = sessionStorage.getItem('trainer');
-            if (trainer) {
-                // console.log('Current Trainer:', JSON.parse(trainer as any));
-            }
-        }, 10); // 3000 milliseconds = 3 seconds
-    
-        return () => clearTimeout(timeout); 
-    }  , [currentTrainer]);
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
@@ -30,14 +19,8 @@ const Navigation = () => {
             <Nav.Link href="#"><Link to="/contact" className="nav-link">Contact</Link></Nav.Link>
           </Nav>
           <Nav className="ml-auto auth-links">
-            {
-              (currentTrainer !== undefined) ? (
-                <Nav.Link href="#"><Link to="/profile" className="nav-link">hello {currentTrainer.first_name}</Link></Nav.Link>
-              ) : <>
                     <Nav.Link href="#"><Link to="/signin" className="nav-link">Sign In</Link></Nav.Link>
                     <Nav.Link href="#" className="sign-up-btn"><Link to="/signup" className="nav-link">Sign Up</Link></Nav.Link>
-                  </>
-            }
           </Nav>
         </Navbar.Collapse>
       </Container>
