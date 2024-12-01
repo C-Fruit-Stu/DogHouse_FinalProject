@@ -116,8 +116,25 @@ export default function TrainingSchedules() {
                             };
                         });
                     }
-                    else{
-                        
+                    else {
+                        const allTrainersSchedules = await getAllTrainersSchedules();
+                        await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(allTrainersSchedules));
+                        if (allTrainersSchedules) {
+                            const asyncSchedules = allTrainersSchedules.map((schedule: TrainingSchedule) => ({
+                                ...schedule,
+                                date: normalizeDate(schedule.date),
+                            }));
+
+                            schedules = [...schedules, ...asyncSchedules];
+
+                            asyncSchedules.forEach((schedule: TrainingSchedule) => {
+                                marked[normalizeDateToISO(schedule.date)] = {
+                                    marked: true,
+                                    dotColor: "green",
+                                    selectedColor: "green",
+                                };
+                            });
+                        }
                     }
                 }
 

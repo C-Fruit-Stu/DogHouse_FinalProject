@@ -84,46 +84,47 @@ export default function Posts() {
 
 
   const toggleModal = () => setModalVisible(!modalVisible);
-  
+
   const handleSubmit = async () => {
     if (clientType === 1 && AddPost) {
-        const currentPostCount =
-            currentTrainer?.Posts && Array.isArray(currentTrainer.Posts)
-                ? currentTrainer.Posts.length + 1
-                : 1;
+      const currentPostCount =
+        currentTrainer?.Posts && Array.isArray(currentTrainer.Posts)
+          ? currentTrainer.Posts.length + 1
+          : 1;
 
-        const newPost: Post = {
-            id: currentPostCount.toString(),
-            title: input1.trim(),
-            description: input2.trim(),
-            image: imageUri || undefined,
-            likes: 0,
-            likedByUser: false,
-            comments: [],
-            isOwner: true,
-        };
+      const newPost: Post = {
+        id: currentPostCount.toString(),
+        title: input1.trim(),
+        description: input2.trim(),
+        image: imageUri || undefined,
+        likes: 0,
+        likedByUser: false,
+        comments: [],
+        isOwner: true,
+      };
 
-        console.log('newPost ====>>>', newPost);
+      console.log('newPost ====>>>', newPost);
 
-        try {
-            const response = await AddPost(newPost);
+      try {
+        const response = await AddPost(newPost);
 
-            if (response) {
-                setPosts((prevPosts) => [...prevPosts, newPost]);
-                setModalVisible(false);
-                setInput1('');
-                setInput2('');
-                setImageUri(null);
-            } else {
-                console.error('Failed to save post to database');
-            }
-        } catch (error) {
-            console.error('Error adding post:', error);
+        if (response) {
+          setPosts((prevPosts) => [...prevPosts, newPost]);
+          setModalVisible(false);
+          setInput1('');
+          setInput2('');
+          setImageUri(null);
+        } else {
+          console.error('Failed to save post to database');
         }
+      } catch (error) {
+        console.error('Error adding post:', error);
+      }
     }
-};
+  };
 
-  
+
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

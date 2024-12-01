@@ -189,22 +189,20 @@ export async function updatePayment(req: Request, res: Response) {
 
 
 export async function addNewPost(req: Request, res: Response) {
-    console.log("Incoming request body:", req.body);
-
+    console.log(req.body);
     let { email, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body;
 
-    if (!title || !description) {
-        return res.status(400).json({ msg: "Invalid info: Missing title or description" });
-    }
+    if (!title || !description)
+        return res.status(400).json({ msg: "invalid info" });
 
     try {
-        const result = await addAnotherPost(email, id, title, description, image, likes, likedByUser, comments, isOwner);
+        let result = await addAnotherPost(email, id, title, description, image, likes, likedByUser, comments, isOwner);
         res.status(200).json({ result });
     } catch (error) {
-        console.error("Error in addNewPost:", error);
-        res.status(500).json({ error: "Server error while adding new post" });
+        res.status(500).json({ error });
     }
 }
+
 
 
 

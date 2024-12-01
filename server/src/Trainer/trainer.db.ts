@@ -319,22 +319,11 @@ export async function addonePost(email: string, post: Post) {
     try {
         await mongo.connect();
 
-        // Check if there is a placeholder post with id === ""
-        const result = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { email, "Posts.id": "" }, // Match trainers with a placeholder post
-            { $set: { "Posts.$": post } }, // Replace the placeholder post
-            { upsert: true } // Create if it doesn't exist
+        // Push the new post to the Posts array
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email }, // Match the trainer by email
+            { $addToSet: { Posts: post } } // Push the new post into the Posts array
         );
-
-        if (result.matchedCount === 0) {
-            // If no placeholder exists, add the new post
-            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-                { email },
-                { $addToSet: { Posts: post } }
-            );
-        }
-
-        return result;
     } catch (error) {
         console.error("Error in addonePost:", error);
         throw error;
@@ -342,6 +331,7 @@ export async function addonePost(email: string, post: Post) {
         await mongo.close();
     }
 }
+
 
 
 
