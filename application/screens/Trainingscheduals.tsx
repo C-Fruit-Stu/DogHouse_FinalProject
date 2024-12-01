@@ -31,16 +31,16 @@ type TrainingSchedule = {
 export default function TrainingSchedules() {
     const route = useRoute<RouteProp<{ params: RouteParams }, "params">>();
     const clientType = route.params?.clientType;
-    const { currentCoustumer, addSchedule } = useContext(CoustumerContext);
-    const { getAllTrainersSchedules, addPayment } = useContext(TrainerContext);
+    const { currentCoustumer, getAllCostumerSchedules, addSchedule } = useContext(CoustumerContext);
+    const { currentTrainer, getAllTrainersSchedules, addPayment } = useContext(TrainerContext);
 
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [trainerScheduleVisible, setTrainerScheduleVisible] = useState(clientType === 1);
     const [markedDates, setMarkedDates] = useState<Record<string, { marked: boolean; dotColor: string; selectedColor: string }>>({});
-    const [allSchedules, setAllSchedules] = useState<TrainingSchedule[]>([]);
+    const [trainersSchedules, setTrainersSchedules] = useState<TrainingSchedule[]>([]);
     const [displayedSchedules, setDisplayedSchedules] = useState<TrainingSchedule[]>([]);
 
-    // Normalize date format
     const normalizeDate = (date: string): string => {
         if (date.includes("/")) {
             return date; // Already in DD/MM/YYYY
@@ -49,7 +49,6 @@ export default function TrainingSchedules() {
             const [year, month, day] = date.split("-");
             return `${day}/${month}/${year}`;
         }
-        console.warn("Unexpected date format:", date);
         return ""; // Return empty string for invalid dates
     };
 
@@ -61,92 +60,66 @@ export default function TrainingSchedules() {
             const [day, month, year] = date.split("/");
             return `${year}-${month}-${day}`;
         }
-        console.warn("Unexpected date format:", date);
         return ""; // Return empty string for invalid dates
     };
-
-    const clearStorageOnReload = async () => {
-        await AsyncStorage.removeItem("TrainersSchedules");
-    };
-
-    useEffect(() => {
-        clearStorageOnReload();
-    }, []);
 
     useEffect(() => {
         const fetchSchedules = async () => {
             try {
                 let schedules: TrainingSchedule[] = [];
-                const marked: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
-
+                const savedMarkedDates = await AsyncStorage.getItem("MarkedDates");
+                const localMarkedDates = savedMarkedDates ? JSON.parse(savedMarkedDates) : {};
+    
                 if (clientType === 2) {
-                    // Add schedules from currentCoustumer to calendar (blue)
+                    // Fetch customer training schedules and mark them blue
                     if (currentCoustumer?.trainingSchedule) {
                         const customerSchedules = currentCoustumer.trainingSchedule.map((schedule: TrainingSchedule) => ({
                             ...schedule,
                             date: normalizeDate(schedule.date),
                         }));
-
                         schedules = [...schedules, ...customerSchedules];
-
+    
                         customerSchedules.forEach((schedule: TrainingSchedule) => {
-                            marked[normalizeDateToISO(schedule.date)] = {
+                            localMarkedDates[normalizeDateToISO(schedule.date)] = {
                                 marked: true,
                                 dotColor: "blue",
                                 selectedColor: "blue",
                             };
                         });
                     }
-
-                    // Add schedules from AsyncStorage to calendar (green)
-                    const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
-                    if (storedSchedules) {
-                        const asyncSchedules = JSON.parse(storedSchedules).map((schedule: TrainingSchedule) => ({
+    
+                    // Fetch trainer schedules and mark them green
+                    const trainerSchedules = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
+                    if (trainerSchedules) {
+                        const trainerSchedulesFormatted = trainerSchedules.map((schedule: any) => ({
                             ...schedule,
                             date: normalizeDate(schedule.date),
                         }));
-
-                        schedules = [...schedules, ...asyncSchedules];
-
-                        asyncSchedules.forEach((schedule: TrainingSchedule) => {
-                            marked[normalizeDateToISO(schedule.date)] = {
-                                marked: true,
-                                dotColor: "green",
-                                selectedColor: "green",
-                            };
-                        });
-                    }
-                    else {
-                        const allTrainersSchedules = await getAllTrainersSchedules();
-                        await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(allTrainersSchedules));
-                        if (allTrainersSchedules) {
-                            const asyncSchedules = allTrainersSchedules.map((schedule: TrainingSchedule) => ({
-                                ...schedule,
-                                date: normalizeDate(schedule.date),
-                            }));
-
-                            schedules = [...schedules, ...asyncSchedules];
-
-                            asyncSchedules.forEach((schedule: TrainingSchedule) => {
-                                marked[normalizeDateToISO(schedule.date)] = {
+                        schedules = [...schedules, ...trainerSchedulesFormatted];
+    
+                        trainerSchedulesFormatted.forEach((schedule: any) => {
+                            if (!localMarkedDates[normalizeDateToISO(schedule.date)]) {
+                                localMarkedDates[normalizeDateToISO(schedule.date)] = {
                                     marked: true,
                                     dotColor: "green",
                                     selectedColor: "green",
                                 };
-                            });
-                        }
+                            }
+                        });
                     }
                 }
-
-                setAllSchedules(schedules);
-                setMarkedDates(marked);
+    
+                setTrainersSchedules(schedules);
+                setMarkedDates(localMarkedDates);
+                await AsyncStorage.setItem("MarkedDates", JSON.stringify(localMarkedDates));
             } catch (error) {
                 console.error("Error in fetchSchedules:", error);
             }
         };
-
+    
         fetchSchedules();
     }, [clientType, currentCoustumer, getAllTrainersSchedules]);
+    
 
     const handleAction = async (schedule: TrainingSchedule) => {
         Alert.alert(
@@ -158,34 +131,20 @@ export default function TrainingSchedules() {
                     text: "Confirm",
                     onPress: async () => {
                         try {
-                            // Change the date color to blue first
-                            setMarkedDates((prev) => ({
-                                ...prev,
-                                [normalizeDateToISO(schedule.date)]: {
-                                    marked: true,
-                                    dotColor: "blue",
-                                    selectedColor: "blue",
-                                },
-                            }));
-
                             await addPayment(schedule.trainerEmail, normalizeDateToISO(schedule.date), schedule.price);
-                            const success = await addSchedule(schedule, currentCoustumer?.email);
+                            await addSchedule(schedule, currentCoustumer?.email);
 
-                            if (success) {
-                                console.log("Schedule successfully added to customer.");
-                            } else {
-                                console.warn("Failed to add schedule to customer.");
-                            }
-
-                            const updatedSchedules = allSchedules.filter(
+                            const updatedSchedules = trainersSchedules.filter(
                                 (item) =>
                                     item.date !== schedule.date ||
                                     item.trainerEmail !== schedule.trainerEmail
                             );
+                            setTrainersSchedules(updatedSchedules);
 
-                            setAllSchedules(updatedSchedules);
-
-                            await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(updatedSchedules));
+                            setMarkedDates((prev) => ({
+                                ...prev,
+                                [normalizeDateToISO(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
+                            }));
                         } catch (error) {
                             console.error("Error processing action:", error);
                             Alert.alert("Error", "Something went wrong while processing the action.");
@@ -196,20 +155,19 @@ export default function TrainingSchedules() {
         );
     };
 
-    const handleDatePress = (date: any) => {
-        const normalizedDate = normalizeDate(date.dateString);
-        setSelectedDate(normalizedDate);
-        const filteredSchedules = allSchedules.filter(
-            (schedule: TrainingSchedule) => schedule.date === normalizedDate
-        );
-        setDisplayedSchedules(filteredSchedules);
-        setModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-        setSelectedDate(null);
-    };
+    const renderTrainerSchedule = () => (
+        <FlatList
+            data={trainersSchedules}
+            keyExtractor={(item, index) => `${item.name}-${index}`}
+            renderItem={({ item }) => (
+                <View style={styles.listItemContainer}>
+                    <Text style={styles.listItem}>
+                        {item.name} at {item.time}, ${item.price} (Date: {item.date})
+                    </Text>
+                </View>
+            )}
+        />
+    );
 
     const renderList = () => (
         <FlatList
@@ -226,13 +184,35 @@ export default function TrainingSchedules() {
         />
     );
 
+    const closeModal = () => {
+        setModalVisible(false);
+        setSelectedDate(null);
+    };
+
+    if (trainerScheduleVisible && clientType === 1) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.headerText}>Trainer's Schedule</Text>
+                {renderTrainerSchedule()}
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>
-                {clientType === 1 ? "Trainer: Select a Training Date" : "Customer: View Available Dates"}
+                {clientType === 1 ? "Trainer: View Training Schedule" : "Customer: View Available Dates"}
             </Text>
             <Calendar
-                onDayPress={handleDatePress}
+                onDayPress={(date: any) => {
+                    const normalizedDate = normalizeDate(date.dateString);
+                    setSelectedDate(normalizedDate);
+                    const filteredSchedules = trainersSchedules.filter(
+                        (schedule) => schedule.date === normalizedDate
+                    );
+                    setDisplayedSchedules(filteredSchedules);
+                    setModalVisible(true);
+                }}
                 markedDates={markedDates}
                 theme={{
                     selectedDayBackgroundColor: clientType === 1 ? "blue" : "green",
