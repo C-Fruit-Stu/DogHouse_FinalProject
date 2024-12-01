@@ -102,7 +102,7 @@ function StackNav() {
       <Stack.Screen name="SignUpTrainer" component={SignUpTrainer} options={{ headerShown: false }} />
       <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
       <Stack.Screen name="LogIn" component={LogIn} options={{ headerShown: false }} />
-      <Stack.Screen name="AllCostumers" component={AllCostumers} options={{ headerShown: false }} />
+      <Stack.Screen name="AllCostumers" component={AllCostumers} options={{ headerShown: true }} />
       <Stack.Screen name="Calander" component={Calanders} options={{ headerShown: false }} />
       <Stack.Screen name="Posts" component={Posts} options={{ headerShown: false }} />
       <Stack.Screen name="Update Info" component={UpdateInfo} options={{ headerShown: false }} />

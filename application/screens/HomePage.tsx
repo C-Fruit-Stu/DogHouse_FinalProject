@@ -6,12 +6,15 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 type RouteParams = {
   clientType?: number;
@@ -23,15 +26,39 @@ export default function HomePage() {
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
   const navigation = useNavigation();
+  const scaleAnimation = new Animated.Value(1);
+  
+  
+  Animated.loop(
+    Animated.sequence([
+      Animated.timing(scaleAnimation, {
+        toValue: 1.1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnimation, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ])
+  ).start();
 
-  // Example schedules array
-  const schedules = [
-    { id: '1', name: 'Morning Training', date: '2024-11-27', time: '08:00 AM' },
-    { id: '2', name: 'Private Lesson', date: '2024-11-27', time: '10:00 AM' },
-    { id: '3', name: 'Evening Practice', date: '2024-11-28', time: '05:00 PM' },
-  ];
+  
 
   const renderScheduleItem = ({ item } : any) => (
+    <Animatable.View
+      animation="fadeInUp"
+      duration={800}
+      style={styles.scheduleCard}
+    >
+      <Text style={styles.scheduleName}>{item.name}</Text>
+      <Text style={styles.scheduleDate}>{item.date}</Text>
+      <Text style={styles.scheduleTime}>{item.time}</Text>
+    </Animatable.View>
+  );
+
+  const rendercostumeritem = ({ item } : any) => (
     <Animatable.View
       animation="fadeInUp"
       duration={800}
@@ -62,9 +89,18 @@ export default function HomePage() {
         <TouchableOpacity
           onPress={() => navigation.navigate('FindTrainer', { clientType })}
         >
-          <View style={styles.statesContainer}>
-            <Text style={styles.textContainer}>Find new Trainers</Text>
-          </View>
+        <Animated.View style={[styles.box, { transform: [{ scale: scaleAnimation }] }]}>
+        <MaterialCommunityIcons name="dog" size={50} color="#fff" style={styles.icon} />
+          <Text style={styles.text}>Find Your Next Trainer</Text>
+        </Animated.View>
+          <Text style={styles.sectionTitle}>Your Schedules</Text>
+        <FlatList
+          data={currentCoustumer.trainingSchedule}
+          renderItem={rendercostumeritem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -169,5 +205,28 @@ const styles = StyleSheet.create({
   scheduleTime: {
     fontSize: 14,
     color: '#666',
+  },
+
+  box: {
+    backgroundColor: 'rgba(29,189,123,0.6)',
+    height: 130,
+    width: "90%",
+    margin: 'auto',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  icon: {
+    marginBottom: 10,
+  },
+  text: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });

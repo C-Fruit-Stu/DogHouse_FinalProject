@@ -14,9 +14,9 @@ type RouteParams = {
 
 export default function FindTrainer() {
     const { GetTrainerPosts, GetAllTrainers, AddCostumerToArr } = useContext(TrainerContext);
-    const { addTrainer,currentCoustumer } = useContext(CoustumerContext);
+    const { addTrainer, currentCoustumer } = useContext(CoustumerContext);
     const navigation = useNavigation();
-    const [localTrainers, setLocalTrainers] = useState<any[]>([]); 
+    const [localTrainers, setLocalTrainers] = useState<any[]>([]);
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
     const clientType = route.params?.clientType;
 
@@ -38,20 +38,13 @@ export default function FindTrainer() {
     const addTrainerToList = async (email: string) => {
         try {
             addTrainer(email);
+            AddCostumerToArr(email, currentCoustumer.email);
         } catch (error) {
             console.error('Error adding trainer to list:', error);
         }
-        try{
-            console.log('trainerEmail ====>>>', email);
+    };
 
-            console.log('currentCoustumer.email ====>>>', currentCoustumer.email);
-            AddCostumerToArr(email, currentCoustumer.email);
-        }catch(error){
-            console.error('Error adding trainer to list:', error);
-        }
-    }
-
-    const showPosts = async (trainerEmail: string) => {
+    const showPosts = (trainerEmail: string) => {
         try {
             navigation.navigate('Posts', { clientType, trainerEmail });
         } catch (error) {
@@ -60,7 +53,7 @@ export default function FindTrainer() {
     };
 
     useEffect(() => {
-        TrainersRawData(); 
+        TrainersRawData();
     }, []);
 
     const calculateAge = (dob: string) => {
@@ -74,43 +67,39 @@ export default function FindTrainer() {
         return age;
     };
 
-    const renderTrainer = ({ item }: { item: any }) => {
-        return (
-            <Animatable.View style={styles.trainerContainer} animation="fadeInUp" duration={1000}>
-                <Image source={{ uri: item.image }} style={styles.trainerImage} />
-                <View style={styles.trainerInfo}>
-                    <Text style={styles.trainerName}>
-                        {item.first_name} {item.last_name}
-                    </Text>
-                    <Text style={styles.trainerExperience}>Experience: {item.experience || 0} years</Text>
-                    <Text style={styles.trainerAge}>Age: {item.dob ? calculateAge(item.dob) : 'N/A'}</Text>
-                    <View style={styles.buttonsContainer}>
-                        <Animatable.View animation="bounceIn" duration={1500}>
-                            <TouchableOpacity style={[styles.button, styles.viewPostsButton]} onPress={() => showPosts(item.email)}>
-                                <Icon name="eye" size={20} color="#fff" style={styles.icon} />
-                                <Text style={styles.buttonText}>View Posts</Text>
-                            </TouchableOpacity>
-                        </Animatable.View>
-                        <Animatable.View animation="zoomIn" duration={1500}>
-                            <TouchableOpacity style={[styles.button, styles.likeButton]} onPress={() => { }}>
-                                <Icon name="thumbs-up" size={20} color="#fff" style={styles.icon} />
-                                <Text style={styles.buttonText}>Like</Text>
-                            </TouchableOpacity>
-                        </Animatable.View>
-                        <Animatable.View animation="fadeIn" duration={1500}>
-                            <TouchableOpacity style={[styles.button, styles.followButton]} onPress={() => addTrainerToList(item.email)}>
-                                <Icon name="plus" size={20} color="#fff" style={styles.icon} />
-                                <Text style={styles.buttonText}>Follow</Text>
-                            </TouchableOpacity>
-                        </Animatable.View>
-                    </View>
+    const renderTrainer = ({ item }: { item: any }) => (
+        <Animatable.View style={styles.trainerContainer} animation="fadeInUp" duration={1200}>
+            <Image source={{ uri: item.image }} style={styles.trainerImage} />
+            <View style={styles.trainerInfo}>
+                <Text style={styles.trainerName}>
+                    {item.first_name} {item.last_name}
+                </Text>
+                <Text style={styles.trainerExperience}>Experience: {item.experience || 0} years</Text>
+                <Text style={styles.trainerAge}>Age: {item.dob ? calculateAge(item.dob) : 'N/A'}</Text>
+                <View style={styles.buttonsContainer}>
+                    <TouchableOpacity style={[styles.button, styles.viewPostsButton]} onPress={() => showPosts(item.email)}>
+                        <Icon name="eye" size={20} color="#fff" />
+                        <Text style={styles.buttonText}>View Posts</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, styles.likeButton]} onPress={() => {}}>
+                        <Icon name="thumbs-up" size={20} color="#fff" />
+                        <Text style={styles.buttonText}>Like</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, styles.followButton]} onPress={() => addTrainerToList(item.email)}>
+                        <Icon name="plus" size={20} color="#fff" />
+                        <Text style={styles.buttonText}>Follow</Text>
+                    </TouchableOpacity>
                 </View>
-            </Animatable.View>
-        );
-    };
+            </View>
+        </Animatable.View>
+    );
 
     if (!localTrainers || localTrainers.length === 0) {
-        return <Text>No trainers found</Text>;
+        return (
+            <Animatable.Text animation="fadeIn" style={styles.noDataText}>
+                No trainers found
+            </Animatable.Text>
+        );
     }
 
     return (
@@ -124,67 +113,66 @@ export default function FindTrainer() {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        marginTop:50
+    container: {
+        marginTop: 20,
+        paddingHorizontal: 15,
+        backgroundColor: '#f5f5f5',
     },
     trainerContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
         padding: 15,
-        marginBottom: 20,
-        backgroundColor: '#ffffff',
+        marginVertical: 10,
+        backgroundColor: '#fff',
         borderRadius: 15,
-        elevation: 4,
+        elevation: 5,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
     },
     trainerImage: {
         width: 90,
         height: 90,
         borderRadius: 45,
-        marginRight: 20,
-        borderWidth: 3,
+        borderWidth: 2,
         borderColor: '#ddd',
+        marginRight: 15,
     },
     trainerInfo: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
     },
     trainerName: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
     },
     trainerExperience: {
         fontSize: 14,
         color: '#777',
-        marginTop: 5,
     },
     trainerAge: {
         fontSize: 14,
         color: '#777',
-        marginTop: 5,
     },
     buttonsContainer: {
         flexDirection: 'row',
+        marginTop: 10,
         justifyContent: 'space-between',
-        marginTop: 15,
     },
     button: {
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 100,
         flexDirection: 'row',
-        marginHorizontal: 5,
+        alignItems: 'center',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
     },
     viewPostsButton: {
         backgroundColor: '#007BFF',
-        height: 40
     },
     likeButton: {
         backgroundColor: '#28a745',
@@ -194,11 +182,14 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
+        marginLeft: 5,
         fontSize: 14,
         fontWeight: 'bold',
-        marginLeft: 10,
     },
-    icon: {
-        marginRight: 5,
+    noDataText: {
+        fontSize: 18,
+        color: '#777',
+        textAlign: 'center',
+        marginTop: 50,
     },
 });

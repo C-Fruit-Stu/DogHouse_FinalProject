@@ -54,24 +54,8 @@ export default function Posts() {
           setPosts([]);
         }
       } else if (clientType === 1 && currentTrainer?.Posts) {
-        setPosts([...currentTrainer.Posts]);
-        let allposts : Post[] = []
-        if(posts != null || posts != undefined){
-          for(let i=0;i<currentTrainer.length;i++){
-            console.log(posts[i])
-            for(let j=0;j<currentTrainer.length;j++){
-              console.log(posts[i])
-              if(posts[i].likes != posts[j].likes && posts[i].id == posts[j].id){
-                console.log(posts[i])
-                if(posts[i].likes > posts[j].likes){
-                  console.log(posts[i])
-                  allposts.push(posts[i])
-                }
-              }
-            }
-          }
-        }
-        setPosts(currentTrainer.Posts);
+        setPosts(currentTrainer?.Posts.filter((post: Post) => post.description !== ''));
+
       }
     };
 

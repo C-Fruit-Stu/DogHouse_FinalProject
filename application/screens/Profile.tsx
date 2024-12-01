@@ -89,11 +89,6 @@ export default function Profile() {
             />
           </View>
           <View style={styles.containerButton}>
-            <TouchableOpacity>
-              <View style={styles.button}>
-                <Text style={styles.buttonText}>Stats</Text>
-              </View>
-            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('AllCostumers', { clientType })}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>Customers</Text>

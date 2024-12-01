@@ -72,7 +72,7 @@ export default function Settings() {
           <TouchableOpacity 
             style={styles.button} 
             onPress={() => {
-              handleLogout();
+            handleLogout();
             navigation.navigate('LogIn')
           }}
           >
