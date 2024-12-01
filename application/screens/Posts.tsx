@@ -45,55 +45,42 @@ export default function Posts() {
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        console.log("clientType:", clientType);
-        console.log("trainerEmail:", trainerEmail);
-  
         if (clientType === 2) {
           if (trainerEmail) {
-            console.log("Fetching posts for specific trainer:", trainerEmail);
             // Fetch posts for the specific trainer
             const fetchedPosts = await GetTrainerPosts(trainerEmail);
-            console.log("Fetched posts for trainerEmail:", fetchedPosts);
-            setPosts(fetchedPosts || []); // Default to an empty array if null
+            const postsArray = Array.isArray(fetchedPosts) ? fetchedPosts : [fetchedPosts];
+            setPosts(postsArray.filter((post: Post) => post.description !== ''));
           } else if (currentCoustumer?.HisTrainer?.length) {
-            console.log("Fetching posts for all followed trainers");
             // Fetch posts from all trainers the customer is following
             const fetchedPostsPromises = currentCoustumer.HisTrainer.map((email: string) =>
-              GetTrainerPosts(email).catch((err: Error) => {
-                console.error(`Error fetching posts for trainer ${email}:`, err);
-                return [];
-              })
+              GetTrainerPosts(email).catch(() => [])
             );
-  
+
             const allFetchedPosts = await Promise.all(fetchedPostsPromises);
             const flattenedPosts = allFetchedPosts.flat();
-            console.log("Flattened posts from all trainers:", flattenedPosts);
             setPosts(flattenedPosts.filter((post: Post) => post.description !== ''));
           } else {
-            console.log("No trainers followed. Setting posts to an empty array.");
-            setPosts([]); // No trainers followed
+            setPosts([]);
           }
         } else if (clientType === 1) {
           if (currentTrainer?.Posts) {
-            console.log("Fetching posts for current trainer:", currentTrainer.email);
             setPosts(currentTrainer.Posts.filter((post: Post) => post.description !== ''));
           } else {
-            console.log("No posts available for the current trainer.");
             setPosts([]);
           }
         } else {
-          console.log("Invalid clientType or no posts to load.");
           setPosts([]);
         }
       } catch (error) {
-        console.error("Error loading posts:", error);
-        setPosts([]); // Handle errors gracefully
+        console.error('Error loading posts:', error);
+        setPosts([]);
       }
     };
-  
+
     loadPosts();
-  }, [clientType, trainerEmail, currentTrainer, currentCoustumer]);
-  
+  }, [clientType, trainerEmail, currentTrainer, currentCoustumer, GetTrainerPosts]);
+
 
 
   const toggleModal = () => setModalVisible(!modalVisible);
@@ -101,8 +88,10 @@ export default function Posts() {
   const handleSubmit = async () => {
     if (clientType === 1 && AddPost) {
       const currentPostCount =
-        currentTrainer?.Posts[0]?.id === '' ? 1 : currentTrainer?.Posts.length + 1 || 1;
-
+        currentTrainer?.Posts && Array.isArray(currentTrainer.Posts)
+          ? currentTrainer.Posts.length + 1
+          : 1;
+  
       const newPost: Post = {
         id: currentPostCount.toString(),
         title: input1.trim(),
@@ -113,10 +102,12 @@ export default function Posts() {
         comments: [],
         isOwner: true,
       };
-
+  
+      console.log('newPost ====>>>', newPost);
+  
       try {
         const response = await AddPost(newPost);
-
+  
         if (response) {
           setPosts((prevPosts) => [...prevPosts, newPost]);
           setModalVisible(false);
@@ -131,6 +122,7 @@ export default function Posts() {
       }
     }
   };
+  
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

@@ -313,15 +313,15 @@ export async function UpdateCard(card1: credit) {
 //         mongo.close();
 //     }
 // }
-
 export async function addonePost(email: string, post: Post) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
         await mongo.connect();
         return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { email },
-            { $addToSet: { Posts: post } }
+            { email, "Posts.id": "" }, // Match where the first post has id === ""
+            { $set: { "Posts.$": post } }, // Replace the matched post
+            { upsert: true } // Create if it doesn't exist
         );
     } catch (error) {
         throw error;
@@ -329,6 +329,8 @@ export async function addonePost(email: string, post: Post) {
         mongo.close();
     }
 }
+
+
 
 export async function updateOnePost(post: Post,id: string) {
     let mongo = new MongoClient(DB_INFO.connection);

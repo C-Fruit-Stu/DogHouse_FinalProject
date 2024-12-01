@@ -129,17 +129,31 @@ export default function TrainerContextProvider({ children }: any) {
         if (currentTrainer) {
             const email = currentTrainer.email;
             newPost = { ...newPost, email };
+    
             if (newPost.title == null || newPost.description == null) {
                 alert("Please enter title and description");
                 return false;
-            }
-            else {
+            } else {
                 try {
-                    console.log('newPost ====>>>', newPost)
-                    let data = await POST('trainer/addnewpost', newPost);
-                    console.log("data" + data);
-                    if (data && data.post) {
-                        return true;
+                    console.log('newPost ====>>>', newPost);
+    
+                    // Check if the first object in Posts is empty
+                    if (
+                        currentTrainer.Posts &&
+                        Array.isArray(currentTrainer.Posts) &&
+                        currentTrainer.Posts.length > 0 &&
+                        currentTrainer.Posts[0]?.id === ""
+                    ) {
+                        // Replace the first empty object
+                        currentTrainer.Posts[0] = newPost;
+                    } else {
+                        // Add the new post normally
+                        let data = await POST('trainer/addnewpost', newPost);
+                        console.log("data" + data);
+    
+                        if (data && data.post) {
+                            return true;
+                        }
                     }
                     return false;
                 } catch (error) {
@@ -147,11 +161,11 @@ export default function TrainerContextProvider({ children }: any) {
                     return false;
                 }
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
+    
 
     async function openNewTraining(trainingSchedule: any) {
         if (currentTrainer) {
