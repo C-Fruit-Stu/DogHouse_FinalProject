@@ -11,7 +11,11 @@ function TrainerContextProvidor({ children }: any) {
 
     const [allTrainer, setAllTrainer] = useState<TrainerType[]>([]);
     const [allCostumers, setAllCostumers] = useState<CoustumerType[]>([]);
-    const [currentTrainer, setCurrentTrainer] = useState<TrainerType>();
+    const [currentTrainer, setCurrentTrainer] = useState(() => {
+        // Default to sessionStorage value if available
+        const storedTrainer = sessionStorage.getItem('trainer');
+        return storedTrainer ? JSON.parse(storedTrainer) : null;
+      });
 
     // useEffect(() => {
     //     const trainer = sessionStorage.getItem('trainer');

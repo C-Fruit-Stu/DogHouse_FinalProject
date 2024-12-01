@@ -17,12 +17,27 @@ const Profile: React.FC = () => {
     const [scheduleDate, setScheduleDate] = useState('');
     const [scheduleTime, setScheduleTime] = useState('');
     useEffect(() => {
-
-        setCurrentTrainer(JSON.parse(sessionStorage.getItem('trainer') as any));
-    }  , []);
-
-
-
+      const storedTrainer = sessionStorage.getItem('trainer');
+      if (!currentTrainer && storedTrainer) {
+        try {
+          const parsedTrainer = JSON.parse(storedTrainer);
+          setCurrentTrainer(parsedTrainer);
+          console.log('Trainer loaded from sessionStorage:', parsedTrainer);
+        } catch (error) {
+          console.error('Failed to parse trainer from sessionStorage:', error);
+        }
+      } else {
+        console.log('Current Trainer is already set:', currentTrainer);
+      }
+    }, [currentTrainer, setCurrentTrainer]); // Empty dependency array ensures this runs only once on mount
+    
+    useEffect(() => {
+      if (currentTrainer) {
+        console.log('Current Trainer updated:', currentTrainer);
+      } else {
+        console.warn('currentTrainer is still undefined.');
+      }
+    }, [currentTrainer]);
 
 
     function handleAddPost(): void {
@@ -68,7 +83,7 @@ const Profile: React.FC = () => {
   return (
     <><>
     <Navigation/>
-      </>        <div className="profile-container">
+    </>        <div className="profile-container">
         <div className="profile-header">
           <img src={currentTrainer?.image} alt="Profile" className="profile-image" />
           <h1 className="profile-name">
@@ -79,11 +94,18 @@ const Profile: React.FC = () => {
 
         <div className="profile-info">
           <h2>Customer Schedules</h2>
-          <ul className="schedule-list">
-            <li>Monday: Training with Alex - 10:00 AM</li>
-            <li>Wednesday: Training with Max - 2:00 PM</li>
-            <li>Friday: Training with Bella - 4:00 PM</li>
-          </ul>
+          <div className="schedule-list">
+          {
+            currentTrainer.trainingSchedule.map((schedule: any, index: any) => (
+              <div key={index} style={{ display: 'flex', flexDirection: 'column',border: '1px solid #ccc', padding: '10px', marginBottom: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
+                <p>Name: {schedule.name}</p>
+                <p>Date: {schedule.date}</p>
+                <p>Time: {schedule.time}</p>
+                <button className="delete-schedule-button"onClick={() => handaleDeleteSchedule(schedule.date, schedule.time)}>Delete</button>
+              </div>
+            ))
+          }
+          </div>
 
           {/* New Schedule Section */}
           <div className="schedule-inputs">
@@ -116,7 +138,7 @@ const Profile: React.FC = () => {
               Submit Schedule
             </button>
           </div>
-          {currentTrainer?.openDates.length > 0 && (
+          {/* {currentTrainer?.openDates.length > 0 && (
             <div className="open-schedules-container">
               <h3>Open Schedules</h3>
               <ul className="open-schedules-list">
@@ -135,46 +157,36 @@ const Profile: React.FC = () => {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
 
           <h2>Posts</h2>
-          <div className="posts-header">
-            <div className="posts-list">
-              <div className="post-item">
-                <img src="/path-to-post-image1.jpg" alt="Post 1" className="post-image" />
-                <p>Training Tips for German Shepherds</p>
+          <div className='posts'>
+          {
+            (currentTrainer?.Posts && currentTrainer?.Posts.length > 0) ?
+            currentTrainer?.Posts.map((post: any, index: any) => (
+              <div className="posts-container">
+                  <div key={index} className="post-item">
+                    <img src={post.image} alt={`Post ${index + 1}`} className="post-image" />
+                    <p className="post-title">{post.title}</p>
+                    <img src={post.image} alt="image post" />
+                    <p className="post-title">{post.description}</p>
+                    <p className="post-title">{post.likes}</p>
+                  </div>
               </div>
-              <div className="post-item">
-                <img src="/path-to-post-image2.jpg" alt="Post 2" className="post-image" />
-                <p>How to Handle Aggressive Dogs</p>
-              </div>
-              <div className="post-item">
-                <img src="/path-to-post-image3.jpg" alt="Post 3" className="post-image" />
-                <p>Benefits of Consistent Training</p>
-              </div>
-            </div>
+            )) :
+            <p>No posts found.</p>
+          }
+          </div>
+
 
             {/* Add Post Button */}
             <button className="add-post-button" onClick={handleAddPost}>
               Add Post
             </button>
           </div>
-
-          <h2>Income and Outcome</h2>
-          <div className="income-outcome">
-            <div className="income">
-              <h3>Income</h3>
-              <p>Total: $4000</p>
-            </div>
-            <div className="outcome">
-              <h3>Outcome</h3>
-              <p>Total: $2000</p>
-            </div>
-          </div>
         </div>
-      </div>
           <Footer/>
-          </>
+    </>
   );
 };
 
