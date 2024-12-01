@@ -518,7 +518,7 @@ export async function removeScheduleByDate(email: string, date: string) {
             .collection(DB_INFO.collection)
             .updateOne(
                 { email },
-                { $pull: { trainingSchedule: { date: new Date(date) } } as any } // Match Date object
+                { $pull: { trainingSchedule: { date } } as any } // Match Date object
             );
     } catch (error) {
         console.error("Error in removeScheduleByDate:", error);

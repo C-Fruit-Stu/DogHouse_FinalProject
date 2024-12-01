@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
     View,
     Text,
@@ -9,12 +9,12 @@ import {
     Button,
     Alert,
     Dimensions,
-} from 'react-native';
-import { Calendar } from 'react-native-calendars';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { TrainerContext } from '../context/TrainerContextProvider';
-import { CoustumerContext } from '../context/CoustumerContextProvider';
+} from "react-native";
+import { Calendar } from "react-native-calendars";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { TrainerContext } from "../context/TrainerContextProvider";
+import { CoustumerContext } from "../context/CoustumerContextProvider";
 
 type RouteParams = {
     clientType?: number;
@@ -22,14 +22,14 @@ type RouteParams = {
 
 type TrainingSchedule = {
     name: string;
-    date: string; // Server-provided format
+    date: string; // Format: DD/MM/YYYY
     time: string;
     price: number;
     trainerEmail?: string;
 };
 
 export default function TrainingSchedules() {
-    const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
+    const route = useRoute<RouteProp<{ params: RouteParams }, "params">>();
     const clientType = route.params?.clientType;
     const { currentCoustumer, addSchedule } = useContext(CoustumerContext);
     const { getAllTrainersSchedules, addPayment } = useContext(TrainerContext);
@@ -41,31 +41,33 @@ export default function TrainingSchedules() {
     const [displayedSchedules, setDisplayedSchedules] = useState<TrainingSchedule[]>([]);
 
     // Normalize date format
-    const normalizeDate = (date: any): string => {
-        if (typeof date === 'string' && date.includes('-')) {
-            return date; // Already normalized (YYYY-MM-DD)
+    const normalizeDate = (date: string): string => {
+        if (date.includes("/")) {
+            return date; // Already in DD/MM/YYYY
         }
-        if (typeof date === 'string' && date.includes('/')) {
-            const parts = date.split('/');
-            if (parts.length === 3) {
-                const [day, month, year] = parts;
-                return `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-            } else {
-                console.warn("Unexpected date format, unable to split into day/month/year:", date);
-            }
+        if (date.includes("-")) {
+            const [year, month, day] = date.split("-");
+            return `${day}/${month}/${year}`;
         }
         console.warn("Unexpected date format:", date);
-        return ""; // Return an empty string for unexpected formats
+        return ""; // Return empty string for invalid dates
     };
-    
 
+    const normalizeDateToISO = (date: string): string => {
+        if (date.includes("-")) {
+            return date; // Already in YYYY-MM-DD
+        }
+        if (date.includes("/")) {
+            const [day, month, year] = date.split("/");
+            return `${year}-${month}-${day}`;
+        }
+        console.warn("Unexpected date format:", date);
+        return ""; // Return empty string for invalid dates
+    };
 
-
-        const clearStorageOnReload = async () => {
-            await AsyncStorage.removeItem("TrainersSchedules");
-            clearStorageOnReload();
-        };
-    
+    const clearStorageOnReload = async () => {
+        await AsyncStorage.removeItem("TrainersSchedules");
+    };
 
     useEffect(() => {
         const fetchSchedules = async () => {
@@ -73,21 +75,19 @@ export default function TrainingSchedules() {
                 if (clientType === 2) {
                     let schedules: TrainingSchedule[] = [];
                     const storedSchedules = await AsyncStorage.getItem("TrainersSchedules");
-    
+
                     if (storedSchedules) {
-                        // Load and normalize schedules from AsyncStorage
                         console.log("Loaded TrainersSchedules from AsyncStorage:", storedSchedules);
                         schedules = JSON.parse(storedSchedules).map((schedule: any) => ({
                             ...schedule,
-                            date: normalizeDate(schedule.date), // Normalize date
+                            date: normalizeDate(schedule.date),
                         }));
-    
+
                         setTrainersSchedules(schedules);
-    
-                        // Mark dates in the calendar
+
                         const markedDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
                         schedules.forEach((schedule: any) => {
-                            markedDates[schedule.date] = {
+                            markedDates[normalizeDateToISO(schedule.date)] = {
                                 marked: true,
                                 dotColor: "green",
                                 selectedColor: "green",
@@ -95,26 +95,23 @@ export default function TrainingSchedules() {
                         });
                         setMarkedDates(markedDates);
                     } else {
-                        // Fetch schedules from the server if not in AsyncStorage
                         console.log("Fetching schedules from server...");
                         const response = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
-    
+
                         if (response && response.length > 0) {
                             schedules = response.map((schedule: any) => ({
                                 ...schedule,
                                 date: normalizeDate(schedule.date),
                             }));
-    
-                            // Save fetched schedules to AsyncStorage
+
                             await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(schedules));
                             console.log("New TrainersSchedules saved to AsyncStorage:", schedules);
-    
+
                             setTrainersSchedules(schedules);
-    
-                            // Mark dates in the calendar
+
                             const markedDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
                             schedules.forEach((schedule: any) => {
-                                markedDates[schedule.date] = {
+                                markedDates[normalizeDateToISO(schedule.date)] = {
                                     marked: true,
                                     dotColor: "green",
                                     selectedColor: "green",
@@ -126,12 +123,12 @@ export default function TrainingSchedules() {
                         }
                     }
                 }
-    
-                // Mark customer-specific schedules (if any)
+
                 if (currentCoustumer?.trainingSchedule[0].name !== "") {
                     const customerDates: Record<string, { marked: boolean; dotColor: string; selectedColor: string }> = {};
                     currentCoustumer.trainingSchedule.forEach((schedule: any) => {
-                        customerDates[normalizeDate(schedule.date)] = {
+                        const formattedDate = normalizeDate(schedule.date);
+                        customerDates[normalizeDateToISO(formattedDate)] = {
                             marked: true,
                             dotColor: "blue",
                             selectedColor: "blue",
@@ -143,29 +140,25 @@ export default function TrainingSchedules() {
                 console.error("Error in fetchSchedules:", error);
             }
         };
-    
+
         fetchSchedules();
     }, [clientType, currentCoustumer, getAllTrainersSchedules]);
-    
-
-
-
 
     const handleAction = async (schedule: TrainingSchedule) => {
         Alert.alert(
             "Confirm Training",
-            `If you accept the training it will cost you $${schedule.price} and it will be transferred automatically to the trainer.\n\nName: ${schedule.name}\nTime: ${schedule.time}\nPrice: $${schedule.price}`,
+            `If you accept the training it will cost you $${schedule.price} and it will be transferred automatically to the trainer.\n\nName: ${schedule.name}\nDate: ${schedule.date}\nTime: ${schedule.time}`,
             [
                 { text: "Cancel", style: "cancel" },
                 {
                     text: "Confirm",
                     onPress: async () => {
                         try {
-                            // Add payment to trainer and delete the schedule from his db
-                            console.log('info from frontend: ',schedule);
-                            await addPayment(schedule.trainerEmail, schedule.date, schedule.price);
+                            console.log("Info from frontend:", schedule);
+                            await addPayment(schedule.trainerEmail, normalizeDateToISO(schedule.date), schedule.price);
 
-                            console.log("schedule ====>>>", schedule);
+                            console.log("schedule:", schedule);
+
                             // Add schedule to customer currentCostumer and db
                             // await addSchedule(schedule);
 
@@ -198,7 +191,9 @@ export default function TrainingSchedules() {
     const handleDatePress = (date: any) => {
         const normalizedDate = normalizeDate(date.dateString);
         setSelectedDate(normalizedDate);
-        const filteredSchedules = trainersSchedules.filter((schedule) => schedule.date === normalizedDate);
+        const filteredSchedules = trainersSchedules.filter(
+            (schedule) => schedule.date === normalizedDate
+        );
         setDisplayedSchedules(filteredSchedules);
         setModalVisible(true);
     };
@@ -217,11 +212,7 @@ export default function TrainingSchedules() {
                     <Text style={styles.listItem}>
                         {item.name} at {item.time}, ${item.price} (Trainer: {item.trainerEmail})
                     </Text>
-                    <Button
-                        title="Accept"
-                        onPress={() => handleAction(item)}
-                        color="#1DBD7B"
-                    />
+                    <Button title="Accept" onPress={() => handleAction(item)} color="#1DBD7B" />
                 </View>
             )}
         />
@@ -230,9 +221,7 @@ export default function TrainingSchedules() {
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>
-                {clientType === 1
-                    ? "Trainer: Select a Training Date"
-                    : "Customer: View Available Dates"}
+                {clientType === 1 ? "Trainer: Select a Training Date" : "Customer: View Available Dates"}
             </Text>
             <Calendar
                 onDayPress={handleDatePress}
@@ -255,9 +244,7 @@ export default function TrainingSchedules() {
                 <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} />
                 <View style={styles.modalContent}>
                     <Text style={styles.modalHeader}>
-                        {selectedDate
-                            ? `Selected Date: ${selectedDate}`
-                            : "No Date Selected"}
+                        {selectedDate ? `Selected Date: ${selectedDate}` : "No Date Selected"}
                     </Text>
                     {renderList()}
                     <Button title="Close" onPress={closeModal} color="#1DBD7B" />
