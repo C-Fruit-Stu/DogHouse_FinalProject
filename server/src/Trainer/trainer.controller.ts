@@ -205,7 +205,6 @@ export async function addNewPost(req: Request, res: Response) {
             likedByUser,
             comments,
             isOwner,
-            trainerEmail
         };
 
         console.log("Post received in addNewPost:", post);
@@ -217,6 +216,7 @@ export async function addNewPost(req: Request, res: Response) {
         res.status(500).json({ error });
     }
 }
+
 
 
 

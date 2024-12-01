@@ -127,8 +127,7 @@ export default function TrainerContextProvider({ children }: any) {
 
     async function AddPost(newPost: Post) {
         if (currentTrainer) {
-            const trainerEmail = currentTrainer.email;
-            newPost = { ...newPost, trainerEmail };
+            const trainerEmail = currentTrainer.email; // Extract the trainer's email
     
             if (!newPost.title || !newPost.description) {
                 alert("Please enter title and description");
@@ -138,14 +137,15 @@ export default function TrainerContextProvider({ children }: any) {
             try {
                 console.log('Adding new post:', newPost);
     
-                const data = await POST('trainer/addnewpost', newPost);
+                // Send the post to the server without including the email in the post object
+                const data = await POST('trainer/addnewpost', { ...newPost, trainerEmail });
     
                 if (data && data.result) {
                     // Update local trainer posts
                     if (!currentTrainer.Posts) {
                         currentTrainer.Posts = [];
                     }
-                    currentTrainer.Posts.push(newPost); // Update local copy
+                    currentTrainer.Posts.push(newPost); // Add to local copy
                     return true;
                 }
     
@@ -158,6 +158,7 @@ export default function TrainerContextProvider({ children }: any) {
             return false;
         }
     }
+    
     
     
     

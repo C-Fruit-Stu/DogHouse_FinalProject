@@ -183,7 +183,7 @@ export async function checkUpdate(card: string, date: string, ccv: string, id: O
 export async function addAnotherPost(email: string, post: Post) {
     try {
         console.log("Adding post to database:", post);
-        return await addonePost(email, post);
+        return await addonePost(email, post); // Use email for locating the trainer
     } catch (error) {
         console.error("Error in addAnotherPost:", error);
         throw error;

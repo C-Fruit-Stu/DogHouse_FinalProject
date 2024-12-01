@@ -319,11 +319,11 @@ export async function addonePost(email: string, post: Post) {
     try {
         await mongo.connect();
 
-        // Directly push the new post to the Posts array
+        // Add the new post to the Posts array
         const result = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
             { email }, // Match the trainer by email
-            { $push: { Posts: post } as any }, // Append the new post
-            { upsert: true } // Create a new document if it doesn't exist
+            { $push: { Posts: [post] } }, // Append the post to the array
+            { upsert: false } // Do not create a new document if it doesn't exist
         );
 
         return result;
@@ -334,6 +334,7 @@ export async function addonePost(email: string, post: Post) {
         await mongo.close();
     }
 }
+
 
 
 
