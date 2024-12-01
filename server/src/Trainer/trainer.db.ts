@@ -314,24 +314,18 @@ export async function UpdateCard(card1: credit) {
 //     }
 // }
 export async function addonePost(email: string, post: Post) {
-    const mongo = new MongoClient(DB_INFO.connection);
+    let mongo = new MongoClient(DB_INFO.connection);
 
     try {
         await mongo.connect();
-
-        // Add the new post to the Posts array
-        const result = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { email }, // Match the trainer by email
-            { $push: { Posts: [post] } }, // Append the post to the array
-            { upsert: false } // Do not create a new document if it doesn't exist
+        return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
+            { email },
+            { $addToSet: { Posts: post } }
         );
-
-        return result;
     } catch (error) {
-        console.error("Error in addonePost:", error);
         throw error;
     } finally {
-        await mongo.close();
+        mongo.close();
     }
 }
 
