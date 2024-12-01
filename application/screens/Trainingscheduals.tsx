@@ -68,6 +68,9 @@ export default function TrainingSchedules() {
     const clearStorageOnReload = async () => {
         await AsyncStorage.removeItem("TrainersSchedules");
     };
+    useEffect(() => {
+        clearStorageOnReload();
+    }, []);
 
     useEffect(() => {
         const fetchSchedules = async () => {
@@ -160,7 +163,7 @@ export default function TrainingSchedules() {
                             console.log("schedule:", schedule);
 
                             // Add schedule to customer currentCostumer and db
-                            // await addSchedule(schedule);
+                            await addSchedule(schedule, currentCoustumer?.email);
 
                             // Update AsyncStorage (filter only the accepted schedule)
                             // const updatedSchedules = trainersSchedules.filter(
@@ -177,7 +180,7 @@ export default function TrainingSchedules() {
                             //     [normalizeDate(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
                             // }));
                             // console.log("Updated TrainersSchedules:", updatedSchedules);
-                            // clearStorageOnReload();
+                            clearStorageOnReload();
                         } catch (error) {
                             console.error("Error processing action:", error);
                             Alert.alert("Error", "Something went wrong while processing the action.");

@@ -173,14 +173,14 @@ export async function addTrainer(req: Request, res: Response) {
 }
 
 export async function addSchedule(req: Request, res: Response) {
-    const schedule = req.body;
+    const {schedule, CostumerEmail} = req.body;
 
     if (!schedule || !schedule.email || !schedule.date || !schedule.name) {
         return res.status(400).json({ msg: "Invalid schedule information" });
     }
 
     try {
-        const result = await addScheduleToArray(schedule);
+        const result = await addScheduleToArray(schedule,CostumerEmail);
         if (result.modifiedCount > 0) {
             return res.status(200).json({ msg: "Schedule added successfully" });
         } else {

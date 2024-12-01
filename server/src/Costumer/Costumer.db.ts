@@ -147,21 +147,28 @@ export async function addTrainerEmail(TrainerEmail: string, CostumerEmail: strin
     }
 }
 
-export async function addScheduleToArrayDB(schedule: trainingSchedule) {
+export async function addScheduleToArrayDB(schedule: trainingSchedule, costumerEmail: string) {
     const mongo = new MongoClient(DB_INFO.connection);
     try {
         await mongo.connect();
-        return await mongo
+
+        // Add the schedule to the customer's `trainingSchedule` array
+        const result = await mongo
             .db(DB_INFO.name)
             .collection(DB_INFO.Collection)
             .updateOne(
-                { email: schedule.email },
-                { $addToSet: { trainingSchedule: schedule } } // Append to trainingSchedule array
+                { email: costumerEmail }, // Match the customer's email
+                { $addToSet: { trainingSchedule: schedule } } // Add the schedule to the array
             );
+
+        console.log(`Schedule added to ${costumerEmail}: ${JSON.stringify(result)}`);
+        return result;
     } catch (error) {
+        console.error("Error in addScheduleToArrayDB:", error);
         throw error;
     } finally {
-        mongo.close();
+        await mongo.close();
     }
 }
+
 

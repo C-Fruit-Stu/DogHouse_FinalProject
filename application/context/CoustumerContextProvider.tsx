@@ -156,10 +156,10 @@ export default function CoustumerContextProvider({ children }: any) {
         }
     }
 
-    async function addSchedule(schedule: trainingSchedule) {
+    async function addSchedule(schedule: trainingSchedule, CostumerEmail: string) {
         try {
             console.log("Adding schedule to customer:", schedule);
-            let data = await POST("costumer/addSchedule", schedule);
+            let data = await POST('costumer/addSchedule', {schedule,CostumerEmail});
             console.log("Response from server:", data);
     
             if (data?.costumer) {

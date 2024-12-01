@@ -92,9 +92,9 @@ export async function addEmailToArray(TrainerEmail: string, CostumerEmail: strin
     }
 }
 
-export async function addScheduleToArray(schedule: trainingSchedule) {
+export async function addScheduleToArray(schedule: trainingSchedule,CostumerEmail: string) {
     try {
-        return await addScheduleToArrayDB(schedule);
+        return await addScheduleToArrayDB(schedule,CostumerEmail);
     } catch (error) {
         throw error;
     }

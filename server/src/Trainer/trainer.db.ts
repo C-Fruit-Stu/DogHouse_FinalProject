@@ -508,8 +508,6 @@ export async function addPaymentToClient(email: string, price: number) {
     }
 }
 
-// Remove the specific schedule
-// Remove the specific schedule
 export async function removeScheduleByDate(email: string, date: string) {
     const mongo = new MongoClient(DB_INFO.connection);
 
@@ -518,10 +516,8 @@ export async function removeScheduleByDate(email: string, date: string) {
 
         // Ensure the `date` is in the same format as stored in the database (DD/MM/YYYY)
         const normalizedDate = date.includes("-")
-            ? date.split("-").reverse().join("/") // Convert "YYYY-MM-DD" to "DD/MM/YYYY"
-            : date; // Already in "DD/MM/YYYY" format
-
-        console.log(`Normalized date for removal: ${normalizedDate}`);
+            ? date.split("-").reverse().join("/") 
+            : date; 
 
         // Perform the `$pull` operation
         const result = await mongo
@@ -529,10 +525,8 @@ export async function removeScheduleByDate(email: string, date: string) {
             .collection(DB_INFO.collection)
             .updateOne(
                 { email },
-                { $pull: { trainingSchedule: { date: normalizedDate } }as any } // Match by normalized date
+                { $pull: { trainingSchedule: { date: normalizedDate } }as any } 
             );
-
-        console.log(`Remove schedule result: ${JSON.stringify(result)}`);
 
         return result;
     } catch (error) {

@@ -257,7 +257,6 @@ export default function TrainerContextProvider({ children }: any) {
             if (data && data.result) {
                 return data.result;
             } else {
-                console.warn("No schedules found for the given trainers.");
                 return [];
             }
         } catch (error) {
@@ -272,8 +271,7 @@ export default function TrainerContextProvider({ children }: any) {
             const payload = { email, date, price };
             console.log("Payload sent to server:", payload);
             let data = await POST("trainer/addpayment", payload);
-            console.log("Response from server:", data);
-    
+
             if (data) {
                 return true; // Payment and schedule removal succeeded
             }
