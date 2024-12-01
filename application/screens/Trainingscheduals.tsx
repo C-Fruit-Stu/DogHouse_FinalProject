@@ -69,7 +69,7 @@ export default function TrainingSchedules() {
                 let schedules: TrainingSchedule[] = [];
                 const savedMarkedDates = await AsyncStorage.getItem("MarkedDates");
                 const localMarkedDates = savedMarkedDates ? JSON.parse(savedMarkedDates) : {};
-    
+
                 if (clientType === 2) {
                     // Fetch customer training schedules and mark them blue
                     if (currentCoustumer?.trainingSchedule) {
@@ -78,7 +78,7 @@ export default function TrainingSchedules() {
                             date: normalizeDate(schedule.date),
                         }));
                         schedules = [...schedules, ...customerSchedules];
-    
+
                         customerSchedules.forEach((schedule: TrainingSchedule) => {
                             localMarkedDates[normalizeDateToISO(schedule.date)] = {
                                 marked: true,
@@ -87,7 +87,7 @@ export default function TrainingSchedules() {
                             };
                         });
                     }
-    
+
                     // Fetch trainer schedules and mark them green
                     const trainerSchedules = await getAllTrainersSchedules(currentCoustumer?.HisTrainer || []);
                     if (trainerSchedules) {
@@ -96,7 +96,7 @@ export default function TrainingSchedules() {
                             date: normalizeDate(schedule.date),
                         }));
                         schedules = [...schedules, ...trainerSchedulesFormatted];
-    
+
                         trainerSchedulesFormatted.forEach((schedule: any) => {
                             if (!localMarkedDates[normalizeDateToISO(schedule.date)]) {
                                 localMarkedDates[normalizeDateToISO(schedule.date)] = {
@@ -108,7 +108,7 @@ export default function TrainingSchedules() {
                         });
                     }
                 }
-    
+
                 setTrainersSchedules(schedules);
                 setMarkedDates(localMarkedDates);
                 await AsyncStorage.setItem("MarkedDates", JSON.stringify(localMarkedDates));
@@ -116,10 +116,10 @@ export default function TrainingSchedules() {
                 console.error("Error in fetchSchedules:", error);
             }
         };
-    
+
         fetchSchedules();
     }, [clientType, currentCoustumer, getAllTrainersSchedules]);
-    
+
 
     const handleAction = async (schedule: TrainingSchedule) => {
         Alert.alert(
@@ -169,6 +169,7 @@ export default function TrainingSchedules() {
         />
     );
 
+
     const renderList = () => (
         <FlatList
             data={displayedSchedules}
@@ -189,7 +190,7 @@ export default function TrainingSchedules() {
         setSelectedDate(null);
     };
 
-    if (trainerScheduleVisible && clientType === 1) {
+    if (clientType === 1) {
         return (
             <View style={styles.container}>
                 <Text style={styles.headerText}>Trainer's Schedule</Text>
@@ -197,49 +198,50 @@ export default function TrainingSchedules() {
             </View>
         );
     }
+    else {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.headerText}>
+                    {clientType === 1 ? "Trainer: View Training Schedule" : "Customer: View Available Dates"}
+                </Text>
+                <Calendar
+                    onDayPress={(date: any) => {
+                        const normalizedDate = normalizeDate(date.dateString);
+                        setSelectedDate(normalizedDate);
+                        const filteredSchedules = trainersSchedules.filter(
+                            (schedule) => schedule.date === normalizedDate
+                        );
+                        setDisplayedSchedules(filteredSchedules);
+                        setModalVisible(true);
+                    }}
+                    markedDates={markedDates}
+                    theme={{
+                        selectedDayBackgroundColor: clientType === 1 ? "blue" : "green",
+                        todayTextColor: "red",
+                        arrowColor: "black",
+                        monthTextColor: "black",
+                        textDayFontWeight: "600",
+                    }}
+                />
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.headerText}>
-                {clientType === 1 ? "Trainer: View Training Schedule" : "Customer: View Available Dates"}
-            </Text>
-            <Calendar
-                onDayPress={(date: any) => {
-                    const normalizedDate = normalizeDate(date.dateString);
-                    setSelectedDate(normalizedDate);
-                    const filteredSchedules = trainersSchedules.filter(
-                        (schedule) => schedule.date === normalizedDate
-                    );
-                    setDisplayedSchedules(filteredSchedules);
-                    setModalVisible(true);
-                }}
-                markedDates={markedDates}
-                theme={{
-                    selectedDayBackgroundColor: clientType === 1 ? "blue" : "green",
-                    todayTextColor: "red",
-                    arrowColor: "black",
-                    monthTextColor: "black",
-                    textDayFontWeight: "600",
-                }}
-            />
-
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="slide"
-                onRequestClose={closeModal}
-            >
-                <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} />
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalHeader}>
-                        {selectedDate ? `Selected Date: ${selectedDate}` : "No Date Selected"}
-                    </Text>
-                    {renderList()}
-                    <Button title="Close" onPress={closeModal} color="#1DBD7B" />
-                </View>
-            </Modal>
-        </View>
-    );
+                <Modal
+                    visible={modalVisible}
+                    transparent={true}
+                    animationType="slide"
+                    onRequestClose={closeModal}
+                >
+                    <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} />
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalHeader}>
+                            {selectedDate ? `Selected Date: ${selectedDate}` : "No Date Selected"}
+                        </Text>
+                        {renderList()}
+                        <Button title="Close" onPress={closeModal} color="#1DBD7B" />
+                    </View>
+                </Modal>
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
