@@ -314,25 +314,17 @@ export async function UpdateCard(card1: credit) {
 //     }
 // }
 export async function addonePost(email: string, post: Post) {
-    let mongo = new MongoClient(DB_INFO.connection);
+    const mongo = new MongoClient(DB_INFO.connection);
 
     try {
         await mongo.connect();
 
-        // Check if there is a placeholder post with id === ""
+        // Directly push the new post to the Posts array
         const result = await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-            { email, "Posts.id": "" }, // Match trainers with a placeholder post
-            { $set: { "Posts.$": post } }, // Replace the placeholder post
-            { upsert: true } // Create if it doesn't exist
+            { email }, // Match the trainer by email
+            { $push: { Posts: post } as any }, // Append the new post
+            { upsert: true } // Create a new document if it doesn't exist
         );
-
-        if (result.matchedCount === 0) {
-            // If no placeholder exists, add the new post
-            return await mongo.db(DB_INFO.name).collection(DB_INFO.collection).updateOne(
-                { email },
-                { $push: { Posts: post } } as any
-            );
-        }
 
         return result;
     } catch (error) {
@@ -346,7 +338,8 @@ export async function addonePost(email: string, post: Post) {
 
 
 
-export async function updateOnePost(post: Post,id: string) {
+
+export async function updateOnePost(post: Post, id: string) {
     let mongo = new MongoClient(DB_INFO.connection);
 
     try {
@@ -532,8 +525,8 @@ export async function removeScheduleByDate(email: string, date: string) {
 
         // Ensure the `date` is in the same format as stored in the database (DD/MM/YYYY)
         const normalizedDate = date.includes("-")
-            ? date.split("-").reverse().join("/") 
-            : date; 
+            ? date.split("-").reverse().join("/")
+            : date;
 
         // Perform the `$pull` operation
         const result = await mongo
@@ -541,7 +534,7 @@ export async function removeScheduleByDate(email: string, date: string) {
             .collection(DB_INFO.collection)
             .updateOne(
                 { email },
-                { $pull: { trainingSchedule: { date: normalizedDate } }as any } 
+                { $pull: { trainingSchedule: { date: normalizedDate } } as any }
             );
 
         return result;
