@@ -125,32 +125,40 @@ export default function TrainerContextProvider({ children }: any) {
         }
     }
 
-    async function AddPost(newPost: any) {
+    async function AddPost(newPost: Post) {
         if (currentTrainer) {
-            const email = currentTrainer.email;
-            newPost = { ...newPost, email };
+            const trainerEmail = currentTrainer.email;
+            newPost = { ...newPost, trainerEmail };
     
-            if (newPost.title == null || newPost.description == null) {
+            if (!newPost.title || !newPost.description) {
                 alert("Please enter title and description");
                 return false;
-            } else {
-                try {
-                    console.log('newPost ====>>>', newPost);
-                    let data = await POST('trainer/addnewpost', newPost);
-                    console.log("data" + data);
-                    if (data && data.post) {
-                        return true;
+            }
+    
+            try {
+                console.log('Adding new post:', newPost);
+    
+                const data = await POST('trainer/addnewpost', newPost);
+    
+                if (data && data.result) {
+                    // Update local trainer posts
+                    if (!currentTrainer.Posts) {
+                        currentTrainer.Posts = [];
                     }
-                    return false;
-                } catch (error) {
-                    console.log(error);
-                    return false;
+                    currentTrainer.Posts.push(newPost); // Update local copy
+                    return true;
                 }
+    
+                return false;
+            } catch (error) {
+                console.error("Error in AddPost:", error);
+                return false;
             }
         } else {
             return false;
         }
     }
+    
     
     
 

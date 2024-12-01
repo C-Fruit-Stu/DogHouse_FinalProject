@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getAllUsers, findUserById, LoginUser, RegisterUser, removeUser, deactiveUser, ChangePass, checkUpdate, addAnotherPost, showallpostsbyid, getAllPosts1, deactivePost, AddTraining, DeleteTraining, OpenTraining, CloseTraining, getAllTrainersInfo, showPostsByEmail, getUserByEmail, addEmailToArray, getAllScheduleInfo, CheckInfo, addPaymentToTotalIncome, updatePost } from "./trainer.model";
 
-import { TrainerUser } from "./trainer.type";
+import { TrainerUser,Post } from "./trainer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
 import { ObjectId } from "mongodb";
 import e from "cors";
@@ -189,16 +189,31 @@ export async function updatePayment(req: Request, res: Response) {
 
 
 export async function addNewPost(req: Request, res: Response) {
-    console.log(req.body);
-    let { email, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body;
-
-    if (!title || !description)
-        return res.status(400).json({ msg: "invalid info" });
-
     try {
-        let result = await addAnotherPost(email, id, title, description, image, likes, likedByUser, comments, isOwner);
+        const { trainerEmail, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body;
+
+        if (!title || !description) {
+            return res.status(400).json({ msg: "Title and description are required" });
+        }
+
+        const post: Post = {
+            id,
+            title,
+            description,
+            image,
+            likes,
+            likedByUser,
+            comments,
+            isOwner,
+            trainerEmail
+        };
+
+        console.log("Post received in addNewPost:", post);
+
+        const result = await addAnotherPost(trainerEmail, post);
         res.status(200).json({ result });
     } catch (error) {
+        console.error("Error in addNewPost:", error);
         res.status(500).json({ error });
     }
 }

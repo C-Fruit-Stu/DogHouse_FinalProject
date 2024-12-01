@@ -54,4 +54,6 @@ export type Post = {
     likedByUser: boolean;
     comments: Comment[];
     isOwner: boolean;
+    trainerEmail?:string;
+
 };
