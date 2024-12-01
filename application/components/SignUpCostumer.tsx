@@ -272,11 +272,6 @@ export default function SignUpCustomer() {
               <Text style={styles.TextButton}>Pick Image</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.buttonNext}>
-            <TouchableOpacity onPress={() => setCameraOpen(true)} style={styles.link}>
-              <Text style={styles.TextButton}>Open Camera</Text>
-            </TouchableOpacity>
-          </View>
         </View>
         {cameraOpen && <CameraComponent />}
         <View style={styles.dateInput}>

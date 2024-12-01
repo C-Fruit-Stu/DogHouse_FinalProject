@@ -76,20 +76,34 @@ export default function FindTrainer() {
                 </Text>
                 <Text style={styles.trainerExperience}>Experience: {item.experience || 0} years</Text>
                 <Text style={styles.trainerAge}>Age: {item.dob ? calculateAge(item.dob) : 'N/A'}</Text>
-                <View style={styles.buttonsContainer}>
-                    <TouchableOpacity style={[styles.button, styles.viewPostsButton]} onPress={() => showPosts(item.email)}>
-                        <Icon name="eye" size={20} color="#fff" />
-                        <Text style={styles.buttonText}>View Posts</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, styles.likeButton]} onPress={() => {}}>
-                        <Icon name="thumbs-up" size={20} color="#fff" />
-                        <Text style={styles.buttonText}>Like</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, styles.followButton]} onPress={() => addTrainerToList(item.email)}>
-                        <Icon name="plus" size={20} color="#fff" />
-                        <Text style={styles.buttonText}>Follow</Text>
-                    </TouchableOpacity>
-                </View>
+                <Animatable.View
+                        animation="fadeInUp"
+                        duration={500}
+                        style={styles.buttonsContainer}
+                        >
+                        <TouchableOpacity
+                            style={[styles.button, styles.viewPostsButton]}
+                            onPress={() => showPosts(item.email)}
+                            activeOpacity={0.8}
+                        >
+                            <Icon name="eye" size={20} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.button, styles.likeButton]}
+                            onPress={() => {}}
+                            activeOpacity={0.8}
+                        >
+                            <Icon name="thumbs-up" size={20} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.button, styles.followButton]}
+                            onPress={() => addTrainerToList(item.email)}
+                            activeOpacity={0.8}
+                        >
+                            <Icon name="plus" size={20} color="#fff" />
+                        </TouchableOpacity>
+                        </Animatable.View>
+
             </View>
         </Animatable.View>
     );
@@ -155,41 +169,49 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#777',
     },
-    buttonsContainer: {
-        flexDirection: 'row',
-        marginTop: 10,
-        justifyContent: 'space-between',
-    },
-    button: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-    },
-    viewPostsButton: {
-        backgroundColor: '#007BFF',
-    },
-    likeButton: {
-        backgroundColor: '#28a745',
-    },
-    followButton: {
-        backgroundColor: '#ffc107',
-    },
-    buttonText: {
-        color: '#fff',
-        marginLeft: 5,
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
+
     noDataText: {
         fontSize: 18,
         color: '#777',
         textAlign: 'center',
         marginTop: 50,
     },
+
+    buttonsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+      },
+      button: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 25,
+        marginHorizontal: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 5,
+      },
+      viewPostsButton: {
+        backgroundColor: "#4caf50", // Green
+      },
+      likeButton: {
+        backgroundColor: "#ff5722", // Orange
+      },
+      followButton: {
+        backgroundColor: "#2196f3", // Blue
+      },
+      buttonText: {
+        color: "#fff",
+        fontSize: 16,
+        marginLeft: 10,
+      },
 });

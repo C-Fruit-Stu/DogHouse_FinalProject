@@ -169,7 +169,7 @@ function TrainerContextProvidor({ children }: any) {
             console.log("data   " + data.costumers);
             if (data && data.costumers) {
                 setAllCostumers(data.costumers);
-                return data.users;
+                return data.costumers;
             }
             return false;
         } catch (error) {

@@ -27,9 +27,6 @@ const Admin: React.FC = () => {
             <Link to="/admin/reports" className="admin-link">View Reports</Link>
           </li>
           <li>
-            <Link to="/settings" className="admin-link">Settings</Link>
-          </li>
-          <li>
             <Link to="/" className="admin-link">Logout</Link>
           </li>
         </ul>

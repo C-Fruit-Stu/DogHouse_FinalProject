@@ -5,37 +5,48 @@ import { TrainerContext } from '../context/TrainerContextProvidor';
 
 interface User {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
 }
 
 const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const navigate = useNavigate(); 
-  const { getAllUsers,DeleteTrainer } = useContext(TrainerContext);
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const navigate = useNavigate();
+  const { getAllUsers, DeleteTrainer } = useContext(TrainerContext);
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
-    // Mock users - replace with actual API call
-    const mockUsers: User[] = [];
-    let trainers = await getAllUsers();
-    console.log('trainers: ', trainers);
-    if (trainers) {
-      mockUsers.push(...trainers);
+    setLoading(true); // Show loading spinner
+    try {
+      const trainers = await getAllUsers();
+      if (trainers) {
+        setUsers(trainers);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false); // Hide loading spinner
     }
-
-    setUsers(mockUsers);
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if(await DeleteTrainer(userId)){
+    setLoading(true); // Show loading spinner during deletion
+    try {
+      if (await DeleteTrainer(userId)) {
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-    }
-    else
+        alert(`User with ID: ${userId} has been deleted.`);
+      } else {
         alert(`Error: User with ID: ${userId} not found.`);
-    alert(`User with ID: ${userId} has been deleted.`);
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    } finally {
+      setLoading(false); // Hide loading spinner
+    }
   };
 
   return (
@@ -46,19 +57,25 @@ const ManageUsers: React.FC = () => {
 
       <h1>Manage Users</h1>
 
-      <ul className="user-list">
-        {users.map((user) => (
-          <li key={user.id} className="user-item">
-            <span className="user-name">{user.first_name} {user.last_name} </span>
-            <button
-              className="delete-button"
-              onClick={() => handleDeleteUser(user.id)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <div className="loading-spinner"></div> // Loading spinner
+      ) : (
+        <ul className="user-list">
+          {users.map((user) => (
+            <li key={user.id} className="user-item">
+              <span className="user-name">
+                {user.first_name} {user.last_name}
+              </span>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteUser(user.id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
