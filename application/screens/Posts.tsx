@@ -3,25 +3,28 @@ import {
   View,
   Modal,
   FlatList,
-  Button,
   StyleSheet,
   TextInput,
   Image,
   Text,
   TouchableOpacity,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
   Animated,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { TrainerContext } from '../context/TrainerContextProvider';
 import { CoustumerContext } from '../context/CoustumerContextProvider';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import { Post, Comment } from '../types/trainer_type';
 import PostView from '../components/ViewPost';
+import { MediaType } from 'expo-image-picker';
 
 type RouteParams = {
   clientType?: number;
-  trainerEmail?: string;
 };
 
 export default function Posts() {
@@ -31,8 +34,8 @@ export default function Posts() {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<{ [key: string]: boolean }>({});
-  
-  const { currentTrainer, AddPost, GetTrainerPosts,AddLike,DeletePost } = useContext(TrainerContext);
+
+  const { currentTrainer, AddPost, GetTrainerPosts } = useContext(TrainerContext);
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
@@ -55,7 +58,6 @@ export default function Posts() {
         }
       } else if (clientType === 1 && currentTrainer?.Posts) {
         setPosts(currentTrainer?.Posts.filter((post: Post) => post.description !== ''));
-
       }
     };
 
@@ -63,112 +65,71 @@ export default function Posts() {
   }, [clientType, currentTrainer, currentCoustumer]);
 
   const toggleModal = () => setModalVisible(!modalVisible);
-  
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     if (clientType === 1 && AddPost) {
+      const currentPostCount =
+        currentTrainer?.Posts[0]?.id === '' ? 1 : currentTrainer?.Posts.length + 1 || 1;
+
       const newPost: Post = {
-        id: Math.random().toString(),
-        title: input1,
-        description: input2,
+        id: currentPostCount.toString(),
+        title: input1.trim(),
+        description: input2.trim(),
         image: imageUri || undefined,
         likes: 0,
         likedByUser: false,
         comments: [],
         isOwner: true,
       };
-      AddPost(newPost);
-      setInput1('');
-      setInput2('');
-      setImageUri(null);
-      setModalVisible(false);
+
+      try {
+        const response = await AddPost(newPost);
+
+        if (response) {
+          setPosts((prevPosts) => [...prevPosts, newPost]);
+          setModalVisible(false);
+          setInput1('');
+          setInput2('');
+          setImageUri(null);
+        } else {
+          console.error('Failed to save post to database');
+        }
+      } catch (error) {
+        console.error('Error adding post:', error);
+      }
     }
   };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
+  
     if (!result.canceled && result.assets) {
       setImageUri(result.assets[0].uri);
     }
   };
 
-  const handleLike = (postId: string,title:string) => {
-    const updatedPosts = posts.map((post: Post) =>
-      post.id === postId
-        ? {
-            ...post,
-            likedByUser: !post.likedByUser,
-            likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
-          }
-        : post
-    );
-    setPosts(updatedPosts);
-    console.log(updatedPosts[1].likes);
-    updatedPosts.map(async (post: Post) => {
-      if (post.id === postId) {
-        if(currentCoustumer != undefined || currentCoustumer != null){
-          if(await AddLike(currentCoustumer.id,post))
-            {
-              console.log("liked");
-            }
-        }
-        if(currentTrainer != undefined || currentTrainer != null){
-          if(await AddPost(post))
-            {
-              if(await DeletePost(title))
-                console.log("liked");
-            }
-        }
-      }
-    })
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
   };
-
-  const handleComment = (postId: string, newComment: Comment) => {
-    const updatedPosts = posts.map((post: Post) =>
-      post.id === postId
-        ? { ...post, comments: [...post.comments, newComment] }
-        : post
-    );
-    setPosts(updatedPosts);
-  };
-
-  const toggleComments = (postId: string) => {
-    setCommentsVisible((prev) => ({ ...prev, [postId]: !prev[postId] }));
-  };
-
-  const handleDeleteComment = (postId: string, commentId: string) => {
-    const updatedPosts = posts.map((post: Post) =>
-      post.id === postId
-        ? { ...post, comments: post.comments.filter((comment) => comment.id !== commentId) }
-        : post
-    );
-    setPosts(updatedPosts);
-  };
-
-  const modalOpacity = new Animated.Value(0);
-  useEffect(() => {
-    if (modalVisible) {
-      Animated.timing(modalOpacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(modalOpacity, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [modalVisible]);
 
   return (
     <View style={styles.container}>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.postContainer}>
+            <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
+          </View>
+        )}
+        ListEmptyComponent={<Text style={styles.noPostsText}>No posts available for this trainer</Text>}
+      />
+
       {clientType === 1 && (
         <TouchableOpacity style={styles.addPostButton} onPress={toggleModal}>
           <Text style={styles.addPostText}>Add Post</Text>
@@ -176,81 +137,44 @@ export default function Posts() {
       )}
 
       <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <Animated.View style={[styles.modalContainer, { opacity: modalOpacity }]}>
-          <View style={styles.modalContent}>
-            <TextInput
-              placeholder="Title"
-              value={input1}
-              onChangeText={setInput1}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Description"
-              value={input2}
-              onChangeText={setInput2}
-              style={styles.input}
-            />
-            <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
-              <Text style={styles.imageButtonText}>Pick an Image</Text>
-            </TouchableOpacity>
-            {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitText}>Submit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
+        <KeyboardAvoidingView
+          style={styles.modalContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <ScrollView
+              contentContainerStyle={styles.modalContentContainer}
+              keyboardShouldPersistTaps="handled"
+            >
+              <View style={styles.modalContent}>
+                <TextInput
+                  placeholder="Title"
+                  value={input1}
+                  onChangeText={setInput1}
+                  style={styles.input}
+                />
+                <TextInput
+                  placeholder="Description"
+                  value={input2}
+                  onChangeText={setInput2}
+                  style={styles.input}
+                  multiline={true}
+                />
+                <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
+                  <Text style={styles.imageButtonText}>Pick an Image</Text>
+                </TouchableOpacity>
+                {imageUri && <Image source={{ uri: imageUri }} style={styles.imagePreview} />}
+                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                  <Text style={styles.submitText}>Submit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                  <Text style={styles.closeText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
-
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <PostView post={item} clientType={clientType!} isOwner={clientType === 1} />
-            <View style={styles.postActions}>
-              <Text style={styles.likesCount}>Likes: {item.likes}</Text>
-              <TouchableOpacity onPress={() => handleLike(item.id,item.title)}>
-                <Text style={styles.likeButton}>{item.likedByUser ? 'Unlike' : 'Like'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => toggleComments(item.id)}>
-                <Text style={styles.commentsCount}>Comments: {item.comments?.length || 0}</Text>
-              </TouchableOpacity>
-              {commentsVisible[item.id] && (
-                <ScrollView style={styles.commentsSection}>
-                  {item.comments?.map((comment: Comment) => (
-                    <View key={comment.id} style={styles.commentContainer}>
-                      <Text style={styles.commentText}>{comment.text}</Text>
-                      {clientType === 1 && (
-                        <TouchableOpacity
-                          onPress={() => handleDeleteComment(item.id, comment.id)}
-                          style={styles.deleteCommentButton}
-                        >
-                          <Text style={styles.deleteCommentText}>Delete</Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  ))}
-                  <TextInput
-                    placeholder="Add a comment"
-                    onSubmitEditing={(event) =>
-                      handleComment(item.id, {
-                        id: Math.random().toString(),
-                        text: event.nativeEvent.text,
-                        userId: 'currentUserId',
-                      })
-                    }
-                    style={styles.commentInput}
-                  />
-                </ScrollView>
-              )}
-            </View>
-          </View>
-        )}
-        ListEmptyComponent={<Text style={styles.noPostsText}>No posts available for this trainer</Text>}
-      />
     </View>
   );
 }
@@ -261,15 +185,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#1DBD7B',
     padding: 15,
     borderRadius: 30,
-    marginBottom: 20,
     alignItems: 'center',
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    transform: [{ translateX: -75 }],
+    width: 150,
   },
   addPostText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  modalContainer: {
-    flex: 1,
+  modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' },
+  modalContentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    flexGrow: 1,
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -306,21 +234,5 @@ const styles = StyleSheet.create({
   closeButton: { alignItems: 'center' },
   closeText: { color: '#999', fontSize: 16 },
   postContainer: { backgroundColor: '#fff', marginBottom: 20, borderRadius: 10, padding: 15 },
-  postActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  likesCount: { fontSize: 14, color: '#777' },
-  likeButton: { color: '#1DBD7B', fontSize: 14, fontWeight: 'bold' },
-  commentsCount: { fontSize: 14, color: '#777' },
-  commentsSection: { marginTop: 15 },
-  commentContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  commentText: { fontSize: 14, color: '#555' },
-  deleteCommentButton: { backgroundColor: '#ff4d4d', padding: 5, borderRadius: 5 },
-  deleteCommentText: { color: '#fff', fontSize: 12 },
-  commentInput: {
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    height: 40,
-  },
   noPostsText: { fontSize: 16, color: '#777', textAlign: 'center' },
 });
