@@ -20,7 +20,7 @@ server.use(express.json({ limit: '10000mb' })); //json עבודה עם
 // Define the CORS options
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:7777', 'https://doghouse-finalproject.onrender.com'] // Whitelist the domains you want to allow
+    origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:7777', 'https://doghouse-finalproject.onrender.com , https://doghouse-la1b.onrender.com'] // Whitelist the domains you want to allow
 };
 server.use(cors(corsOptions)); //רשימת הכתובות שיכולות לגשת לשרת
 
