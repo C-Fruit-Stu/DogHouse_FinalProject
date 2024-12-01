@@ -115,7 +115,7 @@ function StackNav() {
       <Stack.Screen name="ManageCostumers" component={ManageCostumers} options={{ headerShown: false }} />
       <Stack.Screen name="AdminSettings" component={AdminSettings} options={{ headerShown: false }} />
       <Stack.Screen name="StatisticAdmin" component={StatisticAdmin} options={{ headerShown: false }} />
-      <Stack.Screen name="TrainingSchedules" component={TrainingSchedules} options={{ headerShown: false }} />
+      <Stack.Screen name="TrainingSchedules" component={TrainingSchedules} options={{ headerShown: true }} />
       <Stack.Screen name="Membership Details" component={MembershipDetails} options={{ headerShown: false }} />
       <Stack.Screen name="faq" component={FAQ} options={{ headerShown: false }} />
       <Stack.Screen name="support" component={Support} options={{ headerShown: false }} />

@@ -24,7 +24,8 @@ import PostView from '../components/ViewPost';
 import { MediaType } from 'expo-image-picker';
 
 type RouteParams = {
-  clientType?: number;
+  clientType?: number,
+  trainerEmail?: string
 };
 
 export default function Posts() {
@@ -39,30 +40,61 @@ export default function Posts() {
   const { currentCoustumer } = useContext(CoustumerContext);
   const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
   const clientType = route.params?.clientType;
+  const trainerEmail = route.params?.trainerEmail;
 
   useEffect(() => {
     const loadPosts = async () => {
-      if (clientType === 2) {
-        try {
-          if (currentCoustumer?.HisTrainer?.length) {
+      try {
+        console.log("clientType:", clientType);
+        console.log("trainerEmail:", trainerEmail);
+  
+        if (clientType === 2) {
+          if (trainerEmail) {
+            console.log("Fetching posts for specific trainer:", trainerEmail);
+            // Fetch posts for the specific trainer
+            const fetchedPosts = await GetTrainerPosts(trainerEmail);
+            console.log("Fetched posts for trainerEmail:", fetchedPosts);
+            setPosts(fetchedPosts || []); // Default to an empty array if null
+          } else if (currentCoustumer?.HisTrainer?.length) {
+            console.log("Fetching posts for all followed trainers");
+            // Fetch posts from all trainers the customer is following
             const fetchedPostsPromises = currentCoustumer.HisTrainer.map((email: string) =>
-              GetTrainerPosts(email).catch(() => [])
+              GetTrainerPosts(email).catch((err: Error) => {
+                console.error(`Error fetching posts for trainer ${email}:`, err);
+                return [];
+              })
             );
-
+  
             const allFetchedPosts = await Promise.all(fetchedPostsPromises);
             const flattenedPosts = allFetchedPosts.flat();
+            console.log("Flattened posts from all trainers:", flattenedPosts);
             setPosts(flattenedPosts.filter((post: Post) => post.description !== ''));
+          } else {
+            console.log("No trainers followed. Setting posts to an empty array.");
+            setPosts([]); // No trainers followed
           }
-        } catch (error) {
+        } else if (clientType === 1) {
+          if (currentTrainer?.Posts) {
+            console.log("Fetching posts for current trainer:", currentTrainer.email);
+            setPosts(currentTrainer.Posts.filter((post: Post) => post.description !== ''));
+          } else {
+            console.log("No posts available for the current trainer.");
+            setPosts([]);
+          }
+        } else {
+          console.log("Invalid clientType or no posts to load.");
           setPosts([]);
         }
-      } else if (clientType === 1 && currentTrainer?.Posts) {
-        setPosts(currentTrainer?.Posts.filter((post: Post) => post.description !== ''));
+      } catch (error) {
+        console.error("Error loading posts:", error);
+        setPosts([]); // Handle errors gracefully
       }
     };
-
+  
     loadPosts();
-  }, [clientType, currentTrainer, currentCoustumer]);
+  }, [clientType, trainerEmail, currentTrainer, currentCoustumer]);
+  
+
 
   const toggleModal = () => setModalVisible(!modalVisible);
 
@@ -107,7 +139,7 @@ export default function Posts() {
       aspect: [4, 3],
       quality: 1,
     });
-  
+
     if (!result.canceled && result.assets) {
       setImageUri(result.assets[0].uri);
     }

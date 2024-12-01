@@ -116,6 +116,9 @@ export default function TrainingSchedules() {
                             };
                         });
                     }
+                    else{
+                        
+                    }
                 }
 
                 setAllSchedules(schedules);
