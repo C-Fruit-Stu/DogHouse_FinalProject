@@ -189,18 +189,24 @@ export async function updatePayment(req: Request, res: Response) {
 
 
 export async function addNewPost(req: Request, res: Response) {
-    console.log(req.body)
-    let { email, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body
-    if (!title || !description)
-        return res.status(400).json({ msg: "invalid info" })
+    console.log("Incoming request body:", req.body);
+
+    let { email, id, title, description, image, likes, likedByUser, comments, isOwner } = req.body;
+
+    if (!title || !description) {
+        return res.status(400).json({ msg: "Invalid info: Missing title or description" });
+    }
 
     try {
-        let result = await addAnotherPost(email, id, title, description, image, likes, likedByUser, comments, isOwner)
-        res.status(200).json({ result })
+        const result = await addAnotherPost(email, id, title, description, image, likes, likedByUser, comments, isOwner);
+        res.status(200).json({ result });
     } catch (error) {
-        res.status(500).json({ error })
+        console.error("Error in addNewPost:", error);
+        res.status(500).json({ error: "Server error while adding new post" });
     }
 }
+
+
 
 export async function updateonepost(req: Request, res: Response) {
     let { id } = req.params
@@ -209,7 +215,7 @@ export async function updateonepost(req: Request, res: Response) {
     console.log(likes)
 
     if (!id || id.length < 24)
-        return res.status(400).json({ msg: "invalid id" })   
+        return res.status(400).json({ msg: "invalid id" })
 
     if (!title || !description)
         return res.status(400).json({ msg: "invalid info" })
@@ -220,7 +226,7 @@ export async function updateonepost(req: Request, res: Response) {
     } catch (error) {
         res.status(500).json({ error })
     }
-    }
+}
 
 export async function getAllPostsById(req: Request, res: Response) {
     let { id } = req.params
@@ -468,7 +474,7 @@ export async function addPayment(req: Request, res: Response) {
     try {
         await addPaymentToTotalIncome(email, price, date);
         return res.status(200).json({ msg: "Payment added successfully" });
-  
+
     } catch (error) {
         console.error("Error in addPayment:", error);
         return res.status(500).json({ error });
