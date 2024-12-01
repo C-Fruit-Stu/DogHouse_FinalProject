@@ -152,7 +152,36 @@ export async function addScheduleToArrayDB(schedule: trainingSchedule, costumerE
     try {
         await mongo.connect();
 
-        // Add the schedule to the customer's `trainingSchedule` array
+        // Find the customer
+        const customer = await mongo
+            .db(DB_INFO.name)
+            .collection(DB_INFO.Collection)
+            .findOne({ email: costumerEmail });
+
+        if (!customer) {
+            throw new Error(`Customer with email ${costumerEmail} not found`);
+        }
+
+        const { trainingSchedule } = customer;
+
+        // Replace the first empty object if it exists
+        if (
+            trainingSchedule[0].name === "" &&
+            trainingSchedule[0].time === ""
+        ) {
+            const result = await mongo
+                .db(DB_INFO.name)
+                .collection(DB_INFO.Collection)
+                .updateOne(
+                    { email: costumerEmail },
+                    { $set: { "trainingSchedule.0": schedule } } // Replace the first element
+                );
+
+            console.log(`Replaced empty schedule for ${costumerEmail}: ${JSON.stringify(result)}`);
+            return result;
+        }
+
+        // Add the schedule to the `trainingSchedule` array
         const result = await mongo
             .db(DB_INFO.name)
             .collection(DB_INFO.Collection)
@@ -170,5 +199,6 @@ export async function addScheduleToArrayDB(schedule: trainingSchedule, costumerE
         await mongo.close();
     }
 }
+
 
 

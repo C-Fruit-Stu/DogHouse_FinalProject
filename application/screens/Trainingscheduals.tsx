@@ -166,20 +166,20 @@ export default function TrainingSchedules() {
                             await addSchedule(schedule, currentCoustumer?.email);
 
                             // Update AsyncStorage (filter only the accepted schedule)
-                            // const updatedSchedules = trainersSchedules.filter(
-                            //     (item) =>
-                            //         item.date !== schedule.date ||
-                            //         item.trainerEmail !== schedule.trainerEmail
-                            // );
-                            // await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(updatedSchedules));
-                            // setTrainersSchedules(updatedSchedules);
+                            const updatedSchedules = trainersSchedules.filter(
+                                (item) =>
+                                    item.date !== schedule.date ||
+                                    item.trainerEmail !== schedule.trainerEmail
+                            );
+                            await AsyncStorage.setItem("TrainersSchedules", JSON.stringify(updatedSchedules));
+                            setTrainersSchedules(updatedSchedules);
 
-                            // // Mark selected date blue
-                            // setMarkedDates((prev) => ({
-                            //     ...prev,
-                            //     [normalizeDate(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
-                            // }));
-                            // console.log("Updated TrainersSchedules:", updatedSchedules);
+                            // Mark selected date blue
+                            setMarkedDates((prev) => ({
+                                ...prev,
+                                [normalizeDate(schedule.date)]: { marked: true, dotColor: "blue", selectedColor: "blue" },
+                            }));
+                            console.log("Updated TrainersSchedules:", updatedSchedules);
                             clearStorageOnReload();
                         } catch (error) {
                             console.error("Error processing action:", error);

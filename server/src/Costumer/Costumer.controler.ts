@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Costumer,trainingSchedule } from "./Costumer.type";
+import { Costumer, trainingSchedule } from "./Costumer.type";
 import { decryptPassword, encryptPassword } from "../utils/utils";
-import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer, addEmailToArray,addScheduleToArray } from "./Costumer.model";
+import { ChangePass, CheckInfo, checkUpdate, deactiveUser, findcostumerbyID, getallcostumers1, loginCostumer, regCostumer, addEmailToArray, addScheduleToArray } from "./Costumer.model";
 import { ObjectId } from "mongodb";
 
 export async function GetAllCostumrs(req: Request, res: Response) {
@@ -173,15 +173,16 @@ export async function addTrainer(req: Request, res: Response) {
 }
 
 export async function addSchedule(req: Request, res: Response) {
-    const {schedule, CostumerEmail} = req.body;
+    const { schedule, CostumerEmail } = req.body;
 
-    if (!schedule || !schedule.email || !schedule.date || !schedule.name) {
+    // Validate schedule input
+    if (!schedule || !schedule.trainerEmail || !schedule.date || !schedule.name || !schedule.time || !schedule.price) {
         return res.status(400).json({ msg: "Invalid schedule information" });
     }
 
     try {
-        const result = await addScheduleToArray(schedule,CostumerEmail);
-        if (result.modifiedCount > 0) {
+        const result = await addScheduleToArray(schedule, CostumerEmail);
+        if (result.modifiedCount > 0 || result.matchedCount > 0) {
             return res.status(200).json({ msg: "Schedule added successfully" });
         } else {
             return res.status(400).json({ msg: "Failed to add schedule" });
@@ -191,4 +192,5 @@ export async function addSchedule(req: Request, res: Response) {
         return res.status(500).json({ error });
     }
 }
+
 
