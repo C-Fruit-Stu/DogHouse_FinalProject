@@ -26,7 +26,7 @@ const GeminiChat = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showStopIcon, setShowStopIcon] = useState<boolean>(false);
 
-  const API_KEY = 'AIzaSyB1aaPHPfVZ9gthHR9fZFbr1KHflqL4Aqw';
+  const API_KEY = 'AIzaSyDcrBsdr54AnzCV96NV24QNw8jWMy48dko';
 
   useEffect(() => {
     const startChat = async () => {
