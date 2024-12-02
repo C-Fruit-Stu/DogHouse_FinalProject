@@ -18,29 +18,29 @@ import { ScrollView } from "react-native-gesture-handler";
 type Message = {
   text: string;
   user: boolean;
+  loading?: boolean; // To show loading state for bot responses
 };
 
 const GeminiChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [userInput, setUserInput] = useState<string>('');
+  const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [showStopIcon, setShowStopIcon] = useState<boolean>(false);
 
-  const API_KEY = 'AIzaSyDcrBsdr54AnzCV96NV24QNw8jWMy48dko';
+  const API_KEY = "AIzaSyDcrBsdr54AnzCV96NV24QNw8jWMy48dko";
 
   useEffect(() => {
     const startChat = async () => {
       const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-      const prompt = 'hello!';
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const prompt = "hello!";
       const result = await model.generateContent(prompt);
       const response = result.response;
       const text = await response.text();
       showMessage({
-        message: 'Welcome to DogHouse AI',
+        message: "Welcome to DogHouse AI",
         description: text,
-        type: 'info',
-        icon: 'info',
+        type: "info",
+        icon: "info",
         duration: 2000,
       });
       setMessages([{ text, user: false }]);
@@ -50,74 +50,100 @@ const GeminiChat = () => {
   }, []);
 
   const sendMessage = async () => {
-    setLoading(true);
+    if (!userInput.trim()) return;
+
     const userMessage: Message = { text: userInput, user: true };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-    const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    const prompt = userMessage.text;
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const text = await response.text();
-    setMessages((prevMessages) => [...prevMessages, { text, user: false }]);
-    setLoading(false);
-    setUserInput('');
-  };
+    // Add a temporary loading message
+    const loadingMessage: Message = { text: "Thinking...", user: false, loading: true };
+    setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
-  const clearMessages = () => {
-    setMessages([]);
-    setIsSpeaking(false);
+    setLoading(true);
+    const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const prompt = userMessage.text;
+
+    try {
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const text = await response.text();
+
+      // Replace the loading message with the actual response
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        newMessages[newMessages.length - 1] = { text, user: false }; // Replace last message
+        return newMessages;
+      });
+    } catch (error) {
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        newMessages[newMessages.length - 1] = {
+          text: "Sorry, something went wrong. Please try again.",
+          user: false,
+        };
+        return newMessages;
+      });
+    } finally {
+      setLoading(false);
+      setUserInput("");
+    }
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
     <View style={item.user ? styles.userMessageContainer : styles.botMessageContainer}>
-      <Text style={styles.messageText}>
-        {item.text}
-      </Text>
+      {item.loading ? (
+        <ActivityIndicator size="small" color="white" />
+      ) : (
+        <Text style={styles.messageText}>{item.text}</Text>
+      )}
     </View>
   );
 
   return (
     <ScrollView style={styles.containerheader}>
       <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <FlatList
-        data={messages}
-        renderItem={renderMessage}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.messagesList}
-        inverted
-      />
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Type a message..."
-          onChangeText={setUserInput}
-          value={userInput}
-          onSubmitEditing={sendMessage}
-          style={styles.input}
-          placeholderTextColor="#999"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <FlatList
+          data={messages}
+          renderItem={renderMessage}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.messagesList}
+          inverted
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          <Entypo name="paper-plane" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Type a message..."
+            onChangeText={setUserInput}
+            value={userInput}
+            onSubmitEditing={sendMessage}
+            style={styles.input}
+            placeholderTextColor="#999"
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Entypo name="paper-plane" size={24} color="white" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  containerheader:{
-    height: '100%'
+  containerheader: {
+    height: "100%",
   },
   container: {
     flex: 1,
     backgroundColor: "rgba(7,140,101,0.6)",
     paddingTop: 40,
-    height: 850
+    height: 850,
   },
   messagesList: {
     paddingHorizontal: 10,
@@ -125,7 +151,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
   userMessageContainer: {
     backgroundColor: "rgba(7,140,101,0.2)",
@@ -133,7 +159,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     alignSelf: "flex-end",
-    maxWidth: '80%',
+    maxWidth: "80%",
   },
   botMessageContainer: {
     backgroundColor: "rgba(7,140,101,0.1)",
@@ -141,7 +167,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     alignSelf: "flex-start",
-    maxWidth: '80%',
+    maxWidth: "80%",
   },
   inputContainer: {
     flexDirection: "row",
