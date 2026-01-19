@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { useFormik } from 'formik';
-import '../index.css'; // Add custom styles here
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
-import { TrainerContext } from '../context/TrainerContextProvidor';
-import {Post} from '../types/TrainerType';
+import React, { useContext, useState } from "react";
+import { useFormik } from "formik";
+import "../index.css"; // Add custom styles here
+import Navigation from "../components/Navigation";
+import Footer from "../components/Footer";
+import { TrainerContext } from "../context/TrainerContextProvidor";
+import { Post } from "../types/TrainerType";
 
 // type Post = {
 //   id: string;
@@ -66,61 +66,70 @@ const CreatePost: React.FC<{ onPostSubmit: (post: Post) => void }> = ({ onPostSu
   };
 
   return (
-    <><>
-    <Navigation/>
-    </><div className="create-post-container">
-          <form onSubmit={formik.handleSubmit} className="create-post-form">
-              <h2 className="form-title">Create a New Post</h2>
+    <>
+      <Navigation />
+      <div className="create-post-container">
+        <form onSubmit={formik.handleSubmit} className="create-post-form">
+          <h2 className="form-title">Create a New Post</h2>
 
-              <div className="form-group">
-                  <label htmlFor="title">Title</label>
-                  <input
-                      id="title"
-                      name="title"
-                      type="text"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.title}
-                      className={formik.errors.title ? 'input-error' : ''} />
-                  {formik.errors.title && formik.touched.title && (
-                      <div className="error-message">{formik.errors.title}</div>
-                  )}
+          <div className="form-group">
+            <label htmlFor="title">Title</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.title}
+              className={formik.errors.title ? "input-error" : ""}
+            />
+            {formik.errors.title && formik.touched.title && (
+              <div className="error-message">{formik.errors.title}</div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.description}
+              className={formik.errors.description ? "input-error" : ""}
+            />
+            {formik.errors.description && formik.touched.description && (
+              <div className="error-message">{formik.errors.description}</div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="image">Upload Image</label>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {imagePreview && (
+              <div className="image-preview-container">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="image-preview"
+                />
               </div>
+            )}
+          </div>
 
-              <div className="form-group">
-                  <label htmlFor="description">Description</label>
-                  <textarea
-                      id="description"
-                      name="description"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.description}
-                      className={formik.errors.description ? 'input-error' : ''} />
-                  {formik.errors.description && formik.touched.description && (
-                      <div className="error-message">{formik.errors.description}</div>
-                  )}
-              </div>
-
-              <div className="form-group">
-                  <label htmlFor="image">Upload Image</label>
-                  <input
-                      id="image"
-                      name="image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange} />
-                  {imagePreview && (
-                      <div className="image-preview-container">
-                          <img src={imagePreview} alt="Preview" className="image-preview" />
-                      </div>
-                  )}
-              </div>
-
-              <button type="submit" className="submit-button">Submit</button>
-          </form>
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
+        </form>
       </div>
-      <Footer/>
-      </>
+      <Footer />
+    </>
   );
 };
 
